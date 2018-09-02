@@ -27,11 +27,9 @@ const seed = async () => {
     quotes.forEach(quote => {
       tokens.forEach(token => {
         pairs.push({
-          baseTokenId: token._id,
           baseTokenSymbol: token.symbol,
           baseTokenAddress: utils.getAddress(token.contractAddress),
           baseTokenDecimal: 18,
-          quoteTokenId: quote._id,
           quoteTokenSymbol: quote.symbol,
           quoteTokenAddress: utils.getAddress(quote.contractAddress),
           quoteTokenDecimal: 18,
