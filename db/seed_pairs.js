@@ -1,4 +1,5 @@
 const tokens = require('../data/tokens.json')
+const utils = require('ethers').utils
 const MongoClient = require('mongodb').MongoClient
 const url = 'mongodb://localhost:27017'
 
@@ -28,10 +29,12 @@ const seed = async () => {
         pairs.push({
           baseTokenId: token._id,
           baseTokenSymbol: token.symbol,
-          baseTokenAddress: token.contractAddress,
+          baseTokenAddress: utils.getAddress(token.contractAddress),
+          baseTokenDecimal: 18,
           quoteTokenId: quote._id,
           quoteTokenSymbol: quote.symbol,
-          quoteTokenAddress: quote.contractAddress,
+          quoteTokenAddress: utils.getAddress(quote.contractAddress),
+          quoteTokenDecimal: 18,
           active: true,
           makerFee: 0,
           takerFee: 0,

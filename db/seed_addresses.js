@@ -1,4 +1,5 @@
 const { addresses } = require('../data/addresses.json')
+const utils = require('ethers').utils
 const MongoClient = require('mongodb').MongoClient
 const url = 'mongodb://localhost:27017'
 
@@ -7,7 +8,7 @@ const seed = async () => {
     const client = await MongoClient.connect(url, { useNewUrlParser: true })
     const db = client.db('proofdex')
     const documents = addresses.map((address) => ({
-      address: address,
+      address: utils.getAddress(address),
       createdAt: Date(),
       updatedAt: Date()
     }))

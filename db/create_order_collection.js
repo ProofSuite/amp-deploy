@@ -19,8 +19,8 @@ const create = async () => {
          'exchangeAddress',
          'filledAmount',
          'amount',
-         'price',
-         'sel' 'quoteTokenAddress'],
+         'price'
+        ],
       properties:  {
         baseToken: {
           bsonType: "string",

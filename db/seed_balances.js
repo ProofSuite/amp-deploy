@@ -1,4 +1,5 @@
 const addresses = require('../data/addresses.json')
+const utils = require('ethers').utils
 const MongoClient = require('mongodb').MongoClient
 const url = 'mongodb://localhost:27017'
 
@@ -15,14 +16,11 @@ const seed = async () => {
       .find({}, { contractAddress: 1, _id: 1 })
       .toArray()
 
-    console.log(addresses)
-    console.log(tokens)
-
     const documents = addresses.map(address => ({
       address: address,
       tokens: tokens.map(token => ({
         tokenId: token._id,
-        tokenAddress: token.contractAddress,
+        tokenAddress: utils.getAddress(token.contractAddress),
         amount: 1e18,
         lockedAmount: 0
       }))

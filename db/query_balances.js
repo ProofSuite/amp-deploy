@@ -1,17 +1,15 @@
 const MongoClient = require('mongodb').MongoClient
 const url = 'mongodb://localhost:27017'
 
-const drop = async () => {
+const query = async () => {
   try {
     const client = await MongoClient.connect(url, { useNewUrlParser: true })
     const db = client.db('proofdex')
-    const response = await db.dropDatabase()
-
-    client.close()
+    const response = await db.collection('balances').find().toArray()
     console.log(response)
   } catch (e) {
-    console.log(e.message)
+    console.log(e)
   }
 }
 
-drop()
+query()

@@ -1,4 +1,5 @@
 const tokens = require('../data/tokens.json')
+const utils = require('ethers').utils
 const MongoClient = require('mongodb').MongoClient
 const url = 'mongodb://localhost:27017'
 
@@ -8,7 +9,7 @@ const seed = async () => {
     const db = client.db('proofdex')
     const documents = Object.values(tokens).map((token) => ({
       symbol: token.symbol,
-      contractAddress: token.address,
+      contractAddress: utils.getAddress(token.address),
       decimals: 18,
       quote: false,
       createdAt: Date(),
