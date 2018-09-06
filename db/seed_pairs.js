@@ -1,4 +1,3 @@
-const tokens = require('../data/tokens.json')
 const utils = require('ethers').utils
 const MongoClient = require('mongodb').MongoClient
 const url = 'mongodb://localhost:27017'

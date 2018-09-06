@@ -16,7 +16,7 @@ const create = async () => {
         },
         nonce: {
           bsonType: "long",
-        }
+        },
         isBlocked: {
           bsonType: "bool",
           description: "must be a a boolean and is not required"
