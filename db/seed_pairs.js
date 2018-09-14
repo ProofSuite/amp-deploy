@@ -32,6 +32,7 @@ const seed = async () => {
           quoteTokenSymbol: quote.symbol,
           quoteTokenAddress: utils.getAddress(quote.contractAddress),
           quoteTokenDecimal: 18,
+          priceMultiplier: "1000000",
           active: true,
           makerFee: 0,
           takerFee: 0,

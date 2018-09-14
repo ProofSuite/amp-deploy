@@ -7,7 +7,7 @@ const url = 'mongodb://localhost:27017'
 const fs = require('fs')
 const process = require('process')
 
-const truffleBuildPath = process.argv[2] | path.resolve('../../amp-dex/build/contracts/')
+const truffleBuildPath = process.argv[2] || path.resolve('../../amp-dex/build/contracts/')
 // const truffleBuildPath = path.resolve('../amp-dex/build/contracts/')
 
 console.log(truffleBuildPath)
@@ -17,7 +17,6 @@ let documents = []
 
 const seed = async () => {
   try {
-    console.log('asdfasdf')
     const client = await MongoClient.connect(url, { useNewUrlParser: true })
     const db = client.db('proofdex')
     const response = await db.collection('tokens').insertMany(documents)
@@ -47,8 +46,7 @@ fs.readdir(truffleBuildPath, (err, files) => {
       file != 'SafeMath.json'
     ) {
         tokenSymbol = file.slice(0, -5)
-        tokenAddress = json.networks["1000"].address
-        console.log('hadfasdfasdf')
+        tokenAddress = json.networks["8888"].address
         documents.push({
           symbol: tokenSymbol,
           contractAddress: utils.getAddress(tokenAddress),

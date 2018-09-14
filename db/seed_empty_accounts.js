@@ -30,8 +30,8 @@ const seed = async () => {
           id: token._id,
           address: utils.getAddress(token.contractAddress),
           symbol: token.symbol,
-          balance: "10000000000000000000000000000",
-          allowance: "10000000000000000000000000000",
+          balance: "0",
+          allowance: "0",
           lockedBalance: "0",
           pendingBalance: "0",
         }
@@ -41,7 +41,6 @@ const seed = async () => {
 
       account.tokenBalances = tokenBalances
       account.isBlocked = false
-
       documents.push(account)
     })
 
