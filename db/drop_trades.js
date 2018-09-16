@@ -7,7 +7,8 @@ const drop = async () => {
 
   const db = client.db('proofdex')
   const response = await db.dropCollection('trades')
-  db.close()
+
+  client.close()
   console.log(response)
 } catch (e) {
   console.log(e.message)
