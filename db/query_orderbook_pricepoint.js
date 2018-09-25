@@ -10,6 +10,8 @@ const query = async () => {
   const pair = pairs[0]
   const pricepoint = "59303"
 
+  console.log(pair)
+
   const result = await db.collection('orders').aggregate([
     { $match: {
       "status": { $in: [ "OPEN", "PARTIALLY_FILLED" ]},

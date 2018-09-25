@@ -1,8 +1,8 @@
-const { addresses } = require('../data/addresses.json')
 const utils = require('ethers').utils
 const MongoClient = require('mongodb').MongoClient
 const url = 'mongodb://localhost:27017'
 
+let { addresses } = require('../data/addresses.json')
 let minTimeStamp = 1500000000000
 let maxTimeStamp = 1520000000000
 let minAmount = 0.1
@@ -11,18 +11,13 @@ let minPrice = 100
 let maxPrice = 100000
 let ether = 1e18
 
-const randInt = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1) + min)
-}
-
+const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 const randomOrderSide = () => (randInt(0, 1) === 1 ? 'BUY' : 'SELL')
 const randomOrderType = () => ['MARKET', 'LIMIT'][randInt(0, 1)]
-const randomOrderStatus = () => ['EXECUTED', 'CANCELED', 'PARTIALLY_FILLED'][randInt(0, 2)]
+const randomOrderStatus = () => ['NEW', 'OPEN', 'CANCELED', 'PARTIALLY_FILLED', 'FILLED', 'EXECUTED'][randInt(0, 2)]
 const randomPair = () => pairs[randInt(0, 5)]
 const randomFee = () => rand(10000, 100000)
-
 const randomBigAmount = () => String((randInt(0, 10000)/100) * ether)
-
 const randomAmount = () => rand(minAmount, maxAmount)
 const randomRatio = () => rand(0, 1)
 const randomTimestamp = () => randInt(minTimeStamp, maxTimeStamp)
@@ -72,6 +67,11 @@ const seed = async () => {
         maxPricepoint: max,
       })
     })
+
+
+    //we choose a limited number of pairs
+    pairs = pairs.slice(0,3)
+    addresses = addresses.slice(0,4)
 
     for (let i = 0; i < 200; i++) {
       let pair = randomElement(pairs)
@@ -128,6 +128,7 @@ const seed = async () => {
         takeFee,
         amount,
         pricepoint,
+        filledAmount
       }
 
       orders.push(order)
@@ -135,6 +136,7 @@ const seed = async () => {
 
     console.log(orders)
 
+    client.close()
 }
 
 seed()

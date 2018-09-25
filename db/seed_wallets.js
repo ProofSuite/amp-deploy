@@ -5,13 +5,13 @@ const Wallet = ethers.Wallet
 const MongoClient = require('mongodb').MongoClient
 const url = 'mongodb://localhost:27017'
 
+let client, db, documents, response
+
 const seed = async () => {
   try {
-    const client = await MongoClient.connect(url, { useNewUrlParser: true })
-    const db = client.db('proofdex')
-
-    let documents = []
-
+    client = await MongoClient.connect(url, { useNewUrlParser: true })
+    db = client.db('proofdex')
+    documents = []
 
     keys.forEach(key => {
       let walletRecord = {}
@@ -24,11 +24,13 @@ const seed = async () => {
       documents.push(walletRecord)
     })
 
-    const response = await db.collection('wallets').insertMany(documents)
+    response = await db.collection('wallets').insertMany(documents)
     console.log(response)
-    client.close()
+
   } catch (e) {
     console.log(e.message)
+  } finally {
+    client.close()
   }
 }
 

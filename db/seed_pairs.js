@@ -2,11 +2,14 @@ const utils = require('ethers').utils
 const MongoClient = require('mongodb').MongoClient
 const url = 'mongodb://localhost:27017'
 
+let client, db
+
 const seed = async () => {
   try {
+    client = await MongoClient.connect(url, { useNewUrlParser: true })
+    db = client.db('proofdex')
+
     let pairs = []
-    const client = await MongoClient.connect(url, { useNewUrlParser: true })
-    const db = client.db('proofdex')
 
     const tokens = await db.collection('tokens')
       .find(
@@ -43,11 +46,12 @@ const seed = async () => {
     })
 
     const response = await db.collection('pairs').insertMany(pairs)
-    client.close()
-
     console.log(response)
+
   } catch (e) {
     console.log(e.message)
+  } finally {
+    client.close()
   }
 }
 

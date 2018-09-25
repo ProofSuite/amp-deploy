@@ -1,14 +1,16 @@
 const MongoClient = require('mongodb').MongoClient
 const url = 'mongodb://localhost:27017'
 
-let client, db, response
+let client, db
 
-const drop = async () => {
+const query = async () => {
   try {
     client = await MongoClient.connect(url, { useNewUrlParser: true })
     db = client.db('proofdex')
-    response = await db.dropCollection('wallets')
+
+    const response = await db.collection('pairs').find().toArray()
     console.log(response)
+
   } catch (e) {
     console.log(e.message)
   } finally {
@@ -16,4 +18,4 @@ const drop = async () => {
   }
 }
 
-drop()
+query()
