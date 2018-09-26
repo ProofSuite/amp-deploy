@@ -21,9 +21,10 @@ show_menu(){
     ENTER_LINE=`echo "\033[33m"`
     echo -e "${MENU}*********************************************${NORMAL}"
     echo -e "${MENU}${NUMBER} 1)${MENU} MongoDB ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 2)${MENU} Inspect MongoDB ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 2)${MENU} MongoDB (query) ${NORMAL}"
     echo -e "${MENU}${NUMBER} 3)${MENU} Redis ${NORMAL}"
     echo -e "${MENU}${NUMBER} 4)${MENU} RabbitMQ ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 5)${MENU} Engine ${NORMAL}"
     echo -e "${MENU}*********************************************${NORMAL}"
     read opt
 
@@ -51,6 +52,11 @@ show_menu(){
       4) clear;
       write_header "RabbitMQ Menu";
       show_rabbitmq_menu
+      ;;
+
+      5) clear;
+      write_header "Engine Menu";
+      show_engine_menu;
       ;;
 
       x)exit;
@@ -241,7 +247,8 @@ show_inspect_mongo_menu(){
   echo -e "${MENU}${NUMBER} 4)${MENU} Query Pairs ${NORMAL}"
   echo -e "${MENU}${NUMBER} 5)${MENU} Query Orders  ${NORMAL}"
   echo -e "${MENU}${NUMBER} 6)${MENU} Query Trades ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 7)${MENU} Back ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 7)${MENU} Query Addresses ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 8)${MENU} Back ${NORMAL}"
   echo -e "${MENU}*********************************************${NORMAL}"
   read opt
 
@@ -283,6 +290,11 @@ show_inspect_mongo_menu(){
       ;;
 
       7) clear;
+      node ../db/query_addresses | less;
+      show_inspect_mongo_menu;
+      ;;
+
+      8) clear;
       show_menu;
       ;;
 
@@ -295,6 +307,58 @@ show_inspect_mongo_menu(){
       *)clear;
       write_header "Choose an option"
       show_mongo_menu;
+      ;;
+
+      esac
+    fi
+  done
+}
+
+
+show_engine_menu(){
+  NORMAL=`echo "\033[m"`
+  MENU=`echo "\033[36m"` #Blue
+  NUMBER=`echo "\033[33m"` #yellow
+  FGRED=`echo "\033[41m"`
+  RED_TEXT=`echo "\033[31m"`
+  ENTER_LINE=`echo "\033[33m"`
+  echo -e "${MENU}*********************************************${NORMAL}"
+  echo -e "${MENU}${NUMBER} 1)${MENU} Monitor logs ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 2)${MENU} Clear logs ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 3)${MENU} Back ${NORMAL}"
+  echo -e "${MENU}*********************************************${NORMAL}"
+  read opt
+
+  while [ opt != '' ]
+  do
+    if [[ $opt = "" ]]; then
+      exit;
+    else
+      case $opt in
+      1) clear;
+      ttab 'cd $AMPENGINE/logs && multitail api.log engine.log main.log operator.log rabbit.log'
+      show_rabbitmq_menu;
+      ;;
+
+      2) clear;
+      cd $AMPENGINE/logs
+      truncate -s0 api.log && truncate -s0 engine.log && truncate -s0 main.log && truncate -s0 operator.log && truncate -s0 rabbit.log;
+      write 'Done\n';
+      ;;
+
+      3) clear;
+      show_menu;
+      ;;
+
+      x) exit;
+      ;;
+
+      \n) exit;
+      ;;
+
+      *)clear;
+      write "Choose option"
+      show_rabbitmq_menu;
       ;;
 
       esac
