@@ -1,4 +1,3 @@
-// const tokens = require('../data/tokens.json')
 const utils = require('ethers').utils
 const path = require('path')
 const MongoClient = require('mongodb').MongoClient
@@ -43,7 +42,8 @@ fs.readdir(truffleBuildPath, (err, files) => {
       file != 'Owned.json' &&
       file != 'Exchange.json' &&
       file != 'WETH9.json' &&
-      file != 'SafeMath.json'
+      file != 'SafeMath.json' &&
+      file != 'Migrations.json'
     ) {
         tokenSymbol = file.slice(0, -5)
         tokenAddress = json.networks["8888"].address

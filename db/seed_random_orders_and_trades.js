@@ -1,8 +1,11 @@
 const utils = require('ethers').utils
 const MongoClient = require('mongodb').MongoClient
+const faker = require('faker')
 const url = 'mongodb://localhost:27017'
+const { generatePricingData , interpolatePrice } = require('../utils/prices')
 
 let { addresses } = require('../data/addresses.json')
+let exchangeAddress = "0x5d0e9f8d3f66bcb133e1f97aaa44937be5a48920"
 let minTimeStamp = 1500000000000
 let maxTimeStamp = 1520000000000
 let minAmount = 0.1
@@ -79,21 +82,29 @@ let orderLevels = orderWeightedStatuses.reduce((result, current) => {
  }, [])
  .map(elem => elem * 100)
 
- console.log(tradeLevels)
-
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
-const randomOrderSide = () => (randInt(0, 1) === 1 ? 'BUY' : 'SELL')
+const randomSide = () => (randInt(0, 1) === 1 ? 'BUY' : 'SELL')
 const randomOrderType = () => orderTypes[randInt(0, orderTypes.length -1 )]
-// const randomOrderStatus = () => orderStatuses[randInt(0, orderStatuses.length - 1)]
-// const randomTradeStatus = () => tradeStatuses[randInt(0, tradeStatuses.length - 1)]
 const randomPair = () => pairs[randInt(0, 5)]
 const randomFee = () => rand(10000, 100000)
-const randomBigAmount = () => String((randInt(0, 10000)/100) * ether)
+
+
+const randomBigAmount = () => {
+  let ether = utils.bigNumberify("1000000000000000000")
+  let amount = utils.bigNumberify(randInt(0, 100000))
+  let bigAmount = amount.mul(ether).div("100").toString()
+
+  return bigAmount
+}
+
+
+
+
 const randomAmount = () => rand(minAmount, maxAmount)
 const randomRatio = () => rand(0, 1)
 const randomTimestamp = () => randInt(minTimeStamp, maxTimeStamp)
 const randomPrice = () => rand(minPrice, maxPrice)
-const randomHash = () => utils.sha256(utils.randomBytes(100))
+
 const randomAddress = () => randomHash().slice(0, 42);
 const randomElement = (arr) => arr[randInt(0, arr.length-1)]
 
@@ -186,12 +197,12 @@ const seed = async () => {
 
 
     //we choose a limited number of pairs
-    pairs = pairs.slice(0,3)
+    pairs = pairs.slice(0,4)
     addresses = addresses.slice(0,4)
 
     for (let i = 0; i < 200; i++) {
       let pair = randomElement(pairs)
-      let side = randomOrderSide()
+      let side = randomSide()
       let buyTokenAddress = (side == "BUY") ? pair.baseTokenAddress : pair.quoteTokenAddress
       let baseToken = pair.baseTokenAddress
       let quoteToken = pair.quoteTokenAddress
@@ -200,15 +211,16 @@ const seed = async () => {
       let sellTokenSymbol = (side == "SELL") ? pair.quoteTokenSymbol : pair.quoteTokenAddress
       let hash = randomHash()
       let status = randomOrderStatus()
-      let buyTokenAmount = randomBigAmount()
-      let sellTokenAmount = randomBigAmount()
-      let amount = (side == "BUY") ? buyTokenAmount : sellTokenAmount
+      let buyAmount = randomBigAmount()
+      let sellAmount = randomBigAmount()
+      let amount = (side == "BUY") ? buyAmount : sellAmount
       let pricepoint = String(randInt(pair.minPricepoint, pair.maxPricepoint))
       let userAddress = randomElement(addresses)
       let pairName = `${pair.baseTokenSymbol}/${pair.quoteTokenSymbol}`
       let makeFee = 0
       let takeFee = 0
       let filledAmount
+      let createdAt = new Date(faker.fake("{{date.recent}}"))
 
 
       switch(status) {
@@ -235,14 +247,15 @@ const seed = async () => {
       }
 
       let order = {
+        exchangeAddress: utils.getAddress(exchangeAddress),
         userAddress: utils.getAddress(userAddress),
         buyToken: utils.getAddress(buyTokenAddress),
         sellToken: utils.getAddress(sellTokenAddress),
         baseToken: utils.getAddress(baseToken),
         quoteToken: utils.getAddress(quoteToken),
         pairName,
-        buyTokenAmount,
-        sellTokenAmount,
+        buyAmount,
+        sellAmount,
         hash,
         side,
         status,
@@ -250,7 +263,8 @@ const seed = async () => {
         takeFee,
         amount,
         pricepoint,
-        filledAmount
+        filledAmount,
+        createdAt
       }
 
       orders.push(order)
@@ -263,21 +277,25 @@ const seed = async () => {
       let possibleTakers = addresses.filter(address => address != order.userAddress)
       let matchNum = randInt(0, 3) //each filled/partially filled order has between 0 and 3 possible orders that have been matched
       let remainingAmount = order.amount
+
       for(let i = 0; i < matchNum; i++) {
         let tradeAmount = (i == matchNum - 1) ? remainingAmount : String(randInt(0, remainingAmount))
         let taker = randomElement(possibleTakers)
         let maker = order.userAddress
         let orderHash = order.hash
+        let hash = randomHash()
         let status = randomTradeStatus()
         let txHash = ((['SUCCESS', 'ERROR'].indexOf(status) != -1) ? randomHash() : "") //txhash is only present if tx has been sent (=> success or error)
         let takerOrderHash = randomHash()
         let pairName = order.pairName
         let pricepoint = order.pricepoint
         let side = order.side
+        let createdAt = new Date(faker.fake("{{date.recent}}"))
 
         let trade = {
           taker,
           maker,
+          hash,
           baseToken: order.baseToken,
           quoteToken: order.quoteToken,
           orderHash: order.hash,
@@ -287,7 +305,8 @@ const seed = async () => {
           pairName: order.pairName,
           pricepoint: order.pricepoint,
           side: order.side,
-          amount: tradeAmount
+          amount: tradeAmount,
+          createdAt
         }
 
         trades.push(trade)
@@ -297,8 +316,6 @@ const seed = async () => {
     const ordersInsertResponse = await db.collection('orders').insertMany(orders)
     const tradeInsertResponse = await db.collection('trades').insertMany(trades)
 
-    console.log(ordersInsertResponse)
-    console.log(tradeInsertResponse)
     client.close()
 }
 
