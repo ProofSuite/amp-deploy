@@ -67,7 +67,7 @@ const seed = async () => {
       let createdAt = new Date(faker.date.between(start.toString(), end.toString()))
       let timestamp = createdAt.getTime()
       let interpolatedPricepoint = interpolatePrice(pricingData, timestamp)
-      let pricepoint = interpolatedPricepoint + interpolatedPricepoint * 0.05 * (faker.random.number(100) / 100)
+      let pricepoint = Math.floor(interpolatedPricepoint + interpolatedPricepoint * 0.05 * (faker.random.number(100) / 100)).toString()
 
       let trade = {
         taker,

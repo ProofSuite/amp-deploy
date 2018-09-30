@@ -96,8 +96,9 @@ show_mongo_menu(){
     echo -e "${MENU}${NUMBER} 11)${MENU} Seed Accounts ${NORMAL}"
     echo -e "${MENU}${NUMBER} 12)${MENU} Seed Wallets ${NORMAL}"
     echo -e "${MENU}${NUMBER} 13)${MENU} Seed Random Orders and Trades ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 14)${MENU} Seed MongoDB Test Environment ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 15)${MENU} Back ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 14)${MENU} Seed Trades ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 15)${MENU} Seed MongoDB Test Environment ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 16)${MENU} Back ${NORMAL}"
     echo -e "${MENU}*********************************************${NORMAL}"
     read opt
 
@@ -200,6 +201,13 @@ show_mongo_menu(){
       ;;
 
       14) clear;
+      write 'Seeding trades ...';
+      node ../db/seed_ohlcv_trades > /dev/null;
+      write 'Done\n';
+      show_mongo_menu;
+      ;;
+
+      15) clear;
       write 'Seeding tokens ...';
       node ../db/seed_local_network_tokens > /dev/null;
       node ../db/seed_local_network_weth > /dev/null;
@@ -213,7 +221,7 @@ show_mongo_menu(){
       show_mongo_menu;
       ;;
 
-      15) clear;
+      16) clear;
       show_menu;
       ;;
 

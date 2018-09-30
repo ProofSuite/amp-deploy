@@ -51,7 +51,7 @@ const generateTimestamps = (start, end, interval) => {
 
 
 const generatePrices = (timestamps, initialPrice, volatility) => {
-  initialPrice = initialPrice || faker.random.number(100000) / 100
+  initialPrice = initialPrice || faker.random.number(100000)
   volatility = volatility || 0.10
 
   let pricesArray = [ {timestamp: timestamps[0], price: initialPrice }]
@@ -69,7 +69,7 @@ const generatePrices = (timestamps, initialPrice, volatility) => {
 const generatePricingData = ({ start, end, interval, initialPrice, volatility }) => {
   start = start || new Date(2016, 1, 1).getTime()
   end = end || Date.now()
-  initialPrice = initialPrice || faker.random.number(100000) / 100
+  initialPrice = initialPrice || faker.random.number(100000)
   volatility = volatility || 0.05
   interval = interval || 'hour'
 
@@ -91,7 +91,6 @@ const interpolatePrice = (pricingData, timestamp) => {
   let nextPrice = pricingData[nextTimestampIndex] ? pricingData[nextTimestampIndex].price : pricingdata[pricingData.length-1].price
   let previousTimestamp = pricingData[previousTimestampIndex] ? pricingData[previousTimestampIndex].timestamp : pricingData[0].timestamp
   let nextTimestamp = pricingData[nextTimestampIndex] ? pricingData[nextTimestampIndex].timestamp : pricingData[pricingData.length - 1].timestamp
-
   let interpolatedPrice = previousPrice + (nextPrice - previousPrice) * (timestamp - previousTimestamp)/(nextTimestamp - previousTimestamp)
 
   return interpolatedPrice
