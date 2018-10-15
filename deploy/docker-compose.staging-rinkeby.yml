@@ -1,0 +1,169 @@
+# This docker compose file starts processes on remote aws instances
+# For this, docker needs to be in swarm mode with the following nodes
+# - engine
+# - rabbitmq
+# - client
+# - redis
+# - mongodb
+# - ethereum
+#  To work properly the ethereum node and other services might have
+# to be removed and simply working with external services
+
+version: '3'
+services:
+  ethereum:
+    image: ethereum/client-go
+    ports:
+      - "8546:8546"
+      - "8545:8545"
+      - "30303:30303"
+    volumes:
+      - "ethereum_root:/root/.ethereum"
+    environment:
+      - AMP_RINKEBY_ETHERBASE
+    command: [
+      "--port", "30303",
+      "--syncmode", "fast",
+      "--cache", "1024",
+      "--rinkeby",
+      "--cache", "1024",
+      "--datadir", "/root/.ethereum",
+      "--ws", "--wsport", "8546", "--wsaddr", "0.0.0.0",
+      "--rpc", "--rpcport", "8545", "--rpcaddr", "0.0.0.0",
+      "--wsorigins", "*",
+      "--wsapi", "eth,net,web3,personal",
+      "--etherbase", $AMP_RINKEBY_ETHERBASE,
+      "--rpccorsdomain", "*",
+    ]
+    networks:
+      - net
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == ethereum
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
+    networks:
+      - net
+    volumes:
+      - "redis_data:/data"
+    entrypoint: redis-server --appendonly yes
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == redis
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - '5672:5672'
+    networks:
+      - net
+    volumes:
+      - "rabbitmq_logs:/var/log/rabbitmq"
+      - "rabbitmq_data:/var/lib/rabbitmq"
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == rabbitmq
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    networks:
+    - net
+    volumes:
+    - "mongodb_data:/data/db"
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == mongodb
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+
+  client:
+    image: proofsuite/amp-client:staging
+    ports:
+      - "80:80"
+    environment:
+      - AMP_ENGINE_HTTP_URL=/engine
+      - AMP_ENGINE_WS_URL=ws://13.125.100.61/engine
+      - AMP_ETHEREUM_NODE_HTTP_URL=/ethereum/
+      - AMP_ETHEREUM_NODE_WS_URL=ws://localhost/ethereum/
+      - AMP_ETHEREUM_NETWORK_ID=4
+    depends_on:
+      - matching-engine
+      - ethereum
+    networks:
+      - net
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == client
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+    command: >
+        bin/sh -c "chmod +x ./replace.sh && sleep 1 && ./replace.sh && cat /usr/share/nginx/html/env.js && nginx -g 'daemon off;'"
+
+
+  matching-engine:
+    image: proofsuite/amp-matching-engine:staging
+    ports:
+      - '8081:8081'
+    depends_on:
+      - redis
+      - rabbitmq
+      - mongodb
+    environment:
+      - AMP_ETHEREUM_NODE_HTTP_URL=http://ethereum:8545
+      - AMP_ETHEREUM_NODE_WS_URL=ws://ethereum:8546
+      - AMP_MONGO_URL=mongodb
+      - AMP_MONGO_DBNAME=proofdex
+      - AMP_REDIS_URL=redis://redis:6379
+      - AMP_RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+      - AMP_EXCHANGE_CONTRACT_ADDRESS=${AMP_RINKEBY_EXCHANGE_CONTRACT_ADDRESS}
+      - AMP_WETH_CONTRACT_ADDRESS=${AMP_RINKEBY_WETH_CONTRACT_ADDRESS}
+      - AMP_FEE_ACCOUNT_ADDRESS=${AMP_RINKEBY_FEE_ACCOUNT_ADDRESS}
+    networks:
+      - net
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == matching-engine
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+
+
+networks:
+  net:
+    external:
+      name: amp
+
+volumes:
+  ethereum_root:
+  rabbitmq_logs:
+  rabbitmq_data:
+  redis_data:
+  mongodb_data:

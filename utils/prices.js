@@ -3,6 +3,7 @@ const dateFns = require('date-fns')
 const volatility = 0.05
 
 const rand = () => faker.random.number(100) / 100
+const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
 const computeNextPrice = (oldPrice) => {
   let changePercent = 2 * volatility * rand()
@@ -51,8 +52,8 @@ const generateTimestamps = (start, end, interval) => {
 
 
 const generatePrices = (timestamps, initialPrice, volatility) => {
-  initialPrice = initialPrice || faker.random.number(100000)
-  volatility = volatility || 0.10
+  initialPrice = initialPrice || randInt(10000, 10000000)
+  volatility = volatility || 0.03
 
   let pricesArray = [ {timestamp: timestamps[0], price: initialPrice }]
 
@@ -69,12 +70,13 @@ const generatePrices = (timestamps, initialPrice, volatility) => {
 const generatePricingData = ({ start, end, interval, initialPrice, volatility }) => {
   start = start || new Date(2016, 1, 1).getTime()
   end = end || Date.now()
-  initialPrice = initialPrice || faker.random.number(100000)
-  volatility = volatility || 0.05
+  initialPrice = initialPrice || randInt(10000, 10000000)
+  // initialPrice = initialPrice || faker.random.number(100000)
+  volatility = volatility || 0.03
   interval = interval || 'hour'
 
   let timestamps = generateTimestamps(start, end, interval)
-  let pricingData = generatePrices(timestamps)
+  let pricingData = generatePrices(timestamps, initialPrice)
 
   return pricingData
 }

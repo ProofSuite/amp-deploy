@@ -1,0 +1,186 @@
+# This docker-compose file runs the following services
+# - matching-engine
+# - client
+# - mongodb
+# - rabbitmq
+# - redis
+# - ethereum
+# You are assuming to be running an ethereum node on your localhost
+# with the contracts deployed
+
+
+version: '3'
+services:
+  matching-engine:
+    image: amp-engine
+    ports:
+      - "8081:8081"
+    environment:
+      - AMP_ETHEREUM_NODE_URL=ws://ethereum:8546
+      - AMP_MONGO_URL=mongodb
+      - AMP_MONGO_DBNAME
+      - AMP_REDIS_URL=redis://redis:6379
+      - AMP_RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+      - AMP_EXCHANGE_CONTRACT_ADDRESS=${AMP_EXCHANGE_CONTRACT_ADDRESS}
+      - AMP_WETH_CONTRACT_ADDRESS=${AMP_WETH_CONTRACT_ADDRESS}
+      - AMP_FEE_ACCOUNT_ADDRESS=${AMP_FEE_ACCOUNT_ADDRESS}
+    depends_on:
+      - mongodb
+      - rabbitmq
+      - redis
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+
+  client:
+    image: amp-client:latest
+    container_name: "client"
+    ports:
+      - "80:80"
+    environment:
+      - AMP_ENGINE_HTTP_URL=/engine
+      - AMP_ENGINE_WS_URL=ws://localhost/engine
+      - AMP_ETHEREUM_NODE_HTTP_URL=/ethereum/
+      - AMP_ETHEREUM_NODE_WS_URL=ws://localhost/ethereum/
+      - AMP_ETHEREUM_NETWORK_ID=8888
+    depends_on:
+      - matching-engine
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+    command: >
+       bin/sh -c "chmod +x ./replace.sh && ./replace.sh && cat /usr/share/nginx/html/env.js && nginx -g 'daemon off;'"
+
+
+
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    volumes:
+      - ${AMP_MONGO_DBPATH}:/data/db
+    ports:
+      - '27017:27017'
+    restart_policy:
+      condition: on-failure
+      max_attempts: 3
+      window: 120s
+
+  rabbitmq:
+    image: rabbitmq
+    container_name: "rabbitmq"
+    ports:
+      - '5672:5672'
+    restart_policy:
+      condition: on-failure
+      max_attempts: 3
+      window: 120s
+
+  redis:
+    image: redis
+    container_name: "redis"
+    ports:
+      - '6379:6379'
+    restart_policy:
+      condition: on-failure
+      max_attempts: 3
+      window: 120s
+
+  ethereum:
+    image: ethereum/client-go
+    container_name: "ethereum"
+    ports:
+      - "8546:8546"
+      - "8545:8545"
+      - "30303:30303"
+    volumes:
+      - ${AMP_ETHEREUM_DATADIR}:/root/.ethereum
+      - ${AMP_ETHEREUM_DAG}:/root/.ethash
+      - ${AMP_ETHEREUM_GENESIS}:/root/genesis.json
+      - ${AMP_ETHEREUM_DAG_CACHE}:/root/.ethereum/geth/ethash
+    command: [
+      "--datadir", "/root/.ethereum",
+      "--networkid", "8888",
+      "--maxpeers", "0",
+      "--ws", "--wsport", "8546", "--wsaddr", "0.0.0.0",
+      "--rpc", "--rpcport", "8545", "--rpcaddr", ethereum,
+      "--wsorigins", "*",
+      "--wsapi", "eth,net,web3,personal",
+      "--etherbase", $AMP_ETHERBASE,
+      "--rpccorsdomain", "*",
+    ]
+    restart_policy:
+      condition: on-failure
+      max_attempts: 3
+      window: 120s
+
+
+
+
+
+
+# version: '2'
+# services:
+#   matching-engine:
+#     container_name: "matching-engine"
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     ports:
+#       - '8081:8081'
+#     links:
+#       - redis
+#       - rabbitmq
+#       - mongodb
+#     depends_on:
+#       - redis
+#       - rabbitmq
+#       - mongodb
+
+#   rabbitmq:
+#     container_name: "rabbitmq"
+#     image: rabbitmq
+#     ports:
+#       - '5672:5672'
+
+#   redis:
+#     container_name: "redis"
+#     image: redis
+#     ports:
+#       - '6379:6379'
+
+#   mongodb:
+#     image: mongo:latest
+#     container_name: "mongodb"
+#     ports:
+#       - '27017:27017'
+
+
+#   mongodb-seed:
+#     image: mongo:latest
+#     container_name: "mongodb-seed"
+#     links:
+#       - mongodb
+#     volumes:
+#       - ./utils/seed-data:/utils/seed-data
+#     depends_on:
+#       - mongodb
+#     command:
+#       - /bin/sh
+#       - -c
+#       - |
+#         mongo proofdex --eval "db.dropDatabase()"
+#         mongoimport --host mongodb --db proofdex --type json --file utils/seed-data/tokens.json
+#         mongoimport --host mongodb --db proofdex --type json --file utils/seed-data/pairs.json
+#         mongoimport --host mongodb --db proofdex --type json --file utils/seed-data/accounts.json
+
+# # USEFUL COMMANDS TO BE REINCLUDED LATER
+
+# # environment:
+#     #   - MONGO_DATA_DIR=/data/db
+#     #   - MONGO_LOG_DIR=/dev/null
+
+# # command: mongod --smallfiles /--logpath=/dev/null
