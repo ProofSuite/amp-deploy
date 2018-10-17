@@ -63,7 +63,7 @@ docker-machine create --driver amazonec2 \
   --amazonec2-open-port 8545 \
   --amazonec2-open-port 8546 \
   --amazonec2-open-port 30303 \
-  --amazonec2-instance-type="t2.micro" \
+  --amazonec2-instance-type="t2.medium" \
   --amazonec2-region ap-northeast-2 \
   ethereum
 

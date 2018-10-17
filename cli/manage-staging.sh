@@ -12,69 +12,10 @@ if [[ $(which rabbitmqadmin) == "rabbitmqadmin not found" ]]; then
   echo "rabbitmqadmin is missing"
 fi
 
-show_environment_menu(){
-    NORMAL=`echo "\033[m"`
-    MENU=`echo "\033[36m"` #Blue
-    NUMBER=`echo "\033[33m"` #yellow
-    FGRED=`echo "\033[41m"`
-    RED_TEXT=`echo "\033[31m"`
-    ENTER_LINE=`echo "\033[33m"`
-    echo -e "${MENU}*********************************************${NORMAL}"
-    echo -e "${MENU}${NUMBER} 1)${MENU} Local Environment ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 2)${MENU} Staging Environment ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 3)${MENU} Mainnet Environment ${NORMAL}"
-    echo -e "${MENU}*********************************************${NORMAL}"
-    read opt
-
-  while [ opt != '' ]
-  do
-    if [[ $opt = "" ]]; then
-      exit;
-    else
-      case $opt in
-      1) clear;
-      write_header "Local Environment";
-      MONGODB_URL='mongodb://localhost:27017'
-      REDIS_URL='redis://localhost:6379'
-      RABBITMQ_URL='amqp://guest:guest@localhost:5672/'
-      AMP_ENVIRONMENT='local'
-
-      show_menu
-      ;;
-
-      2) clear;
-      write_header "Staging Environment";
-      MONGODB_URL='mongodb://'$(docker-machine ip mongodb)':27017';
-      REDIS_URL='redis://'$(docker-machine ip redis)':6379';
-      RABBITMQ_URL='ampq://guest:guest@'$(docker-machine ip rabbitmq)':5672';
-      AMP_ENVIRONMENT='staging'
-
-      show_menu
-      ;;
-
-      3) clear;
-      write_header "Production Environment";
-      MONGODB_URL='mongodb://'$(docker-machine ip mongodb)':27017';
-      REDIS_URL='redis://'$(docker-machine ip redis)':6379';
-      RABBITMQ_URL='ampq://guest:guest@'$(docker-machine ip rabbitmq)':5672';
-      AMP_ENVIRONMENT='production'
-      show_menu
-      ;;
-
-      x)exit;
-      ;;
-
-      \n)exit;
-      ;;
-
-      *)clear;
-      write_header "Choose option";
-      show_menu;
-      ;;
-      esac
-    fi
-  done
-}
+MONGODB_URL='mongodb://'$(docker-machine ip mongodb)':27017';
+REDIS_URL='redis://'$(docker-machine ip redis)':6379';
+RABBITMQ_URL='ampq://guest:guest@'$(docker-machine ip rabbitmq)':5672';
+AMP_ENVIRONMENT='staging'
 
 
 show_menu(){
@@ -155,16 +96,15 @@ show_mongo_menu(){
     echo -e "${MENU}${NUMBER} 5)${MENU} Drop Wallets ${NORMAL}"
     echo -e "${MENU}${NUMBER} 6)${MENU} Drop Orders ${NORMAL}"
     echo -e "${MENU}${NUMBER} 7)${MENU} Drop Trades ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 8)${MENU} Seed Tokens (ChainID = 8888) ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 9)${MENU} Seed Tokens (ChainID = 1000) ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 10)${MENU} Seed Pairs ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 11)${MENU} Seed Accounts ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 12)${MENU} Seed Wallets ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 13)${MENU} Seed Random Orders and Trades ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 14)${MENU} Seed Random Trades ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 15)${MENU} Seed MongoDB Test Environment ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 16)${MENU} Seed Random Orders ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 17)${MENU} Back ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 8)${MENU} Seed Tokens ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 9)${MENU} Seed Pairs ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 10)${MENU} Seed Accounts ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 11)${MENU} Seed Wallets ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 12)${MENU} Seed Random Orders and Trades ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 13)${MENU} Seed Random Trades ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 14)${MENU} Seed MongoDB Test Environment ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 15)${MENU} Seed Random Orders ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 16)${MENU} Back ${NORMAL}"
     echo -e "${MENU}*********************************************${NORMAL}"
     read opt
 
@@ -176,48 +116,48 @@ show_mongo_menu(){
       case $opt in
       1) clear;
       write "Dropping Database";
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/drop_db > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/common/drop_db > /dev/null;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       2) clear;
       write "Dropping Pairs";
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/drop_pairs > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/common/drop_pairs > /dev/null;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       3) clear;
       write "Dropping Tokens";
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/drop_tokens > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/common/drop_tokens > /dev/null;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       4) clear;
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/drop_accounts > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/common/drop_accounts > /dev/null;
       write_header "Dropped Accounts";
       show_mongo_menu;
       ;;
 
       5) clear;
       write 'Dropping wallets ';
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/drop_wallets > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/common/drop_wallets > /dev/null;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       6) clear;
       write 'Dropping orders collection...';
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/drop_orders > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/common/drop_orders > /dev/null;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       7) clear;
       write 'Dropping trades collection...'
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/drop_trades > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/common/drop_trades > /dev/null;
       write 'Done\n';
       show_mongo_menu;
       ;;
@@ -225,111 +165,69 @@ show_mongo_menu(){
       # Seed tokens
       8) clear;
       write 'Seeding tokens...';
-      case "$AMP_ENVIRONMENT" in
-      "local")
-      MONGODB_URL=$MONGODB_URL node ../db/common/seed_local_network_tokens > /dev/null;
-      MONGODB_URL=$MONGODB_URL node ../db/common/seed_local_network_weth > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_tokens > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_quotes > /dev/null;
       write 'Done\n';
       show_mongo_menu;
-      ;;
-
-      "staging")
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_ganache_network_tokens > /dev/null;
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_ganache_network_weth > /dev/null;
-      write 'Done\n';
-      show_mongo_menu;
-      ;;
-
-      "production")
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/mainnet/seed_ganache_network_tokens > /dev/null;
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/mainnet/seed_ganache_network_weth > /dev/null;
-      write 'Done\n';
-      show_mongo_menu;
-      ;;
-
-      *)clear;
-      show_menu;
-      ;;
-      esac
       ;;
 
       9) clear;
       write 'Seeding pairs...';
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/seed_pairs > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_pairs > /dev/null;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       10) clear;
       write 'Seeding accounts...';
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/seed_accounts > /dev/null;
+      MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_accounts > /dev/null;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       11) clear;
       write 'Seeding wallets...';
-      case "$AMP_ENVIRONMENT" in
-      "local")
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/local/seed_wallets > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_wallets > /dev/null;
       write 'Done\n';
       show_mongo_menu;
-      ;;
-
-      "staging")
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_wallets > /dev/null;
-      write 'Done\n';
-      show_mongo_menu;
-      ;;
-
-      "production")
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/mainnet/seed_wallets > /dev/null;
-      write 'Done\n';
-      show_mongo_menu;
-      ;;
-
-      *)clear;
-      show_menu;
-      ;;
-      esac
       ;;
 
       12) clear;
       write 'Seeding random orders and trades...';
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/seed_random_orders_and_trades > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_random_orders_and_trades > /dev/null;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       13) clear;
       write 'Seeding trades ...';
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/seed_ohlcv_trades > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/seed_ohlcv_trades > /dev/null;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       14) clear;
       write 'Seeding tokens ...';
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/seed_local_network_tokens > /dev/null;
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/seed_local_network_weth > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_tokens > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_quotes > /dev/null;
       write 'Seeding pairs ...';
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/seed_pairs > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_pairs > /dev/null;
       write 'Seeding wallets ...';
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/seed_wallets > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_wallets > /dev/null;
       write 'Seeding accounts ...';
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/seed_accounts > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_accounts > /dev/null;
       write 'Done\n'
       show_mongo_menu;
       ;;
 
-      16) clear;
+      15) clear;
       write 'Seeding orders ...';
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/seed_random_orders > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_random_orders > /dev/null;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
-      17) clear;
+      16) clear;
       show_menu;
       ;;
 
@@ -375,37 +273,37 @@ show_inspect_mongo_menu(){
     else
       case $opt in
       1) clear;
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/query_tokens | less ;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/common/query_tokens | less ;
       show_inspect_mongo_menu;
       ;;
 
       2) clear;
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/query_raw_orderbook | less;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/common/query_raw_orderbook | less;
       show_inspect_mongo_menu;
       ;;
 
       3) clear;
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/query_orderbook | less;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/common/query_orderbook | less;
       show_inspect_mongo_menu;
       ;;
 
       4) clear;
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/query_pairs | less;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/common/query_pairs | less;
       show_inspect_mongo_menu;
       ;;
 
       5) clear;
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/query_orders | less;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/common/query_orders | less;
       show_inspect_mongo_menu;
       ;;
 
       6) clear;
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/query_trades | less;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/common/query_trades | less;
       show_inspect_mongo_menu;
       ;;
 
       7) clear;
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/query_addresses | less;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/common/query_addresses | less;
       show_inspect_mongo_menu;
       ;;
 
@@ -651,4 +549,4 @@ write_header(){
 }
 
 clear
-show_environment_menu
+show_menu

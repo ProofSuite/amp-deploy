@@ -1,9 +1,9 @@
-const { keys } = require('../data/keys.json')
+const { keys } = require('./keys.json')
 const ethers = require('ethers')
 const utils = ethers.utils
 const Wallet = ethers.Wallet
 const MongoClient = require('mongodb').MongoClient
-const url = process.env.AMP_MONGODB_URL || 'mongodb://localhost:27017'
+const url = process.env.MONGODB_URL || 'mongodb://localhost:27017'
 
 let client, db, documents, response
 

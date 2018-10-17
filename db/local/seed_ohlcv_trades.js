@@ -1,10 +1,11 @@
+let { addresses } = require('./addresses.json')
+
 const utils = require('ethers').utils
 const MongoClient = require('mongodb').MongoClient
 const faker = require('faker')
-const url = process.env.AMP_MONGODB_URL || 'mongodb://localhost:27017'
-const { generatePricingData, interpolatePrice } = require('../utils/prices')
+const url = process.env.MONGODB_URL || 'mongodb://localhost:27017'
+const { generatePricingData, interpolatePrice } = require('../../utils/prices')
 
-let { addresses } = require('../data/addresses.json')
 let exchangeAddress = '0x7400d4d4263a3330beeb2a0d2674f0456054f217'
 let minAmount = 0.1
 let maxAmount = 10000

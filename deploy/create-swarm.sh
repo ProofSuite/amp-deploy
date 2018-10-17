@@ -22,4 +22,4 @@ docker swarm join --token $manager_token $(docker-machine ip client):2377
 eval $(docker-machine env ethereum)
 docker swarm join --token $manager_token $(docker-machine ip client):2377
 
-docker network create --driver overlay --attachable amp
+docker network create --driver overlay --subnet 172.20.0.0/16 --attachable amp

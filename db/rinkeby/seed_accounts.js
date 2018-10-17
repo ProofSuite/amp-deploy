@@ -1,7 +1,7 @@
-const { addresses } = require('../data/addresses.json')
+const { addresses } = require('./addresses.json')
 const utils = require('ethers').utils
 const MongoClient = require('mongodb').MongoClient
-const url = process.env.AMP_MONGODB_URL || 'mongodb://localhost:27017'
+const url = process.env.MONGODB_URL || 'mongodb://localhost:27017'
 
 const randInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -39,6 +39,8 @@ const seed = async () => {
           pendingBalance: "0",
         }
       })
+
+      console.log(tokens)
 
       account.tokenBalances = tokenBalances
       account.isBlocked = false

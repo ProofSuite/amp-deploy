@@ -1,0 +1,10 @@
+{
+  "WETH": {
+    "symbol": "WETH",
+    "address": "0x9699cbb8e54ed3d37a416aaf971dd5674b1f9913"
+  },
+  "DAI": {
+    "symbol": "DAI",
+    "address": "0x6ea72b980853ecd43b3e447018f69f15153482da"
+  }
+}

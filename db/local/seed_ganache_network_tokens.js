@@ -1,17 +1,13 @@
-// const tokens = require('../data/tokens.json')
+const tokens = require('./tokens.json')
 const utils = require('ethers').utils
 const path = require('path')
 const MongoClient = require('mongodb').MongoClient
-const url = process.env.AMP_MONGODB_URL || 'mongodb://localhost:27017'
+const url = process.env.MONGODB_URL || 'mongodb://localhost:27017'
 
 const fs = require('fs')
 const process = require('process')
 
-const truffleBuildPath = process.argv[2] || path.resolve('../../amp-dex/build/contracts/')
-// const truffleBuildPath = path.resolve('../amp-dex/build/contracts/')
-
-console.log(truffleBuildPath)
-
+const truffleBuildPath = process.argv[2] || path.join(`${process.env.AMP_DEX_PATH}`, `/build/contracts`)
 let documents = []
 
 

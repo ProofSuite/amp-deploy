@@ -26,6 +26,8 @@ export AMP_WETH_CONTRACT_ADDRESS='0x24c7db6f5da8310212c0ce7a2a390bedad37c829'
 export AMP_FEE_ACCOUNT_ADDRESS='0xe8e84ee367bc63ddb38d3d01bccef106c194dc47'
 
 # These variables are used for the staging/rinkeby environment. You can leave these variables as they are in the template
+export AMP_RINKEBY_ETHEREUM_NODE_IP=''
+export AMP_RINKEBY_MATCHING_ENGINE_IP=''
 export AMP_RINKEBY_ETHERBASE='0xcc5697310277bcc3be506f53ed8aafc9d17a2c18'
 export AMP_RINKEBY_EXCHANGE_CONTRACT_ADDRESS='0x9cc2feea9a0a8851ecea0f5d10f164e4642a2e4c'
 export AMP_RINKEBY_WETH_CONTRACT_ADDRESS='0xa2c04faee0c109ac75191432ca836844228f36db'
@@ -34,6 +36,8 @@ export AMP_RINKEBY_INFURA_NODE_HTTP_URL='https://mainnet.infura.io'
 export AMP_RINKEBY_INFURA_NODE_WS_URL='wss://rinkeby.infura.io/ws'
 
 # These variables are used for the mainnet environment. You can leave these variables as they are in the template
+export AMP_MAINNET_ETHEREUM_IP=''
+export AMP_MAINNET_MATCHING_ENGINE_IP=''
 export AMP_MAINNET_ETHERBASE=''
 export AMP_MAINNET_EXCHANGE_CONTRACT_ADDRESS=''
 export AMP_MAINNET_WETH_CONTRACT_ADDRESS=''
