@@ -7,6 +7,8 @@
 # - ethereum
 # You are assuming to be running an ethereum node on your localhost
 # with the contracts deployed
+# Currently in the process of creating images that reload upon code changes
+# Using this configuration is currently impractical for local development
 
 
 version: '3'

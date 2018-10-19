@@ -147,8 +147,8 @@ services:
     environment:
       - AMP_ETHEREUM_NODE_HTTP_URL=http://ethereum:8545
       - AMP_ETHEREUM_NODE_WS_URL=ws://ethereum:8546
-      - AMP_MONGO_URL=mongodb
-      - AMP_MONGO_DBNAME=proofdex
+      - AMP_MONGODB_URL=mongodb
+      - AMP_MONGODB_DBNAME=proofdex
       - AMP_REDIS_URL=redis://redis:6379
       - AMP_RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
       - AMP_EXCHANGE_CONTRACT_ADDRESS=${AMP_RINKEBY_EXCHANGE_CONTRACT_ADDRESS}

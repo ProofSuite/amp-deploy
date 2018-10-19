@@ -1,6 +1,5 @@
 # This scripts deploys the amp-client:develop and amp-matching-engine:develop images
 # The following environment variables preferably need to be set
-
 AMP_RINKEBY_MATCHING_ENGINE_IP=${AMP_RINKEBY_MATCHING_ENGINE_IP:-'13.125.100.61'} \
 AMP_RINKEBY_CLIENT_IP=${AMP_RINKEBY_CLIENT_IP:-'13.125.177.169'} \
 AMP_RINKEBY_ETHEREUM_IP=${AMP_RINKEBY_ETHEREUM_IP:-'13.125.62.193'} \

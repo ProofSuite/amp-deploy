@@ -10,7 +10,6 @@ const query = async () => {
     db = client.db('proofdex')
 
     const pairs = await db.collection('pairs').find({ 'baseTokenSymbol': 'PRFT' }).toArray()
-    console.log(pairs)
     const pair = pairs[0]
 
     const bids = await db.collection('orders').aggregate([

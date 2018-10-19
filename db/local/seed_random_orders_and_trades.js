@@ -87,6 +87,7 @@ const randomSide = () => (randInt(0, 1) === 1 ? 'BUY' : 'SELL')
 const randomOrderType = () => orderTypes[randInt(0, orderTypes.length -1 )]
 const randomPair = () => pairs[randInt(0, 5)]
 const randomFee = () => rand(10000, 100000)
+const randomHash = () => utils.sha256(utils.randomBytes(100))
 
 
 const randomBigAmount = () => {
