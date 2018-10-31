@@ -201,7 +201,7 @@ show_mongo_menu(){
 
       13) clear;
       write 'Seeding trades ...';
-      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/seed_ohlcv_trades > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_random_trades > /dev/null;
       write 'Done\n';
       show_mongo_menu;
       ;;
@@ -213,9 +213,7 @@ show_mongo_menu(){
       write 'Seeding pairs ...';
       AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_pairs > /dev/null;
       write 'Seeding wallets ...';
-      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_wallets > /dev/null;
-      write 'Seeding accounts ...';
-      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_accounts > /dev/null;
+      AMP_ENVIRONMENT='staging' MONGODB_URL=$MONGODB_URL node ../db/rinkeby/seed_rinkeby_operator_wallets > /dev/null;
       write 'Done\n'
       show_mongo_menu;
       ;;

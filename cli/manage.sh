@@ -97,8 +97,9 @@ show_mongo_menu(){
     echo -e "${MENU}${NUMBER} 12)${MENU} Seed Random Orders and Trades ${NORMAL}"
     echo -e "${MENU}${NUMBER} 13)${MENU} Seed Random Trades ${NORMAL}"
     echo -e "${MENU}${NUMBER} 14)${MENU} Seed MongoDB Test Environment ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 15)${MENU} Seed Random Orders ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 16)${MENU} Back ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 15)${MENU} Seed Rinkeby MongoDB Test Environment ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 16)${MENU} Seed Random Orders ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 17)${MENU} Back ${NORMAL}"
     echo -e "${MENU}*********************************************${NORMAL}"
     read opt
 
@@ -215,13 +216,26 @@ show_mongo_menu(){
       ;;
 
       15) clear;
+      write 'Seeding tokens ...';
+      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/local/seed_rinkeby_tokens > /dev/null;
+      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/local/seed_rinkeby_quotes > /dev/null;
+      write 'Seeding pairs ...';
+      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/local/seed_pairs > /dev/null;
+      write 'Seeding wallets ...';
+      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/local/seed_rinkeby_wallets > /dev/null;
+      write 'Done\n'
+      show_mongo_menu;
+      ;;
+
+
+      16) clear;
       write 'Seeding orders ...';
       AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/seed_random_orders > /dev/null;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
-      16) clear;
+      17) clear;
       show_menu;
       ;;
 
