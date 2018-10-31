@@ -113,8 +113,8 @@ services:
       - "80:80"
     environment:
       - AMP_ENGINE_HTTP_URL=/engine
-      - AMP_ETHEREUM_NODE_HTTP_URL=https://rinkeby.infura.io
       - AMP_ENGINE_WS_URL=ws://${AMP_RINKEBY_MATCHING_ENGINE_IP:-13.125.100.61}:8081
+      - AMP_ETHEREUM_NODE_HTTP_URL=https://rinkeby.infura.io
       - AMP_ETHEREUM_NODE_WS_URL=wss://rinkeby.infura.io/_ws
       - AMP_ETHEREUM_NETWORK_ID=4
     depends_on:
