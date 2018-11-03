@@ -652,6 +652,25 @@ const WETH = [
 
 const Exchange = [
   {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "baseTokens",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "constant": false,
     "inputs": [
       {
@@ -705,6 +724,25 @@ const Exchange = [
   },
   {
     "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "quoteTokens",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [],
     "name": "wethToken",
     "outputs": [
@@ -725,6 +763,37 @@ const Exchange = [
       {
         "name": "",
         "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "name": "pairs",
+    "outputs": [
+      {
+        "name": "pairID",
+        "type": "bytes32"
+      },
+      {
+        "name": "baseToken",
+        "type": "address"
+      },
+      {
+        "name": "quoteToken",
+        "type": "address"
+      },
+      {
+        "name": "pricepointMultiplier",
+        "type": "uint256"
       }
     ],
     "payable": false,
@@ -848,34 +917,14 @@ const Exchange = [
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "name": "taker",
-        "type": "address"
-      },
-      {
         "indexed": false,
-        "name": "tokenSell",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "tokenBuy",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "orderHashes",
+        "name": "makerOrderHashes",
         "type": "bytes32[]"
       },
       {
         "indexed": false,
-        "name": "tradeHashes",
+        "name": "takerOrderHashes",
         "type": "bytes32[]"
-      },
-      {
-        "indexed": false,
-        "name": "filledAmounts",
-        "type": "uint256[]"
       },
       {
         "indexed": true,
@@ -958,12 +1007,12 @@ const Exchange = [
       },
       {
         "indexed": false,
-        "name": "orderHash",
+        "name": "makerOrderHash",
         "type": "bytes32"
       },
       {
         "indexed": false,
-        "name": "tradeHash",
+        "name": "takerOrderHash",
         "type": "bytes32"
       }
     ],
@@ -1070,6 +1119,109 @@ const Exchange = [
     "constant": false,
     "inputs": [
       {
+        "name": "_baseToken",
+        "type": "address"
+      },
+      {
+        "name": "_quoteToken",
+        "type": "address"
+      },
+      {
+        "name": "_pricepointMultiplier",
+        "type": "uint256"
+      }
+    ],
+    "name": "registerPair",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "registerBaseToken",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "registerQuoteToken",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "deleteBaseToken",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "deleteQuoteToken",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
         "name": "_wethToken",
         "type": "address"
       }
@@ -1132,11 +1284,15 @@ const Exchange = [
     "inputs": [
       {
         "name": "orderValues",
-        "type": "uint256[8][]"
+        "type": "uint256[10][]"
       },
       {
         "name": "orderAddresses",
         "type": "address[4][]"
+      },
+      {
+        "name": "amounts",
+        "type": "uint256[]"
       },
       {
         "name": "v",
@@ -1163,11 +1319,15 @@ const Exchange = [
     "inputs": [
       {
         "name": "orderValues",
-        "type": "uint256[8]"
+        "type": "uint256[10]"
       },
       {
         "name": "orderAddresses",
         "type": "address[4]"
+      },
+      {
+        "name": "amount",
+        "type": "uint256"
       },
       {
         "name": "v",
@@ -1178,80 +1338,7 @@ const Exchange = [
         "type": "bytes32[4]"
       }
     ],
-    "name": "executeTrade",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes32"
-      },
-      {
-        "name": "",
-        "type": "bytes32"
-      },
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "orderValues",
-        "type": "uint256[6][]"
-      },
-      {
-        "name": "orderAddresses",
-        "type": "address[3][]"
-      },
-      {
-        "name": "v",
-        "type": "uint8[]"
-      },
-      {
-        "name": "r",
-        "type": "bytes32[]"
-      },
-      {
-        "name": "s",
-        "type": "bytes32[]"
-      }
-    ],
-    "name": "batchCancelOrders",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "orderValues",
-        "type": "uint256[6]"
-      },
-      {
-        "name": "orderAddresses",
-        "type": "address[3]"
-      },
-      {
-        "name": "v",
-        "type": "uint8"
-      },
-      {
-        "name": "r",
-        "type": "bytes32"
-      },
-      {
-        "name": "s",
-        "type": "bytes32"
-      }
-    ],
-    "name": "cancelOrder",
+    "name": "executeSingleTrade",
     "outputs": [
       {
         "name": "",
@@ -1266,35 +1353,19 @@ const Exchange = [
     "constant": false,
     "inputs": [
       {
-        "name": "orderHash",
+        "name": "orderAddresses",
+        "type": "address[4]"
+      },
+      {
+        "name": "makerOrderHashes",
         "type": "bytes32[]"
       },
       {
-        "name": "amount",
-        "type": "uint256[]"
-      },
-      {
-        "name": "tradeNonce",
-        "type": "uint256[]"
-      },
-      {
-        "name": "taker",
-        "type": "address[]"
-      },
-      {
-        "name": "v",
-        "type": "uint8[]"
-      },
-      {
-        "name": "r",
-        "type": "bytes32[]"
-      },
-      {
-        "name": "s",
+        "name": "takerOrderHashes",
         "type": "bytes32[]"
       }
     ],
-    "name": "batchCancelTrades",
+    "name": "emitLog",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -1304,36 +1375,82 @@ const Exchange = [
     "constant": false,
     "inputs": [
       {
-        "name": "orderHash",
-        "type": "bytes32"
+        "name": "orderAddresses",
+        "type": "address[4]"
+      }
+    ],
+    "name": "validatePair",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "orderValues",
+        "type": "uint256[10]"
+      },
+      {
+        "name": "orderAddresses",
+        "type": "address[4]"
+      },
+      {
+        "name": "v",
+        "type": "uint8[2]"
+      },
+      {
+        "name": "rs",
+        "type": "bytes32[4]"
+      }
+    ],
+    "name": "validateSignatures",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "orderValues",
+        "type": "uint256[10]"
+      },
+      {
+        "name": "orderAddresses",
+        "type": "address[4]"
       },
       {
         "name": "amount",
         "type": "uint256"
       },
       {
-        "name": "tradeNonce",
+        "name": "pricepointMultiplier",
         "type": "uint256"
-      },
-      {
-        "name": "taker",
-        "type": "address"
-      },
-      {
-        "name": "v",
-        "type": "uint8"
-      },
-      {
-        "name": "r",
-        "type": "bytes32"
-      },
-      {
-        "name": "s",
-        "type": "bytes32"
       }
     ],
-    "name": "cancelTrade",
+    "name": "executeTrade",
     "outputs": [
+      {
+        "name": "",
+        "type": "bytes32"
+      },
+      {
+        "name": "",
+        "type": "bytes32"
+      },
       {
         "name": "",
         "type": "bool"

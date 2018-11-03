@@ -46,4 +46,4 @@ files.forEach((file, index) => {
   }
 });
 
-fs.writeFileSync('./addresses.json', JSON.stringify(contracts), 'utf8');
+fs.writeFileSync('./contract_addresses.json', JSON.stringify(contracts), 'utf8');
