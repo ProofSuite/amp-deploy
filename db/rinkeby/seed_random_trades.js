@@ -12,7 +12,6 @@ let maxAmount = 10000
 let ether = 1e18
 
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
-const randomSide = () => (randInt(0, 1) === 1 ? 'BUY' : 'SELL')
 const randomHash = () => utils.sha256(utils.randomBytes(100))
 const randomElement = (arr) => arr[randInt(0, arr.length-1)]
 
@@ -57,14 +56,13 @@ const seed = async () => {
     for (let i = 0; i < numberOfOrders; i++) {
       let taker = randomElement(addresses)
       let maker = randomElement(addresses.filter(address => address !== taker))
-      let orderHash = randomHash()
+      let makerOrderHash = randomHash()
       let hash = randomHash()
       let amount = randomBigAmount()
       let status = 'SUCCESS'
       let txHash = randomHash()
       let takerOrderHash = randomHash()
       let pairName = `${pair.baseTokenSymbol}/${pair.quoteTokenSymbol}`
-      let side = randomSide()
       let createdAt = new Date(faker.date.between(start.toString(), end.toString()))
       let timestamp = createdAt.getTime()
       let interpolatedPricepoint = interpolatePrice(pricingData, timestamp)
@@ -76,13 +74,12 @@ const seed = async () => {
         hash,
         baseToken: pair.baseTokenAddress,
         quoteToken: pair.quoteTokenAddress,
-        orderHash,
+        makerOrderHash,
         status,
         txHash,
         takerOrderHash,
         pairName,
         pricepoint,
-        side,
         amount,
         createdAt
       }

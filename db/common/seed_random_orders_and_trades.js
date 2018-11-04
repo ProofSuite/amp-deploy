@@ -202,17 +202,11 @@ const seed = async () => {
     for (let i = 0; i < 200; i++) {
       let pair = randomElement(pairs)
       let side = randomSide()
-      let buyTokenAddress = (side == "BUY") ? pair.baseTokenAddress : pair.quoteTokenAddress
       let baseToken = pair.baseTokenAddress
       let quoteToken = pair.quoteTokenAddress
-      let sellTokenAddress = (side == "SELL") ? pair.quoteTokenAddress : pair.baseTokenAddress
-      let buyTokenSymbol = (side == "BUY") ? pair.baseTokenSymbol : pair.quoteTokenSymbol
-      let sellTokenSymbol = (side == "SELL") ? pair.quoteTokenSymbol : pair.quoteTokenAddress
       let hash = randomHash()
       let status = randomOrderStatus()
-      let buyAmount = randomBigAmount()
-      let sellAmount = randomBigAmount()
-      let amount = (side == "BUY") ? buyAmount : sellAmount
+      let amount = randomBigAmount()
       let pricepoint = String(randInt(pair.minPricepoint, pair.maxPricepoint))
       let userAddress = randomElement(addresses)
       let pairName = `${pair.baseTokenSymbol}/${pair.quoteTokenSymbol}`
@@ -248,13 +242,9 @@ const seed = async () => {
       let order = {
         exchangeAddress: utils.getAddress(exchangeAddress),
         userAddress: utils.getAddress(userAddress),
-        buyToken: utils.getAddress(buyTokenAddress),
-        sellToken: utils.getAddress(sellTokenAddress),
         baseToken: utils.getAddress(baseToken),
         quoteToken: utils.getAddress(quoteToken),
         pairName,
-        buyAmount,
-        sellAmount,
         hash,
         side,
         status,
@@ -297,7 +287,7 @@ const seed = async () => {
           hash,
           baseToken: order.baseToken,
           quoteToken: order.quoteToken,
-          orderHash: order.hash,
+          makerOrderHash: order.hash,
           status,
           txHash,
           takerOrderHash,

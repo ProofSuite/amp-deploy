@@ -10,16 +10,14 @@ const create = async () => {
     validator:  {
       $jsonSchema: 'object',
       required: [
-         'buyToken',
-         'sellToken',
-         'baseTokenAddress',
-         'quoteTokenAddress',
-         'amountBuy',
-         'amountSell',
+         'baseToken',
+         'quoteToken',
+         'amount',
+         'pricepoint',
+         'userAddress'
          'exchangeAddress',
          'filledAmount',
          'amount',
-         'price'
         ],
       properties:  {
         baseToken: {
@@ -28,28 +26,13 @@ const create = async () => {
         quoteToken: {
           bsonType: "string",
         },
-        buyToken: {
-          bsonType: "string"
-        },
-        sellToken: {
-          bsonType: "string"
-        },
-        baseTokenAddress: {
-          bsonType: "string"
-        },
-        quoteTokenAddress: {
-          bsonType: "string"
-        },
         filledAmount: {
           bsonType: "long"
         },
         amount: {
           bsonType: "long"
         },
-        price: {
-          bsonType: "long"
-        },
-        fee: {
+        pricepoint: {
           bsonType: "long"
         },
         makeFee: {
@@ -61,32 +44,23 @@ const create = async () => {
         side: {
           bsonType: "string"
         },
-        amountBuy: {
-          bsonType: "amountBuy"
-        },
-        amountSell: {
-          bsonType: "amountSell"
-        },
         exchangeAddress: {
-          bsonType: "string"
-        },
-        signature: {
-          bsonType: "object"
-        },
-        pairID: {
-          bsonType: "objectID"
-        },
-        pairName: {
-          bsonType: "string"
-        },
-        hash: {
           bsonType: "string"
         },
         userAddress: {
           bsonType: "string"
         },
-        orderBook: {
+        signature: {
           bsonType: "object"
+        },
+        nonce: {
+          bsonType: 'string'
+        }
+        pairName: {
+          bsonType: "string"
+        },
+        hash: {
+          bsonType: "string"
         },
         createdAt: {
           bsonType: "string"

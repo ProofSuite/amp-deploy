@@ -1,8 +1,8 @@
-const utils = require('ethers').utils
-const path = require('path')
-const MongoClient = require('mongodb').MongoClient
-const process = require('process')
 const fs = require('fs')
+const path = require('path')
+const process = require('process')
+const utils = require('ethers').utils
+const MongoClient = require('mongodb').MongoClient
 
 const url = process.env.MONGODB_URL || 'mongodb://localhost:27017'
 const truffleBuildPath = process.argv[2] || path.join(`${process.env.AMP_DEX_PATH}`, `/build/contracts`)

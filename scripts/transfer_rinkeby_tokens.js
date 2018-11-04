@@ -26,7 +26,7 @@ const transferTokens = async () => {
         let tx = await token.transfer(account, amount)
         let receipt = await signer.provider.waitForTransaction(tx.hash)
 
-        if (receipt.status === '0x0') {
+        if (receipt.status === '0') {
           console.log(`Transaction ${tx.hash} failed ${symbol}`)
         } else {
           console.log(`${amount} ${symbol} sent to ${account}`)

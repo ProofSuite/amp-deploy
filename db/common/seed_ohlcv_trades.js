@@ -56,7 +56,7 @@ const seed = async () => {
     for (let i = 0; i < numberOfOrders; i++) {
       let taker = randomElement(addresses)
       let maker = randomElement(addresses.filter(address => address !== taker))
-      let orderHash = randomHash()
+      let makerOrderHash = randomHash()
       let hash = randomHash()
       let amount = randomBigAmount()
       let status = 'SUCCESS'
