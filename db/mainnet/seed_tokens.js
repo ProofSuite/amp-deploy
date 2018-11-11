@@ -1,19 +1,22 @@
-const { addresses, quoteTokens } = require('./config.js')
+const { quoteTokens, baseTokens, addresses } = require('./config')
 const utils = require('ethers').utils
+const path = require('path')
 const MongoClient = require('mongodb').MongoClient
 const url = process.env.MONGODB_URL || 'mongodb://localhost:27017'
+const fs = require('fs')
+const process = require('process')
 
-let client, db, documents, response
+let documents = []
 
 const seed = async () => {
   try {
     client = await MongoClient.connect(url, { useNewUrlParser: true })
     db = client.db('proofdex')
-    documents = quoteTokens.map((symbol) => ({
+    documents = baseTokens.map((symbol) => ({
       symbol: symbol,
       contractAddress: utils.getAddress(addresses[symbol]),
       decimals: 18,
-      quote: true,
+      quote: fakse,
       createdAt: Date(),
       updatedAt: Date()
     }))

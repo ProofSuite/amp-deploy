@@ -1,2 +1,4 @@
 scripts/index.js
 node_modules/
+
+db/mainnet/keys.json

@@ -1,0 +1,18 @@
+{
+  "keys": [
+    "0x4f1320c9d2c4b8f5afbadb96adf3122af67814e8a79d7753281eca5d45d8abae",
+    "0xc5ce7f5e94352a2728360f66de16130ae5b365360392b7946abd4151dd794607",
+    "0x207dadbadd624708a257b593710ba103184c76b843d975969d4193d57954b5cd",
+    "0x5fceb6b66fb8bb6dd23779e9db2748ddb35a31e963e7c3d9ef625e239ef8342d",
+    "0x2675d05bf0d6a19673a70c46ad2bb51beb0907a4c3c6a970819f2c6f3e96863b",
+    "0xbea2bda92cae573166171b42b05c83906bdfc1ff1384f0f46fa2dcb5a8e6c282",
+    "0x9f5ab87e1a0c41cded2a237f4ad3243a5683914e9a92c20f8a1da8049e5f3a27",
+    "0xd98c1324364c19f3569cb94b8ec642b48f038873299f7a991cae723b66be5cba",
+    "0x391fd085c09f295e744882a615dd293b850ab73cf653a7fdd9f25a00be265c6b",
+    "0x26f2fdca7c68adbcb2abf32af3c2fbce05e62f58c18a4afbf46738e100dcab3e"
+  ]
+}
+
+// The previous snippet is a template of the format to be used for the keys.json file.
+// The keys.json file should not be included on repository and should prefereably be deleted
+// after seeding operator wallets.

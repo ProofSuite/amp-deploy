@@ -1,8 +1,9 @@
-const { keys } = require('../data/keys.json')
+//NOTE: The keys.json should **NOT** be included in the repository.
+const { keys } = require('./keys.json')
 const ethers = require('ethers')
+const MongoClient = require('mongodb').MongoClient
 const utils = ethers.utils
 const Wallet = ethers.Wallet
-const MongoClient = require('mongodb').MongoClient
 const url = process.env.MONGODB_URL || 'mongodb://localhost:27017'
 
 let client, db, documents, response
@@ -16,7 +17,6 @@ const seed = async () => {
     keys.forEach(key => {
       let walletRecord = {}
       wallet = new Wallet(key)
-
       walletRecord.privateKey = wallet.privateKey.slice(2)
       walletRecord.address = utils.getAddress(wallet.address)
       walletRecord.admin = true
