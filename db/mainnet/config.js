@@ -1,5 +1,3 @@
-
-
 export const addresses = {
   "AE": "0x5ca9a71b1d01849c0a95490cc00559717fcf0d1d",
   "BAT": "0x0d8775f648430679a709e98d2b0cb6250d2887ef",
