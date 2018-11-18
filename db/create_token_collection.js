@@ -1,4 +1,3 @@
-const tokens = require('../tokens.json')
 const MongoClient = require('mongodb').MongoClient
 const url = process.env.MONGODB_URL || 'mongodb://localhost:27017'
 

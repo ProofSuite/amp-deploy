@@ -4,9 +4,6 @@ const url = process.env.MONGODB_URL || 'mongodb://localhost:27017'
 
 let client, db
 
-
-console.log(url)
-
 const seed = async () => {
   try {
     client = await MongoClient.connect(url, { useNewUrlParser: true })
@@ -17,14 +14,14 @@ const seed = async () => {
     const tokens = await db.collection('tokens')
       .find(
         { quote: false },
-        { symbol: 1, contractAddress: 1 }
+        { symbol: 1, contractAddress: 1, decimals: 1 }
       )
       .toArray()
 
     const quotes = await db.collection('tokens')
       .find(
         { quote: true },
-        { symbol: 1, contractAddress: 1 }
+        { symbol: 1, contractAddress: 1, decimals: 1 }
       )
       .toArray()
 
@@ -34,11 +31,11 @@ const seed = async () => {
         pairs.push({
           baseTokenSymbol: token.symbol,
           baseTokenAddress: utils.getAddress(token.contractAddress),
-          baseTokenDecimal: 18,
+          baseTokenDecimal: token.decimals,
           quoteTokenSymbol: quote.symbol,
           quoteTokenAddress: utils.getAddress(quote.contractAddress),
-          quoteTokenDecimal: 18,
-          priceMultiplier: "1000000",
+          quoteTokenDecimal: quote.decimals,
+          priceMultiplier: "1000000000",
           active: true,
           makerFee: 0,
           takerFee: 0,

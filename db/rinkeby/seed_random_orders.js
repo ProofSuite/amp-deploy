@@ -193,7 +193,7 @@ const seed = async () => {
     })
 
 
-    //we choose a limited number of pairs
+    //we choose a limited number of user accounts
     addresses = addresses.slice(0,4)
 
       for (let i = 0; i < 20000; i++) {

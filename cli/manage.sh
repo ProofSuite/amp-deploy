@@ -230,7 +230,7 @@ show_mongo_menu(){
 
       16) clear;
       write 'Seeding orders ...';
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/seed_random_orders > /dev/null;
+      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/local/seed_random_orders > /dev/null;
       write 'Done\n';
       show_mongo_menu;
       ;;

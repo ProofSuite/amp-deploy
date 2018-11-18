@@ -1,8 +1,8 @@
 const fs = require('fs')
 const path = require('path');
 const { utils, providers, Wallet, Contract } = require('ethers')
-const { ERC20, Exchange } = require('./abis')
-const { contractAddresses, baseTokens, quoteTokens } = require('./config')
+const { ERC20, Exchange } = require('../abis')
+const { contractAddresses, baseTokens, quoteTokens } = require('../config')
 const pk = process.env.AMP_MAINNET_PRIVATE_KEY
 
 const mainnetAddresses = contractAddresses['1']
@@ -20,12 +20,10 @@ const registerPairs = async () => {
       quoteTokenAddress = rinkebyAddresses[quoteTokenSymbol]
 
       //TODO custom pricepoint multiplier
-      let tx = await exchange.registerPair(baseTokenAddress, quoteTokenAddress, 1e6)
+      let tx = await exchange.registerPair(baseTokenAddress, quoteTokenAddress, 1e9)
       let receipt = await signer.provider.waitForTransaction(tx.hash)
 
-      console.log(receipt)
-
-      if (receipt.status === '0x1') {
+      if (receipt.status === 1) {
         console.log(`${baseTokenSymbol}/${quoteTokenSymbol} registration successful`)
         } else {
         console.log(`${baseTokenSymbol}/${quoteTokenSymbol} registration failed`)
