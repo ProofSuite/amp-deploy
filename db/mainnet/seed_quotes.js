@@ -1,4 +1,4 @@
-const { addresses, quoteTokens } = require('./config.js')
+const { addresses, quoteTokens, decimals } = require('./config.js')
 const utils = require('ethers').utils
 const MongoClient = require('mongodb').MongoClient
 const url = process.env.MONGODB_URL || 'mongodb://localhost:27017'
@@ -12,7 +12,7 @@ const seed = async () => {
     documents = quoteTokens.map((symbol) => ({
       symbol: symbol,
       contractAddress: utils.getAddress(addresses[symbol]),
-      decimals: 18,
+      decimals: decimals[symbol],
       quote: true,
       createdAt: Date(),
       updatedAt: Date()

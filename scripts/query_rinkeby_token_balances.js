@@ -1,9 +1,9 @@
 const fs = require('fs')
 const path = require('path');
 const { utils, providers, Wallet, Contract } = require('ethers')
-const { ERC20 } = require('./abis')
-const contractAddresses = require('./contract_addresses.json')
+const { contractAddresses } = require('../config')
 const { accounts } = require('./accounts.js')
+const { ERC20 } = require('../abis')
 
 const truffleBuildPath = path.join(`${process.env.AMP_DEX_PATH}`, `/build/contracts`);
 

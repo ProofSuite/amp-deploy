@@ -390,7 +390,8 @@ show_rabbitmq_menu(){
   echo -e "${MENU}${NUMBER} 2)${MENU} List queues ${NORMAL}"
   echo -e "${MENU}${NUMBER} 3)${MENU} List connections  ${NORMAL}"
   echo -e "${MENU}${NUMBER} 4)${MENU} List channels ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 5)${MENU} Show logs (new tab) ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 5)${MENU} Show logs ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 5)${MENU} Report ${NORMAL}"
   echo -e "${MENU}${NUMBER} 6)${MENU} Back ${NORMAL}"
   echo -e "${MENU}*********************************************${NORMAL}"
   read opt
@@ -402,31 +403,41 @@ show_rabbitmq_menu(){
     else
       case $opt in
       1) clear;
-      rabbitmqadmin list users;
+      eval $(docker-machine env rabbitmq)
+      docker container exec -it $(docker container ls -q) rabbitmqctl list_users
       show_rabbitmq_menu;
       ;;
 
       2) clear;
-      rabbitmqadmin list queues;
+      eval $(docker-machine env rabbitmq)
+      docker container exec -it $(docker container ls -q) rabbitmqctl list_queues
       show_rabbitmq_menu;
       ;;
 
       3) clear;
-      rabbitmqadmin list connections;
+      eval $(docker-machine env rabbitmq)
+      docker container exec -it $(docker container ls -q) rabbitmqctl list_connections
       show_rabbitmq_menu;
       ;;
 
       4) clear;
-      rabbitmqadmin list channels
+      eval $(docker-machine env rabbitmq)
+      docker container exec -it $(docker container ls -q) rabbitmqctl list_channels
       show_rabbitmq_menu;
       ;;
 
       5) clear;
-      ttab 'cat /usr/local/var/log/rabbitmq/rabbit@localhost.log'
+      eval $(docker-machine env rabbitmq)
+      docker container exec -it $(docker container ls -q) 'cat /usr/local/var/log/rabbitmq/rabbit@localhost.log'
       show_rabbitmq_menu;
       ;;
 
       6) clear;
+      eval $(docker-machine env rabbitmq)
+      docker container exec -it $(docker container ls -q) rabbitmqctl report
+      ;;
+
+      7) clear;
       show_menu;
       ;;
 

@@ -15,7 +15,7 @@ const transferEther = async () => {
   })
 
   let receipt = await signer.provider.waitForTransaction(tx.hash)
-  if (receipt.status === '0x0') {
+  if (receipt.status === 0) {
     console.log(`Transaction ${tx.hash} failed`)
   } else {
     console.log(`Transaction ${tx.hash} successful`)

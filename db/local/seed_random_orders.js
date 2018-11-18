@@ -105,8 +105,8 @@ const randomAddress = () => randomHash().slice(0, 42);
 const randomElement = (arr) => arr[randInt(0, arr.length-1)]
 
 const randomPricepointRange = () => {
-  let a = randInt(10000, 1000000000)
-  let b = randInt(10000, 1000000000)
+  let a = randInt(10000000, 1000000000000)
+  let b = randInt(10000000, 1000000000000)
   let min = Math.min(a, b)
   let max = Math.max(a, b)
   return { min, max }
