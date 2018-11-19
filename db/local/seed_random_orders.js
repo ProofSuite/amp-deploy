@@ -193,7 +193,6 @@ const seed = async () => {
     })
 
 
-    //we choose a limited number of pairs
     addresses = addresses.slice(0,4)
 
       for (let i = 0; i < 20000; i++) {
