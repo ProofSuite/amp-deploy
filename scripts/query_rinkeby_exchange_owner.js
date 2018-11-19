@@ -1,12 +1,12 @@
 const fs = require('fs')
 const path = require('path');
 const { utils, providers, Wallet, Contract } = require('ethers')
-const { Exchange } = require('../abis')
+const { Exchange } = require('../utils/abis')
 const { contractAddresses } = require('../config')
 
 const addresses = contractAddresses['4']
 
-let provider = new providers.InfuraProvider('rinkeby')
+let provider = new providers.InfuraProvider('rinkeby', '63739bbdf74143aeb0e6d8bb8307084f')
 let signer = new Wallet(pk, provider)
 
 const queryOwner = async () => {

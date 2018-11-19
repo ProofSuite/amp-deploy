@@ -3,6 +3,20 @@ const contractAddresses = require('./contractAddresses.json')
 const quoteTokens = ['WETH', 'DAI', 'TUSD', 'USDC']
 const baseTokens = [ "AE", "BAT", "BNB", "GNT", "KNC", "LOOM", "LRC", "MITH", "MKR", "NPXS", "OMG", "PRFT", "REP", "SNT", "WTC", "ZRX" ]
 
+const makeFees = {
+  "WETH": '0',
+  "DAI": '0',
+  "TUSD": '0',
+  "USDC": '0'
+}
+
+const takeFees = {
+  "WETH": '0',
+  "DAI": '0',
+  "TUSD": '0',
+  "USDC": '0'
+}
+
 const decimals = {
   "AE": 18,
   "BAT": 18,
@@ -56,6 +70,8 @@ const testAccounts =  {
 module.exports = {
   quoteTokens,
   baseTokens,
+  takeFees,
+  makeFees,
   decimals,
   operators,
   testAccounts,

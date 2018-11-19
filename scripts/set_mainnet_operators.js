@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path');
 const { utils, providers, Wallet, Contract } = require('ethers')
-const { Exchange } = require('../abis')
+const { Exchange } = require('../utils/abis')
 const { contractAddresses, operators } = require('../config')
 
 
