@@ -2,7 +2,15 @@ const utils = require('ethers').utils
 const MongoClient = require('mongodb').MongoClient
 const url = process.env.MONGODB_URL || 'mongodb://localhost:27017'
 
+const getPriceMultiplier = (baseTokenDecimals, quoteTokenDecimals) => {
+  let defaultPricepointMultiplier = utils.bigNumberify(1e9)
+  let decimalsPricepointMultiplier = utils.bigNumberify((10 ** (baseTokenDecimals - quoteTokenDecimals)).toString())
+
+  return defaultPricepointMultiplier.mul(decimalsPricepointMultiplier)
+}
+
 let client, db
+
 
 const seed = async () => {
   try {
@@ -21,24 +29,24 @@ const seed = async () => {
     const quotes = await db.collection('tokens')
       .find(
         { quote: true },
-        { symbol: 1, contractAddress: 1, decimals: 1 }
+        { symbol: 1, contractAddress: 1, decimals: 1, makeFee: 1, takeFee: 1 }
       )
       .toArray()
 
-
+    
     quotes.forEach(quote => {
       tokens.forEach(token => {
         pairs.push({
           baseTokenSymbol: token.symbol,
           baseTokenAddress: utils.getAddress(token.contractAddress),
-          baseTokenDecimal: token.decimals,
+          baseTokenDecimals: token.decimals,
           quoteTokenSymbol: quote.symbol,
           quoteTokenAddress: utils.getAddress(quote.contractAddress),
-          quoteTokenDecimal: quote.decimals,
-          priceMultiplier: "1000000000",
+          quoteTokenDecimals: quote.decimals,
+          priceMultiplier: getPriceMultiplier(token.decimals, quote.decimals),
           active: true,
-          makerFee: 0,
-          takerFee: 0,
+          makeFee: quote.makeFee,
+          takeFee: quote.takeFee,
           createdAt: Date(),
           updatedAt: Date()
         })

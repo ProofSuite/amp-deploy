@@ -28,7 +28,9 @@ const seed = async () => {
   const client = await MongoClient.connect(url, { useNewUrlParser: true })
   const db = client.db('proofdex')
 
-  const pairDocuments = await db.collection('pairs').find({}, {
+  const pairDocuments = await db.collection('pairs').find({
+    quoteTokenSymbol: 'USDC'
+  }, {
     baseTokenSymbol: 1,
     baseTokenAddress: 1,
     quoteTokenSymbol: 1,

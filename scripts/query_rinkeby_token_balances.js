@@ -3,7 +3,7 @@ const path = require('path');
 const { utils, providers, Wallet, Contract } = require('ethers')
 const { contractAddresses } = require('../config')
 const { accounts } = require('./accounts.js')
-const { ERC20 } = require('../abis')
+const { ERC20 } = require('../utils/abis')
 
 const truffleBuildPath = path.join(`${process.env.AMP_DEX_PATH}`, `/build/contracts`);
 
@@ -13,7 +13,7 @@ const rinkebyAddresses = contractAddresses['4']
 
 let files = fs.readdirSync(truffleBuildPath);
 
-let provider = new providers.InfuraProvider('rinkeby')
+let provider = new providers.InfuraProvider('rinkeby', '63739bbdf74143aeb0e6d8bb8307084f')
 let signer = new Wallet(pk, provider)
 
 const queryTokenBalances = async () => {
