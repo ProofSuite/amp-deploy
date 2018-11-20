@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const contractAddresses = require('./contractAddresses.json')
 
 const quoteTokens = ['WETH', 'DAI', 'TUSD', 'USDC']
@@ -40,7 +42,7 @@ const decimals = {
   "USDC": 6
 }
 
-const operators = {
+const operatorAddresses = {
   "1": [],
   "4": [
     '0xe0a1240b358dfa6c167edea09c763ae9f3b51ea0',
@@ -50,9 +52,7 @@ const operators = {
   ]
 }
 
-const testAccounts =  {
-  "1": [],
-  "4": [
+const testAccounts = [
     "0xcc5697310277bcc3be506f53ed8aafc9d17a2c18",
     "0x3b89e78363d872c80c78c254bf1bb9ff9e586571",
     "0xf2934427c36ba897f9be6ed554ed2dbce3da1c68",
@@ -63,7 +63,11 @@ const testAccounts =  {
     "0xc8b74b6b883a96e3defd62934ec3a1e44f149860",
     "0x53ee745b3d30d692dc016450fef68a898c16fa44",
     "0xe0a1240b358dfa6c167edea09c763ae9f3b51ea0"
-  ]
+]
+
+const keys = {
+  "1": process.env.AMP_MAINNET_KEYS.split(','),
+  "4": process.env.AMP_RINKEBY_KEYS.split(',')
 }
 
 
@@ -73,7 +77,8 @@ module.exports = {
   takeFees,
   makeFees,
   decimals,
-  operators,
+  operatorAddresses,
   testAccounts,
-  contractAddresses
+  contractAddresses,
+  keys
 }
