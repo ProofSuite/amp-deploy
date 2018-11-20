@@ -9,7 +9,6 @@ services:
       - AMP_ETHEREUM_NODE_HTTP_URL=ws://ethereum:8545
       - AMP_MONGO_URL=mongodb
       - AMP_MONGO_DBNAME
-      - AMP_REDIS_URL=redis://redis:6379
       - AMP_RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
       - AMP_EXCHANGE_CONTRACT_ADDRESS
       - AMP_WETH_CONTRACT_ADDRESS
@@ -17,7 +16,6 @@ services:
     depends_on:
       - mongodb
       - rabbitmq
-      - redis
       - ethereum
     deploy:
       restart_policy:
@@ -56,12 +54,6 @@ services:
     container_name: "rabbitmq"
     ports:
       - '5672:5672'
-
-  redis:
-    image: redis
-    container_name: "redis"
-    ports:
-      - '6379:6379'
 
   ethereum:
     image: ethereum/client-go

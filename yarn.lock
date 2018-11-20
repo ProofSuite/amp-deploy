@@ -177,6 +177,10 @@ doctrine@^2.1.0:
   dependencies:
     esutils "^2.0.2"
 
+dotenv@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-6.1.0.tgz#9853b6ca98292acb7dec67a95018fa40bccff42c"
+
 elliptic@6.3.3:
   version "6.3.3"
   resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.3.3.tgz#5482d9646d54bcb89fd7d994fc9e2e9568876e3f"

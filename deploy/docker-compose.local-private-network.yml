@@ -3,7 +3,6 @@
 # - client
 # - mongodb
 # - rabbitmq
-# - redis
 # - ethereum
 # You are assuming to be running an ethereum node on your localhost
 # with the contracts deployed
@@ -21,7 +20,6 @@ services:
       - AMP_ETHEREUM_NODE_URL=ws://ethereum:8546
       - AMP_MONGO_URL=mongodb
       - AMP_MONGO_DBNAME
-      - AMP_REDIS_URL=redis://redis:6379
       - AMP_RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
       - AMP_EXCHANGE_CONTRACT_ADDRESS=${AMP_EXCHANGE_CONTRACT_ADDRESS}
       - AMP_WETH_CONTRACT_ADDRESS=${AMP_WETH_CONTRACT_ADDRESS}
@@ -29,7 +27,6 @@ services:
     depends_on:
       - mongodb
       - rabbitmq
-      - redis
     deploy:
       restart_policy:
         condition: on-failure
@@ -57,8 +54,6 @@ services:
     command: >
        bin/sh -c "chmod +x ./replace.sh && ./replace.sh && cat /usr/share/nginx/html/env.js && nginx -g 'daemon off;'"
 
-
-
   mongodb:
     image: mongo:latest
     container_name: "mongodb"
@@ -76,16 +71,6 @@ services:
     container_name: "rabbitmq"
     ports:
       - '5672:5672'
-    restart_policy:
-      condition: on-failure
-      max_attempts: 3
-      window: 120s
-
-  redis:
-    image: redis
-    container_name: "redis"
-    ports:
-      - '6379:6379'
     restart_policy:
       condition: on-failure
       max_attempts: 3
@@ -118,71 +103,3 @@ services:
       condition: on-failure
       max_attempts: 3
       window: 120s
-
-
-
-
-
-
-# version: '2'
-# services:
-#   matching-engine:
-#     container_name: "matching-engine"
-#     build:
-#       context: .
-#       dockerfile: Dockerfile
-#     ports:
-#       - '8081:8081'
-#     links:
-#       - redis
-#       - rabbitmq
-#       - mongodb
-#     depends_on:
-#       - redis
-#       - rabbitmq
-#       - mongodb
-
-#   rabbitmq:
-#     container_name: "rabbitmq"
-#     image: rabbitmq
-#     ports:
-#       - '5672:5672'
-
-#   redis:
-#     container_name: "redis"
-#     image: redis
-#     ports:
-#       - '6379:6379'
-
-#   mongodb:
-#     image: mongo:latest
-#     container_name: "mongodb"
-#     ports:
-#       - '27017:27017'
-
-
-#   mongodb-seed:
-#     image: mongo:latest
-#     container_name: "mongodb-seed"
-#     links:
-#       - mongodb
-#     volumes:
-#       - ./utils/seed-data:/utils/seed-data
-#     depends_on:
-#       - mongodb
-#     command:
-#       - /bin/sh
-#       - -c
-#       - |
-#         mongo proofdex --eval "db.dropDatabase()"
-#         mongoimport --host mongodb --db proofdex --type json --file utils/seed-data/tokens.json
-#         mongoimport --host mongodb --db proofdex --type json --file utils/seed-data/pairs.json
-#         mongoimport --host mongodb --db proofdex --type json --file utils/seed-data/accounts.json
-
-# # USEFUL COMMANDS TO BE REINCLUDED LATER
-
-# # environment:
-#     #   - MONGO_DATA_DIR=/data/db
-#     #   - MONGO_LOG_DIR=/dev/null
-
-# # command: mongod --smallfiles /--logpath=/dev/null

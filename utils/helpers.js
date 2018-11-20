@@ -7,6 +7,33 @@ const otherContracts = ['Owned.json', 'Migrations.json', 'SafeMath.json', 'Proof
 const { contractAddresses } = require('../config/contractAddresses.json')
 
 
+const getNetworkID = (networkName) => {
+  return {
+    "mainnet": "1",
+    "homestead": "1",
+    "rinkeby": "4",
+    "local": "8888"
+  }[networkName]
+}
+
+const getPrivateKeyFromEnvironment = (networkName) => {
+  switch(networkName) {
+    case "mainnet": 
+      return process.env.AMP_MAINNET_PRIVATE_KEY
+    case "rinkeby":
+      return process.env.AMP_RINKEBY_PRIVATE_KEY
+    default:
+      throw new Error('Could not get private key from environment')
+  }
+}
+
+const getPriceMultiplier = (baseTokenDecimals, quoteTokenDecimals) => {
+  let defaultPricepointMultiplier = utils.bigNumberify(1e9)
+  let decimalsPricepointMultiplier = utils.bigNumberify((10 ** (baseTokenDecimals - quoteTokenDecimals)).toString())
+
+  return defaultPricepointMultiplier.mul(decimalsPricepointMultiplier)
+}
+
 // file corresponds to a token if it is not in the `otherContracts` array
 const isToken = (file) => {
   return otherContracts.indexOf(file) === -1
@@ -89,7 +116,10 @@ const queryContractAddresses = () => {
 }
 
 module.exports = {
+  getNetworkID,
+  getPriceMultiplier,
   getMainnetAddresses,
   getRinkebyAddresses,
-  queryContractAddresses
+  queryContractAddresses,
+  getPrivateKeyFromEnvironment
 }

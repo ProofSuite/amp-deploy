@@ -3,7 +3,6 @@
 # - engine
 # - rabbitmq
 # - client
-# - redis
 # - mongodb
 # - ethereum
 #  To work properly the ethereum node and other services might have
@@ -43,26 +42,6 @@ services:
       placement:
         constraints:
           - node.hostname == ethereum
-      restart_policy:
-        condition: on-failure
-        max_attempts: 3
-        window: 120s
-
-  redis:
-    image: redis
-    ports:
-      - '6379:6379'
-    networks:
-      amp:
-        aliases:
-        - redis
-    volumes:
-      - "redis_data:/data"
-    entrypoint: redis-server --appendonly yes
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == redis
       restart_policy:
         condition: on-failure
         max_attempts: 3
@@ -141,17 +120,13 @@ services:
     ports:
       - '8081:8081'
     depends_on:
-      - redis
       - rabbitmq
       - mongodb
     environment:
-      # - AMP_ETHEREUM_NODE_HTTP_URL=http://ethereum:8545
-      # - AMP_ETHEREUM_NODE_WS_URL=ws://ethereum:8546
       - AMP_ETHEREUM_NODE_HTTP_URL=https://rinkeby.infura.io
       - AMP_ETHEREUM_NODE_WS_URL=wss://rinkeby.infura.io/_ws
       - AMP_MONGODB_URL=mongodb
       - AMP_MONGODB_DBNAME=proofdex
-      - AMP_REDIS_URL=redis://redis:6379
       - AMP_RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
       - AMP_EXCHANGE_CONTRACT_ADDRESS=${AMP_RINKEBY_EXCHANGE_CONTRACT_ADDRESS}
       - AMP_WETH_CONTRACT_ADDRESS=${AMP_RINKEBY_WETH_CONTRACT_ADDRESS}
@@ -178,5 +153,4 @@ volumes:
   ethereum_root:
   rabbitmq_logs:
   rabbitmq_data:
-  redis_data:
   mongodb_data:

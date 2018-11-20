@@ -8,7 +8,7 @@ const drop = async () => {
   try {
     client = await MongoClient.connect(mongoUrl, { useNewUrlParser: true })
     db = client.db('proofdex')
-    response = await db.dropCollection('tokens')
+    response = await db.dropCollection('pairs')
     console.log(response)
   } catch(e) {
     console.log(e.message)
