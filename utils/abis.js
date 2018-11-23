@@ -649,907 +649,793 @@ const WETH = [
   }
 ]
 
-
 const Exchange = [
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "baseTokens",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "setOwner",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "operators",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "name": "filled",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "quoteTokens",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "wethToken",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "feeAccount",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "name": "pairs",
-    "outputs": [
-      {
-        "name": "pairID",
-        "type": "bytes32"
-      },
-      {
-        "name": "baseToken",
-        "type": "address"
-      },
-      {
-        "name": "quoteToken",
-        "type": "address"
-      },
-      {
-        "name": "pricepointMultiplier",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "name": "traded",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "VERSION",
-    "outputs": [
-      {
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "name": "_wethToken",
-        "type": "address"
-      },
-      {
-        "name": "_feeAccount",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "oldWethToken",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "newWethToken",
-        "type": "address"
-      }
-    ],
-    "name": "LogWethTokenUpdate",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "oldFeeAccount",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "newFeeAccount",
-        "type": "address"
-      }
-    ],
-    "name": "LogFeeAccountUpdate",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "operator",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "isOperator",
-        "type": "bool"
-      }
-    ],
-    "name": "LogOperatorUpdate",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "makerOrderHashes",
-        "type": "bytes32[]"
-      },
-      {
-        "indexed": false,
-        "name": "takerOrderHashes",
-        "type": "bytes32[]"
-      },
-      {
-        "indexed": true,
-        "name": "tokenPairHash",
-        "type": "bytes32"
-      }
-    ],
-    "name": "LogBatchTrades",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "name": "maker",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "name": "taker",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "tokenSell",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "tokenBuy",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "filledAmountSell",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "name": "filledAmountBuy",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "name": "paidFeeMake",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "name": "paidFeeTake",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "name": "orderHash",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "name": "tradeHash",
-        "type": "bytes32"
-      },
-      {
-        "indexed": true,
-        "name": "tokenPairHash",
-        "type": "bytes32"
-      }
-    ],
-    "name": "LogTrade",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "errorId",
-        "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "name": "makerOrderHash",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "name": "takerOrderHash",
-        "type": "bytes32"
-      }
-    ],
-    "name": "LogError",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "orderHash",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "name": "tokenBuy",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "amountBuy",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "name": "tokenSell",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "amountSell",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "name": "expires",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "name": "nonce",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "name": "maker",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "name": "tokenPairHash",
-        "type": "bytes32"
-      }
-    ],
-    "name": "LogCancelOrder",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "orderHash",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "name": "tradeNonce",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "name": "taker",
-        "type": "address"
-      }
-    ],
-    "name": "LogCancelTrade",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "name": "previousOwner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "SetOwner",
-    "type": "event"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_baseToken",
-        "type": "address"
-      },
-      {
-        "name": "_quoteToken",
-        "type": "address"
-      },
-      {
-        "name": "_pricepointMultiplier",
-        "type": "uint256"
-      }
-    ],
-    "name": "registerPair",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_token",
-        "type": "address"
-      }
-    ],
-    "name": "registerBaseToken",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_token",
-        "type": "address"
-      }
-    ],
-    "name": "registerQuoteToken",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_token",
-        "type": "address"
-      }
-    ],
-    "name": "deleteBaseToken",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_token",
-        "type": "address"
-      }
-    ],
-    "name": "deleteQuoteToken",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_wethToken",
-        "type": "address"
-      }
-    ],
-    "name": "setWethToken",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_feeAccount",
-        "type": "address"
-      }
-    ],
-    "name": "setFeeAccount",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_operator",
-        "type": "address"
-      },
-      {
-        "name": "_isOperator",
-        "type": "bool"
-      }
-    ],
-    "name": "setOperator",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "orderValues",
-        "type": "uint256[10][]"
-      },
-      {
-        "name": "orderAddresses",
-        "type": "address[4][]"
-      },
-      {
-        "name": "amounts",
-        "type": "uint256[]"
-      },
-      {
-        "name": "v",
-        "type": "uint8[2][]"
-      },
-      {
-        "name": "rs",
-        "type": "bytes32[4][]"
-      }
-    ],
-    "name": "executeBatchTrades",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "orderValues",
-        "type": "uint256[10]"
-      },
-      {
-        "name": "orderAddresses",
-        "type": "address[4]"
-      },
-      {
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "name": "v",
-        "type": "uint8[2]"
-      },
-      {
-        "name": "rs",
-        "type": "bytes32[4]"
-      }
-    ],
-    "name": "executeSingleTrade",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "orderAddresses",
-        "type": "address[4]"
-      },
-      {
-        "name": "makerOrderHashes",
-        "type": "bytes32[]"
-      },
-      {
-        "name": "takerOrderHashes",
-        "type": "bytes32[]"
-      }
-    ],
-    "name": "emitLog",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "orderAddresses",
-        "type": "address[4]"
-      }
-    ],
-    "name": "validatePair",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "orderValues",
-        "type": "uint256[10]"
-      },
-      {
-        "name": "orderAddresses",
-        "type": "address[4]"
-      },
-      {
-        "name": "v",
-        "type": "uint8[2]"
-      },
-      {
-        "name": "rs",
-        "type": "bytes32[4]"
-      }
-    ],
-    "name": "validateSignatures",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "orderValues",
-        "type": "uint256[10]"
-      },
-      {
-        "name": "orderAddresses",
-        "type": "address[4]"
-      },
-      {
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "name": "pricepointMultiplier",
-        "type": "uint256"
-      }
-    ],
-    "name": "executeTrade",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes32"
-      },
-      {
-        "name": "",
-        "type": "bytes32"
-      },
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "signer",
-        "type": "address"
-      },
-      {
-        "name": "hash",
-        "type": "bytes32"
-      },
-      {
-        "name": "v",
-        "type": "uint8"
-      },
-      {
-        "name": "r",
-        "type": "bytes32"
-      },
-      {
-        "name": "s",
-        "type": "bytes32"
-      }
-    ],
-    "name": "isValidSignature",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "numerator",
-        "type": "uint256"
-      },
-      {
-        "name": "denominator",
-        "type": "uint256"
-      },
-      {
-        "name": "target",
-        "type": "uint256"
-      }
-    ],
-    "name": "isRoundingError",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "numerator",
-        "type": "uint256"
-      },
-      {
-        "name": "denominator",
-        "type": "uint256"
-      },
-      {
-        "name": "target",
-        "type": "uint256"
-      }
-    ],
-    "name": "getPartialAmount",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "pure",
-    "type": "function"
-  }
-]
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "rewardAccount",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "setOwner",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "operators",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "filled",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "pairs",
+      "outputs": [
+        {
+          "name": "pairID",
+          "type": "bytes32"
+        },
+        {
+          "name": "baseToken",
+          "type": "address"
+        },
+        {
+          "name": "quoteToken",
+          "type": "address"
+        },
+        {
+          "name": "pricepointMultiplier",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "traded",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "VERSION",
+      "outputs": [
+        {
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "_rewardAccount",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "oldRewardAccount",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "newRewardAccount",
+          "type": "address"
+        }
+      ],
+      "name": "LogRewardAccountUpdate",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "isOperator",
+          "type": "bool"
+        }
+      ],
+      "name": "LogOperatorUpdate",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "makerOrderHashes",
+          "type": "bytes32[]"
+        },
+        {
+          "indexed": false,
+          "name": "takerOrderHashes",
+          "type": "bytes32[]"
+        },
+        {
+          "indexed": true,
+          "name": "tokenPairHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "LogBatchTrades",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "maker",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "taker",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "tokenSell",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "tokenBuy",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "filledAmountSell",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "filledAmountBuy",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "paidFeeMake",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "paidFeeTake",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "orderHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "name": "tradeHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "name": "tokenPairHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "LogTrade",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "errorId",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "name": "makerOrderHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "name": "takerOrderHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "LogError",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "orderHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "name": "userAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "baseToken",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "quoteToken",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "pricepoint",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "side",
+          "type": "uint256"
+        }
+      ],
+      "name": "LogCancelOrder",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "SetOwner",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_baseToken",
+          "type": "address"
+        },
+        {
+          "name": "_quoteToken",
+          "type": "address"
+        },
+        {
+          "name": "_pricepointMultiplier",
+          "type": "uint256"
+        }
+      ],
+      "name": "registerPair",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_baseToken",
+          "type": "address"
+        },
+        {
+          "name": "_quoteToken",
+          "type": "address"
+        }
+      ],
+      "name": "getPairPricepointMultiplier",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_baseToken",
+          "type": "address"
+        },
+        {
+          "name": "_quoteToken",
+          "type": "address"
+        }
+      ],
+      "name": "pairIsRegistered",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_rewardAccount",
+          "type": "address"
+        }
+      ],
+      "name": "setFeeAccount",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_operator",
+          "type": "address"
+        },
+        {
+          "name": "_isOperator",
+          "type": "bool"
+        }
+      ],
+      "name": "setOperator",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "orderValues",
+          "type": "uint256[10][]"
+        },
+        {
+          "name": "orderAddresses",
+          "type": "address[4][]"
+        },
+        {
+          "name": "amounts",
+          "type": "uint256[]"
+        },
+        {
+          "name": "v",
+          "type": "uint8[2][]"
+        },
+        {
+          "name": "rs",
+          "type": "bytes32[4][]"
+        }
+      ],
+      "name": "executeBatchTrades",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "orderValues",
+          "type": "uint256[10]"
+        },
+        {
+          "name": "orderAddresses",
+          "type": "address[4]"
+        },
+        {
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "name": "v",
+          "type": "uint8[2]"
+        },
+        {
+          "name": "rs",
+          "type": "bytes32[4]"
+        }
+      ],
+      "name": "executeSingleTrade",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "orderValues",
+          "type": "uint256[10]"
+        },
+        {
+          "name": "orderAddresses",
+          "type": "address[4]"
+        },
+        {
+          "name": "v",
+          "type": "uint8[2]"
+        },
+        {
+          "name": "rs",
+          "type": "bytes32[4]"
+        }
+      ],
+      "name": "validateSignatures",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "orderValues",
+          "type": "uint256[10]"
+        },
+        {
+          "name": "orderAddresses",
+          "type": "address[4]"
+        },
+        {
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "name": "pricepointMultiplier",
+          "type": "uint256"
+        }
+      ],
+      "name": "executeTrade",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bytes32"
+        },
+        {
+          "name": "",
+          "type": "bytes32"
+        },
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "orderValues",
+          "type": "uint256[6][]"
+        },
+        {
+          "name": "orderAddresses",
+          "type": "address[3][]"
+        },
+        {
+          "name": "v",
+          "type": "uint8[]"
+        },
+        {
+          "name": "r",
+          "type": "bytes32[]"
+        },
+        {
+          "name": "s",
+          "type": "bytes32[]"
+        }
+      ],
+      "name": "batchCancelOrders",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "orderValues",
+          "type": "uint256[6]"
+        },
+        {
+          "name": "orderAddresses",
+          "type": "address[3]"
+        },
+        {
+          "name": "v",
+          "type": "uint8"
+        },
+        {
+          "name": "r",
+          "type": "bytes32"
+        },
+        {
+          "name": "s",
+          "type": "bytes32"
+        }
+      ],
+      "name": "cancelOrder",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "signer",
+          "type": "address"
+        },
+        {
+          "name": "hash",
+          "type": "bytes32"
+        },
+        {
+          "name": "v",
+          "type": "uint8"
+        },
+        {
+          "name": "r",
+          "type": "bytes32"
+        },
+        {
+          "name": "s",
+          "type": "bytes32"
+        }
+      ],
+      "name": "isValidSignature",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "numerator",
+          "type": "uint256"
+        },
+        {
+          "name": "denominator",
+          "type": "uint256"
+        },
+        {
+          "name": "target",
+          "type": "uint256"
+        }
+      ],
+      "name": "isRoundingError",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "numerator",
+          "type": "uint256"
+        },
+        {
+          "name": "denominator",
+          "type": "uint256"
+        },
+        {
+          "name": "target",
+          "type": "uint256"
+        }
+      ],
+      "name": "getPartialAmount",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "orderAddresses",
+          "type": "address[4]"
+        },
+        {
+          "name": "makerOrderHashes",
+          "type": "bytes32[]"
+        },
+        {
+          "name": "takerOrderHashes",
+          "type": "bytes32[]"
+        }
+      ],
+      "name": "emitLog",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
 
 
 const RewardPools = [

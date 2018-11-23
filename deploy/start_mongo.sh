@@ -1,0 +1,1 @@
+mongod --auth --sslMode "requireSSL" --sslPEMKeyFile ${AMP_CERTS_PATH}/amp_mongodb.pem -u hey -p hey

@@ -16,6 +16,15 @@ const getNetworkID = (networkName) => {
   }[networkName]
 }
 
+const getInfuraKey = (networkName) => {
+  return {
+    "mainnet": "1",
+    "homestead": "1",
+    "rinkeby": "4",
+    "local": "8888"
+  }[networkName]
+}
+
 const getPrivateKeyFromEnvironment = (networkName) => {
   switch(networkName) {
     case "mainnet": 
@@ -57,31 +66,24 @@ const queryContractAddresses = () => {
     let json = JSON.parse(fs.readFileSync(`${truffleBuildPath}/${file}`, 'utf8'));
 
     if (json.networks['8888']) {
-      if (isToken(file)) {
-        symbol = file.slice(0, -5);
-        if (symbol === 'WETH9') symbol = 'WETH';
-
-        address = json.networks['8888'].address;
-        contracts['8888'][symbol] = utils.getAddress(address);
-      }
+      symbol = file.slice(0, -5);
+      if (symbol === 'WETH9') symbol = 'WETH';
+      address = json.networks['8888'].address;
+      contracts['8888'][symbol] = utils.getAddress(address);
     }
 
     if (json.networks['1000']) {
-      if (isToken(file)) {
-        symbol = file.slice(0, -5);
-        if (symbol === 'WETH9') symbol = 'WETH';
-        address = json.networks['1000'].address;
-        contracts['1000'][symbol] = utils.getAddress(address);
-      }
+      symbol = file.slice(0, -5);
+      if (symbol === 'WETH9') symbol = 'WETH';
+      address = json.networks['1000'].address;
+      contracts['1000'][symbol] = utils.getAddress(address);
     }
 
     if (json.networks['4']) {
-      if (isToken(file)) {
-        symbol = file.slice(0, -5);
-        if (symbol === 'WETH9') symbol = 'WETH';
-        address = json.networks['4'].address;
-        contracts['4'][symbol] = utils.getAddress(address);
-      }
+      symbol = file.slice(0, -5);
+      if (symbol === 'WETH9') symbol = 'WETH';
+      address = json.networks['4'].address;
+      contracts['4'][symbol] = utils.getAddress(address);
     }
   });
 
@@ -91,9 +93,9 @@ const queryContractAddresses = () => {
     "BAT": "0x0d8775f648430679a709e98d2b0cb6250d2887ef",
     "BNB": " 0xB8c77482e45F1F44dE1745F52C74426C631bDD52",
     "DAI": "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359",
-    "Exchange": "0x0",
-    "RewardPools": "0x0",
-    "RewardCollector": "0x0",
+    "Exchange": "0x44cccaaa4f586300f552dd4adbb20ceddf57a2c5",
+    "RewardPools": "0x654d7a6de5580e0c8bc34658cc5e471d55a864bd",
+    "RewardCollector": "0x1ff2124b2a842257704e94c40214252ba646e3c7",
     "GNT": "0xa74476443119A942dE498590Fe1f2454d7D4aC0d",
     "KNC": "0xdd974d5c2e2928dea5f71b9825b8b646686bd200",
     "LOOM": "0xa4e8c3ec456107ea67d3075bf9e3df3a75823db0",
@@ -109,7 +111,7 @@ const queryContractAddresses = () => {
     "WTC": "0xb7cb1c96db6b22b0d3d9536e0108d062bd488f74",
     "ZRX": "0xe41d2489571d322189246dafa5ebde1f4699f498",
     "TUSD": "0x8dd5fbce2f6a956c3022ba3663759011dd51e73e",
-    "USDC": "0x0"
+    "USDC": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
   }
 
   fs.writeFileSync('../config/contractAddresses.json', JSON.stringify(contracts), 'utf8');
@@ -117,6 +119,7 @@ const queryContractAddresses = () => {
 
 module.exports = {
   getNetworkID,
+  getInfuraKey,
   getPriceMultiplier,
   getMainnetAddresses,
   getRinkebyAddresses,

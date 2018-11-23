@@ -1,0 +1,1 @@
+docker-machine scp -r ${PWD}:/rabbitmq-production.conf

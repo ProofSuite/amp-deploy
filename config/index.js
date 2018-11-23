@@ -1,9 +1,8 @@
 require('dotenv').config()
 
 const contractAddresses = require('./contractAddresses.json')
-
-const quoteTokens = ['WETH', 'DAI', 'TUSD', 'USDC']
-const baseTokens = [ "AE", "BAT", "BNB", "GNT", "KNC", "LOOM", "LRC", "MITH", "MKR", "NPXS", "OMG", "PRFT", "REP", "SNT", "WTC", "ZRX" ]
+const quoteTokens = ['USDC', 'WETH', 'DAI']
+const baseTokens = [ "AE", "BAT", "BNB", "GNT", "KNC", "LOOM", "LRC", "MITH", "MKR", "NPXS", "OMG", "PRFT", "REP", "SNT", "WTC", "ZRX"]
 
 const makeFees = {
   "WETH": '0',
@@ -70,6 +69,11 @@ const keys = {
   "4": process.env.AMP_RINKEBY_KEYS.split(',')
 }
 
+const infuraKeys = {
+  "1": process.env.AMP_MAINNET_INFURA_KEY,
+  "2": process.env.AMP_RINKEBY_INFURA_KEY,
+}
+
 
 module.exports = {
   quoteTokens,
@@ -80,5 +84,6 @@ module.exports = {
   operatorAddresses,
   testAccounts,
   contractAddresses,
-  keys
+  keys,
+  infuraKeys
 }

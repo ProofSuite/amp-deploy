@@ -1,4 +1,5 @@
 # Create docker machines
+
 docker-machine create --driver amazonec2 \
  --amazonec2-open-port 27017 \
  --amazonec2-open-port 2377/tcp \
@@ -63,12 +64,3 @@ eval $(docker-machine env mongodb-production)
 docker swarm join --token $manager_token $(docker-machine ip client-production):2377
 
 docker network create --driver overlay --attachable amp-production
-
-docker-machine ssh rabbitmq-production mkdir etc
-docker-machine ssh client-production mkdir etc
-docker-machine ssh mongodb-production mkdir etc
-docker-machine ssh matching-engine-production mkdir etc
-docker-machine ssh rabbitmq-production mkdir etc/ssl
-docker-machine ssh client-production mkdir etc/ssl
-docker-machine ssh mongodb-production mkdir etc/ssl
-docker-machine ssh matching-engine-production mkdir etc/ssl

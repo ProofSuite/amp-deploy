@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path');
 const { utils, providers, Wallet, Contract } = require('ethers')
 const { ERC20, Exchange } = require('../utils/abis')
-const { getNetworkID, getPrivateKeyFromEnvironment } = require('../utils/helpers')
+const { getNetworkID, getPrivateKeyFromEnvironment, getInfuraKey } = require('../utils/helpers')
 const { contractAddresses, baseTokens, quoteTokens, decimals } = require('../config')
 
 const network = process.argv[2]
@@ -11,12 +11,11 @@ if (!network) console.log('Usage: node register_pairs {network}')
 
 const networkID = getNetworkID(network)
 const pk = getPrivateKeyFromEnvironment(network)
+const infuraKey = getInfuraKey(network)
 
 const addresses = contractAddresses[networkID]
-const provider = new providers.InfuraProvider(network)
+const provider = new providers.InfuraProvider(network, infuraKey)
 const signer = new Wallet(pk, provider)
-
-console.log(addresses)
 
 let exchange = new Contract(addresses['Exchange'], Exchange, signer)
 

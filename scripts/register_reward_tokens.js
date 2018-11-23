@@ -3,17 +3,17 @@ const path = require('path');
 const { utils, providers, Wallet, Contract } = require('ethers')
 const { ERC20, Rewards } = require('../utils/abis')
 const { contractAddresses, baseTokens, quoteTokens } = require('../config')
-const { getNetworkID, getPrivateKeyFromEnvironment } = require('../utils/helpers')
+const { getNetworkID, getPrivateKeyFromEnvironment, getInfuraKey } = require('../utils/helpers')
 
 const network = process.argv[2]
 if (network) throw new Error('Usage: node register_reward_tokens.js {network}')
 
+const infuraKey = getInfuraKey(network)
 const networkID = getNetworkID(network)
 const pk = getPrivateKeyFromEnvironment(network)
 const addresses = contractAddresses[networkID]
 
-
-const provider = new providers.InfuraProvider('rinkeby')
+const provider = new providers.InfuraProvider(network, infuraKey)
 const signer = new Wallet(pk, provider)
 let rewards = new Contract(addresses['RewardPools'], Rewards, signer)
 

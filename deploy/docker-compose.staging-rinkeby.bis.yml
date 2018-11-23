@@ -10,6 +10,43 @@
 
 version: '3'
 services:
+  ethereum:
+    image: ethereum/client-go
+    ports:
+      - "30303:30303"
+      - "8545:8545"
+      - "8546:8546"
+    volumes:
+      - "ethereum_root:/root/.ethereum"
+    environment:
+      - AMP_RINKEBY_ETHERBASE
+    command: [
+      "--port", "30303",
+      "--syncmode", "fast",
+      "--cache", "1024",
+      "--rinkeby",
+      "--datadir", "/root/.ethereum",
+      "--wsapi", "admin,eth,net,web3,personal",
+      "--rpcapi", "admin,eth,net,web3,personal",
+      "--rpc", "--rpcport", "8545", "--rpcaddr", "0.0.0.0",
+      "--ws", "--wsport", "8546", "--wsaddr", "0.0.0.0",
+      "--wsorigins", "*",
+      "--etherbase", $AMP_RINKEBY_ETHERBASE,
+      "--rpccorsdomain", "*",
+    ]
+    networks:
+      amp:
+        aliases:
+        - ethereum
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == ethereum
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+
   rabbitmq:
     image: rabbitmq
     ports:
@@ -24,7 +61,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == rabbitmq-staging
+          - node.hostname == rabbitmq
       restart_policy:
         condition: on-failure
         max_attempts: 3
@@ -43,7 +80,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == mongodb-staging
+          - node.hostname == mongodb
       restart_policy:
         condition: on-failure
         max_attempts: 3
@@ -55,7 +92,7 @@ services:
       - "80:80"
     environment:
       - AMP_ENGINE_HTTP_URL=/engine
-      - AMP_ETHEREUM_NODE_HTTP_URL=https://rinkeby.infura.io/
+      - AMP_ETHEREUM_NODE_HTTP_URL=/ethereum
       - AMP_ENGINE_WS_URL=ws://${AMP_RINKEBY_MATCHING_ENGINE_IP}:8081
       - AMP_ETHEREUM_NODE_WS_URL=wss://rinkeby.infura.io/_ws
       - AMP_ETHEREUM_NETWORK_ID=4
@@ -69,7 +106,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == client-staging
+          - node.hostname == client
       restart_policy:
         condition: on-failure
         max_attempts: 3
@@ -101,7 +138,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == matching-engine-staging
+          - node.hostname == matching-engine
       restart_policy:
         condition: on-failure
         max_attempts: 3
@@ -109,10 +146,11 @@ services:
 
 
 networks:
-  amp-staging:
+  amp:
     external: true
 
 volumes:
+  ethereum_root:
   rabbitmq_logs:
   rabbitmq_data:
   mongodb_data:

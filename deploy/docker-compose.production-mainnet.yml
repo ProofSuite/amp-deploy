@@ -8,48 +8,13 @@
 #  To work properly the ethereum node and other services might have
 # to be removed and simply working with external services
 
-version: '3'
+version: '3.3'
 services:
-  ethereum:
-    image: ethereum/client-go
-    ports:
-      - "30303:30303"
-      - "8545:8545"
-      - "8546:8546"
-    volumes:
-      - "ethereum_root:/root/.ethereum"
-    environment:
-      - AMP_MAINNET_ETHERBASE
-    command: [
-      "--port", "30303",
-      "--syncmode", "fast",
-      "--cache", "1024",
-      "--datadir", "/root/.ethereum",
-      "--wsapi", "admin,eth,net,web3,personal",
-      "--rpcapi", "admin,eth,net,web3,personal",
-      "--rpc", "--rpcport", "8545", "--rpcaddr", "0.0.0.0",
-      "--ws", "--wsport", "8546", "--wsaddr", "0.0.0.0",
-      "--wsorigins", "*",
-      "--etherbase", $AMP_MAINNET_ETHERBASE,
-      "--rpccorsdomain", "*",
-    ]
-    networks:
-      amp-production:
-        aliases:
-        - ethereum
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == ethereum-production
-      restart_policy:
-        condition: on-failure
-        max_attempts: 3
-        window: 120s
-
   rabbitmq:
     image: rabbitmq
     ports:
       - '5672:5672'
+      - '5671:443'
     networks:
       amp-production:
         aliases:
@@ -57,6 +22,15 @@ services:
     volumes:
       - "rabbitmq_logs:/var/log/rabbitmq"
       - "rabbitmq_data:/var/lib/rabbitmq"
+    configs:
+      - source: rabbitmq-ca-cert
+        target: /etc/ssl/rabbitmq/ca_certificate.pem"
+      - source: rabbitmq-server-cert
+        target: /etc/ssl/rabbitmq/server_certificate.pem
+      - source: rabbitmq-server-key
+        target: /etc/ssl/rabbitmq/server_key.pem
+      - source: rabbitmq-config
+        target: /etc/rabbitmq/rabbitmq.conf
     deploy:
       placement:
         constraints:
@@ -69,13 +43,18 @@ services:
   mongodb:
     image: mongo:latest
     ports:
-      - '27017:27017'
+      # - '27017:27017'
+      - '27017:443'
     networks:
       amp-production:
         aliases:
         - mongodb
     volumes:
     - "mongodb_data:/data/db"
+    # - "/etc/letsencrypt:/etc/letsencrypt"
+    configs:
+    - source: mongodb-full-key
+      target: /etc/ssl/mongodb/server_full_key.pem
     deploy:
       placement:
         constraints:
@@ -84,20 +63,55 @@ services:
         condition: on-failure
         max_attempts: 3
         window: 120s
+    command: [
+      "--auth",
+      "--sslMode", "requireSSL",
+      "--sslPEMKeyFile", "/etc/ssl/mongodb/server_full_key.pem",
+      # "--sslCAFile", "/etc/ssl/mongodb/ca_certificate.pem"
+    ]
+
+
+  # letsencrypt-bot:
+  #   image: hamburml/docker-flow-letsencrypt:latest
+  #   networks:
+  #     - amp-production
+  #   environment:
+  #     - DOMAIN_1=('amp.exchange.com', 'www.amp.exchange.com')
+  #     - CERTBOT_EMAIL=david@proofsuite.com
+  #     - CERTBOT_CRON_RENEW=('0 3 * * *' '0 15 * * *')
+  #   volumes:
+  #     - /etc/letsencrypt:/etc/letsencrypt
+  #   deploy:
+  #     placement:
+  #       constraints:
+  #         - node.hostname == client-production
+  #       restart_policy:
+  #         condition: on-failure
+  #         max_attempts: 3
+  #         window: 120s
 
   client:
     image: proofsuite/amp-client:latest
     ports:
       - "80:80"
+      - "443:443"
     environment:
       - AMP_ENGINE_HTTP_URL=/engine
-      - AMP_ETHEREUM_NODE_HTTP_URL=/ethereum
+      - AMP_ETHEREUM_NODE_HTTP_URL=https://mainnet.infura.io/
       - AMP_ENGINE_WS_URL=ws://${AMP_MAINNET_MATCHING_ENGINE_IP}:8081
       - AMP_ETHEREUM_NODE_WS_URL=wss://mainnet.infura.io/_ws
-      - AMP_ETHEREUM_NETWORK_ID=4
+      - AMP_ETHEREUM_NETWORK_ID=1
     depends_on:
       - matching-engine
       - ethereum
+    configs:
+      # - /etc/letsencrypt:/etc/letsencrypt
+      - source: nginx-config
+        target: /etc/nginx/nginx.conf
+      - source: client-server-cert
+        target: /etc/ssl/client/server_certificate.pem
+      - source: client-server-key
+        target: /etc/ssl/client/server_key.pem
     networks:
       amp-production:
         aliases:
@@ -117,21 +131,47 @@ services:
   matching-engine:
     image: proofsuite/amp-matching-engine:latest
     ports:
-      - '8081:8081'
+      # - '8081:8081'
+      - '8081:443'
     depends_on:
       - rabbitmq
       - mongodb
     environment:
-      # - AMP_ETHEREUM_NODE_HTTP_URL=http://ethereum:8545
-      # - AMP_ETHEREUM_NODE_WS_URL=ws://ethereum:8546
-      - AMP_ETHEREUM_NODE_HTTP_URL=https://mainnet.infura.io
-      - AMP_ETHEREUM_NODE_WS_URL=wss://mainnet.infura.io/_ws
+      - AMP_ETHEREUM_NODE_HTTP_URL=https://mainnet.infura.io/${AMP_MAINNET_INFURA_KEY}
+      - AMP_ETHEREUM_NODE_WS_URL=wss://mainnet.infura.io/_ws/${AMP_MAINNET_INFURA_KEY}
       - AMP_MONGODB_URL=mongodb
       - AMP_MONGODB_DBNAME=proofdex
-      - AMP_RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+      - AMP_MONGODB_USERNAME=${AMP_PRODUCTION_MONGODB_USERBNAME}
+      - AMP_MONGODB_PASSWORD=${AMP_PRODUCTION_MONGODB_PASSWORD}
+      - AMP_ENABLE_TLS=true
+      - AMP_RABBITMQ_URL=rabbitmq
+      - AMP_RABBITMQ_USERNAME=${AMP_PRODUCTION_RABBITMQ_USERNAME}
+      - AMP_RABBITMQ_PASSWORD=${AMP_PRODUCTION_RABBITMQ_PASSWORD}
+      - AMP_MATCHING_ENGINE_CA_CERT=/etc/ssl/matching-engine/ca_certificate.pem
+      - AMP_MATCHING_ENGINE_SERVER_CERT=/etc/ssl/matching-engine/server_certificate.pem
+      - AMP_MATCHING_ENGINE_SERVER_KEY=/etc/ssl/matching-engine/server_key.pem
+      - AMP_MONGODB_CLIENT_CERT=/etc/ssl/mongodb/client_certificate.pem
+      - AMP_MONGODB_CLIENT_KEY=/etc/ssl/mongodb/client_key.pem
+      - AMP_RABBITMQ_CLIENT_KEY=/etc/ssl/rabbitmq/client_key.pem
+      - AMP_RABBITMQ_CLIENT_CERT=/etc/ssl/rabbitmq/client_certificate.pem
       - AMP_EXCHANGE_CONTRACT_ADDRESS=${AMP_MAINNET_EXCHANGE_CONTRACT_ADDRESS}
-      - AMP_WETH_CONTRACT_ADDRESS=${AMP_MAINNET_WETH_CONTRACT_ADDRESS}
       - AMP_FEE_ACCOUNT_ADDRESS=${AMP_MAINNET_FEE_ACCOUNT_ADDRESS}
+    configs:
+      - source: matching-engine-ca-cert
+        target: /etc/ssl/matching-engine/ca_certificate.pem
+      - source: matching-engine-server-cert
+        target: /etc/ssl/matching-engine/server_cert.pem
+      - source: matching-engine-server-key
+        target: /etc/ssl/matching-engine/server_key.pem
+      - source: rabbitmq-client-cert
+        target: /etc/ssl/rabbitmq/client_cert.pem
+      - source: rabbitmq-client-key
+        target: /etc/ssl/rabbitmq/client_key.pem
+      - source: mongodb-client-cert
+        target: /etc/ssl/mongodb/client_cert.pem
+      - source: mongodb-client-key
+        target: /etc/ssl/mongodb/client_key.pem
+
     networks:
       amp-production:
         aliases:
@@ -150,8 +190,41 @@ networks:
   amp-production:
     external: true
 
+configs:
+  matching-engine-ca-cert:
+    external: true
+  matching-engine-server-cert:
+    external: true
+  matching-engine-server-key:
+    external: true
+  mongodb-client-key:
+    external: true
+  mongodb-client-cert:
+    external: true
+  mongodb-full-key:
+    external: true
+  rabbitmq-client-cert:
+    external: true
+  rabbitmq-client-key:
+    external: true
+  client-ca-cert:
+    external: true
+  client-server-cert:
+    external: true
+  client-server-key:
+    external: true
+  rabbitmq-ca-cert:
+    external: true
+  rabbitmq-server-cert:
+    external: true
+  rabbitmq-server-key:
+    external: true
+  rabbitmq-config:
+    external: true
+  nginx-config:
+    external: true
+
 volumes:
-  ethereum_root:
   rabbitmq_logs:
   rabbitmq_data:
   mongodb_data:
