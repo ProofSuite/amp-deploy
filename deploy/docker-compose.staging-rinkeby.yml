@@ -29,6 +29,8 @@ services:
         condition: on-failure
         max_attempts: 3
         window: 120s
+    command: >
+      bin/sh -c "sleep 10 && rabbitmq"
 
   mongodb:
     image: mongo:latest

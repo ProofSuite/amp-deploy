@@ -10,12 +10,7 @@
 
 version: '3.7'
 services:
-  # Currently the username and password need to be set manually after deployment with the following commands:
-  # rabbitmqctl add_user ${username} ${password}
-  # rabbitmqctl set_user_tags ${username} administrator
-  # rabbitmqctl set_permissions ${username} ".*" ".*" ".*"
   rabbitmq:
-    hostname: rabbitmq
     image: rabbitmq
     ports:
       - '5672:5672'
@@ -27,6 +22,9 @@ services:
     volumes:
       - "rabbitmq_logs:/var/log/rabbitmq"
       - "rabbitmq_data:/var/lib/rabbitmq"
+    environment:
+      RABBIMQ_DEFAULT_USER: ${AMP_PRODUCTION_RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${AMP_PRODUCTION_RABBITMQ_PASSWORD} 
     configs:
       - source: rabbitmq-ca-cert
         target: /etc/ssl/rabbitmq/ca_certificate.pem
@@ -44,6 +42,39 @@ services:
         condition: on-failure
         max_attempts: 3
         window: 120s
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      # - '27017:27017'
+      - '27017:443'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: hey
+      MONGO_INITDB_ROOT_PASSWORD: hey
+    networks:
+      amp-production:
+        aliases:
+        - mongodb
+    volumes:
+    - "mongodb_data:/data/db"
+    configs:
+    - source: mongodb-full-key
+      target: /etc/ssl/mongodb/server_full_key.pem
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == mongodb-production
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+    command: [
+      "--auth",
+      "--sslMode", "requireSSL",
+      "--sslPEMKeyFile", "/etc/ssl/mongodb/server_full_key.pem",
+      # "--sslCAFile", "/etc/ssl/mongodb/ca_certificate.pem"
+    ]
+
 
   # letsencrypt-bot:
   #   image: hamburml/docker-flow-letsencrypt:latest
@@ -65,7 +96,6 @@ services:
   #         window: 120s
 
   client:
-    hostname: client
     image: proofsuite/amp-client:latest
     ports:
       - "80:80"
@@ -79,9 +109,8 @@ services:
     depends_on:
       - matching-engine
       - ethereum
-    volumes: 
-      - /etc/letsencrypt:/etc/letsencrypt
     configs:
+      # - /etc/letsencrypt:/etc/letsencrypt
       - source: nginx-config
         target: /etc/nginx/nginx.conf
       - source: client-server-cert
@@ -105,11 +134,10 @@ services:
 
 
   matching-engine:
-    hostname: matching-engine
     image: proofsuite/amp-matching-engine:latest
     ports:
-      - '8081:8081'
-      # - '8081:443'
+      # - '8081:8081'
+      - '8081:443'
     depends_on:
       - rabbitmq
       - mongodb
@@ -122,8 +150,8 @@ services:
       - AMP_MONGODB_PASSWORD=${AMP_PRODUCTION_MONGODB_PASSWORD}
       - AMP_ENABLE_TLS=true
       - AMP_RABBITMQ_URL=rabbitmq
-      - AMP_RABBITMQ_USERNAME=root
-      - AMP_RABBITMQ_PASSWORD=verystrongpassword
+      - AMP_RABBITMQ_USERNAME=${AMP_PRODUCTION_RABBITMQ_USERNAME}
+      - AMP_RABBITMQ_PASSWORD=${AMP_PRODUCTION_RABBITMQ_PASSWORD}
       - AMP_MATCHING_ENGINE_CA_CERT=/etc/ssl/matching-engine/ca_certificate.pem
       - AMP_MATCHING_ENGINE_SERVER_CERT=/etc/ssl/matching-engine/server_certificate.pem
       - AMP_MATCHING_ENGINE_SERVER_KEY=/etc/ssl/matching-engine/server_key.pem
@@ -137,15 +165,15 @@ services:
       - source: matching-engine-ca-cert
         target: /etc/ssl/matching-engine/ca_certificate.pem
       - source: matching-engine-server-cert
-        target: /etc/ssl/matching-engine/server_certificate.pem
+        target: /etc/ssl/matching-engine/server_cert.pem
       - source: matching-engine-server-key
         target: /etc/ssl/matching-engine/server_key.pem
       - source: rabbitmq-client-cert
-        target: /etc/ssl/rabbitmq/client_certificate.pem
+        target: /etc/ssl/rabbitmq/client_cert.pem
       - source: rabbitmq-client-key
         target: /etc/ssl/rabbitmq/client_key.pem
       - source: mongodb-client-cert
-        target: /etc/ssl/mongodb/client_certificate.pem
+        target: /etc/ssl/mongodb/client_cert.pem
       - source: mongodb-client-key
         target: /etc/ssl/mongodb/client_key.pem
 
@@ -220,4 +248,4 @@ configs:
 volumes:
   rabbitmq_logs:
   rabbitmq_data:
-  client_certificates:
+  mongodb_data:

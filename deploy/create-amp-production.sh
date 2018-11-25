@@ -72,3 +72,36 @@ docker-machine ssh rabbitmq-production mkdir etc/ssl
 docker-machine ssh client-production mkdir etc/ssl
 docker-machine ssh mongodb-production mkdir etc/ssl
 docker-machine ssh matching-engine-production mkdir etc/ssl
+
+docker-machine ssh matching-engine-production sudo chmod 755 /etc/letsencrypt/live
+docker-machine ssh matching-engine-production mkdir -p etc/letsencrypt/amp.exchange
+
+AMP_PRODUCTION_RABBITMQ_USERNAME=${AMP_PRODUCTION_RABBITMQ_USERNAME}
+AMP_PRODUCTION_RABBITMQ_PASSWORD=${AMP_PRODUCTION_RABBITMQ_PASSWORD}
+AMP_PRODUCTION_MONGODB_USERNAME=${AMP_PRODUCTION_MONGODB_USERNAME}
+AMP_PRODUCTION_MONGODB_PASSWORD=${AMP_PRODUCTION_MONGODB_PASSWORD}
+
+
+
+# mongod --dbpath /data/db --nojournal
+# while ! nc -vz localhost 27017; do sleep 1; done
+
+# echo "Creating mongodb user:"
+# echo -e "Username: ${AMP_PRODUCTION_MONGOB_USERNAME}"
+# echo -e "Password: ${AMP_PRODUCTION_MONGODB_PASSWORD}"
+# mongo proofdex --eval "db.createUser({ user: 'AMP_PRODUCTION_MONGODB_USERNAME', pwd: 'AMP_PRODUCTION_MONGODB_PASSWORD', roles: [ { role: dbAdminAnyDatabase, db: proofdex } ] });"
+
+# mongod --dbpath /data/db --shutdown
+
+
+
+
+
+
+
+
+
+
+
+
+
