@@ -2,9 +2,21 @@ const argv = require('yargs').argv
 const utils = require('ethers').utils
 const MongoClient = require('mongodb').MongoClient
 const faker = require('faker')
-const { testAccounts: addresses } = require('../../config')
+const { testAccounts: addresses } = require('../config')
+const { generatePricingData, interpolatePrice } = require('../utils/prices')
+const { getMongoURI } = require('../utils/helpers')
+
 const mongoUrl = argv.mongo_url || 'mongodb://localhost:27017'
-const { generatePricingData, interpolatePrice } = require('../../utils/prices')
+const mongoUsername = argv.mongo_username
+const mongoPassword = argv.mongo_password
+
+let mongoURI
+
+if (mongoUsername && mongoPassword) {
+  mongoURI = getMongoURI(mongoUsername, mongoPassword)
+} else {
+  mongoURI = mongoUrl 
+}
 
 let exchangeAddress = '0x7400d4d4263a3330beeb2a0d2674f0456054f217'
 let minAmount = 0.1
@@ -25,12 +37,10 @@ let randomBigAmount = () => {
 }
 
 const seed = async () => {
-  const client = await MongoClient.connect(mongoUrl, { useNewUrlParser: true })
+  const client = await MongoClient.connect(mongoURI, { useNewUrlParser: true })
   const db = client.db('proofdex')
 
-  const pairDocuments = await db.collection('pairs').find({
-    quoteTokenSymbol: 'USDC'
-  }, {
+  const pairDocuments = await db.collection('pairs').find({ quoteTokenSymbol: "WETH" }, {
     baseTokenSymbol: 1,
     baseTokenAddress: 1,
     quoteTokenSymbol: 1,
@@ -51,10 +61,10 @@ const seed = async () => {
 
   for (let pair of pairs) {
     let trades = []
-    let start = new Date(2017, 6, 1)
+    let start = new Date(2018, 6, 1)
     let end = new Date(Date.now())
     let pricingData = generatePricingData(start, end)
-    let numberOfOrders = 100000
+    let numberOfOrders = 50000
 
     for (let i = 0; i < numberOfOrders; i++) {
       let taker = randomElement(addresses)

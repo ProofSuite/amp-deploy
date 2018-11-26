@@ -12,9 +12,11 @@ if [[ $(which rabbitmqadmin) == "rabbitmqadmin not found" ]]; then
   echo "rabbitmqadmin is missing"
 fi
 
-MONGODB_URL='mongodb://'$(docker-machine ip mongodb-production)':27017';
+MONGODB_URL='';
 RABBITMQ_URL='ampq://guest:guest@'$(docker-machine ip rabbitmq-production)':5672';
 AMP_ENVIRONMENT='production'
+MONGODB_USERNAME=$AMP_MONGODB_USERNAME
+MONGODB_PASSWORD=$AMP_MONGODB_PASSWORD
 
 
 show_menu(){
@@ -62,6 +64,7 @@ show_menu(){
       5) clear;
       write_header "Contracts Menu";
       show_contracts_menu;
+      ;;
 
       x)exit;
       ;;
@@ -99,8 +102,8 @@ show_mongo_menu(){
     echo -e "${MENU}${NUMBER} 10)${MENU} Seed Wallets ${NORMAL}"
     echo -e "${MENU}${NUMBER} 11)${MENU} Seed Random Orders ${NORMAL}"
     echo -e "${MENU}${NUMBER} 12)${MENU} Seed Random Trades ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 14)${MENU} Seed Rinkeby MongoDB Test Environment ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 15)${MENU} Back ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 13)${MENU} Seed Rinkeby MongoDB Test Environment ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 14)${MENU} Back ${NORMAL}"
     echo -e "${MENU}*********************************************${NORMAL}"
     read opt
 
@@ -112,102 +115,177 @@ show_mongo_menu(){
       case $opt in
       1) clear;
       write "Dropping Database";
-      node ../db/drop_db --mongo_url $MONGODB_URL > /dev/null;
+      node ../db/drop_db --mongo_url $MONGODB_URL \
+        --mongo_username $MONGODB_USERNAME \
+        --mongo_password $MONGODB_PASSWORD;
+
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       2) clear;
       write "Dropping Pairs";
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collection pairs > /dev/null;
+      node ../db/drop_collection \
+        --mongo_username $MONGODB_USERNAME \
+        --mongo_url $MONGODB_URL \
+        --mongo_password $MONGODB_PASSWORD \
+        --collection pairs;
+
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       3) clear;
       write "Dropping Tokens";
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collection tokens > /dev/null;
+      node ../db/drop_collection \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD \
+      --collection tokens;
+
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       4) clear;
       write "Dropping Account";
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collections accounts > /dev/null;
+      node ../db/drop_collection \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD \
+      --collections accounts;
+
       write_header "Dropped Accounts";
       show_mongo_menu;
       ;;
 
       5) clear;
       write 'Dropping wallets ';
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collection wallets > /dev/null;
+      node ../db/drop_collection \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD \
+      --collection wallets;
+
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       6) clear;
       write 'Dropping orders collection...';
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collection orders > /dev/null;
+      node ../db/drop_collection \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD \
+      --collection orders;
+      
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       7) clear;
       write 'Dropping trades collection...'
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collection trades > /dev/null;
+      node ../db/drop_collection \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD \
+      --collection trades;
+
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       8) clear;
       write 'Seed tokens...';
-      node ../db/seed_tokens --mongo_url $MONGODB_URL --network local > /dev/null;
-      node ../db/seed_quotes --mongo_url $MONGODB_URL --network local > /dev/null;
+      node ../db/seed_tokens \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD \
+      --network homestead;
+
+      node ../db/seed_quotes \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD \
+      --network homestead;
+
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       9) clear;
       write 'Seeding pairs...';
-      node ../db/seed_pairs --mongo_url $MONGODB_URL > /dev/null;
+      node ../db/seed_pairs \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD;
+
+      write 'Done\n';
+      show_mongo_menu;
+      ;;
+
+      10) clear;
+      write 'Seeding wallets...';
+      node ../db/seed_wallets \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD \
+      --network homestead;
+
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       11) clear;
-      write 'Seeding wallets...';
-      node ../db/seed_wallets --mongo_url $MONGODB_URL --network local > dev/null;
+      write 'Seeding orders';
+      node ../db/seed_orders \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD;
+
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       12) clear;
-      write 'Seeding orders';
-      node ../db/seed_orders --mongo_url $MONGODB_URL > dev/null;
+      write 'Seeding trades';
+      node ../db/seed_trades \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       13) clear;
-      write 'Seeding trades';
-      node ../db/seed_trades --mongo_url $MONGODB_URL > dev/null;
-      write 'Done\n';
-      show_mongo_menu;
-      ;;
-
-      14) clear;
       write 'Seeding tokens ...';
-      node ../db/seed_tokens --mongo_url $MONGODB_URL --network homestead > /dev/null;
-      node ../db/seed_quotes --mongo_url $MONGODB_URL --network homestead > /dev/null;
+      node ../db/seed_tokens \
+        --mongo_url $MONGODB_URL \
+        --mongo_username $MONGODB_USERNAME \
+        --mongo_password $MONGODB_PASSWORD \
+        --network homestead;
+      node ../db/seed_quotes \
+        --mongo_url $MONGODB_URL \
+        --mongo_username $MONGODB_USERNAME \
+        --mongo_password $MONGODB_PASSWORD \
+        --network homestead;
+
       write 'Seeding pairs ...';
-      node ../db/seed_pairs --mongo_url $MONGODB_URL > /dev/null;
+      node ../db/seed_pairs --mongo_url $MONGODB_URL \
+        --mongo_username $MONGODB_USERNAME \
+        --mongo_password $MONGODB_PASSWORD;
+
       write 'Seeding wallets ...';
-      node ../db/seed_wallets --mongo_url $MONGODB_URL --network homestead > dev/null;
+      node ../db/seed_wallets --mongo_url $MONGODB_URL \
+        --mongo_username $MONGODB_USERNAME \
+        --mongo_password $MONGODB_PASSWORD \
+       --network homestead;
+
       write 'Done\n'
       show_mongo_menu;
       ;;
 
-      15) clear;
+      14) clear;
       show_menu;
       ;;
 

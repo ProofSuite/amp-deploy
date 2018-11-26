@@ -19,9 +19,9 @@ services:
     image: rabbitmq
     ports:
       - '5672:5672'
-      - '5671:443'
+      - '5671:5671'
     networks:
-      amp-production:
+      amp-production-backend:
         aliases:
         - rabbitmq
     volumes:
@@ -45,71 +45,12 @@ services:
         max_attempts: 3
         window: 120s
 
-  # letsencrypt-bot:
-  #   image: hamburml/docker-flow-letsencrypt:latest
-  #   networks:
-  #     - amp-production
-  #   environment:
-  #     - DOMAIN_1=('amp.exchange.com', 'www.amp.exchange.com')
-  #     - CERTBOT_EMAIL=david@proofsuite.com
-  #     - CERTBOT_CRON_RENEW=('0 3 * * *' '0 15 * * *')
-  #   volumes:
-  #     - /etc/letsencrypt:/etc/letsencrypt
-  #   deploy:
-  #     placement:
-  #       constraints:
-  #         - node.hostname == client-production
-  #       restart_policy:
-  #         condition: on-failure
-  #         max_attempts: 3
-  #         window: 120s
-
-  client:
-    hostname: client
-    image: proofsuite/amp-client:latest
-    ports:
-      - "80:80"
-      - "443:443"
-    environment:
-      - AMP_ENGINE_HTTP_URL=https://amp.exchange/
-      - AMP_ETHEREUM_NODE_HTTP_URL=https://mainnet.infura.io/
-      - AMP_ENGINE_WS_URL=wss://amp.exchange/
-      - AMP_ETHEREUM_NODE_WS_URL=wss://mainnet.infura.io/_ws
-      - AMP_ETHEREUM_NETWORK_ID=1
-    depends_on:
-      - matching-engine
-      - ethereum
-    volumes: 
-      - /etc/letsencrypt:/etc/letsencrypt
-    configs:
-      - source: nginx-config
-        target: /etc/nginx/nginx.conf
-      - source: client-server-cert
-        target: /etc/ssl/client/server_certificate.pem
-      - source: client-server-key
-        target: /etc/ssl/client/server_key.pem
-    networks:
-      amp-production:
-        aliases:
-        - client
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == client-production
-      restart_policy:
-        condition: on-failure
-        max_attempts: 3
-        window: 120s
-    command: >
-         bin/sh -c "sleep 10 && chmod +x ./replace.sh && sleep 1 && ./replace.sh && cat /usr/share/nginx/html/env.js && nginx -g 'daemon off;'"
-
-
   matching-engine:
     hostname: matching-engine
     image: proofsuite/amp-matching-engine:latest
     ports:
-      - '8081:443'
-      # - '8081:443'
+      - '443:443'
+      - '80:80'
     depends_on:
       - rabbitmq
       - mongodb
@@ -118,7 +59,7 @@ services:
       - AMP_ETHEREUM_NODE_WS_URL=wss://mainnet.infura.io/_ws/${AMP_MAINNET_INFURA_KEY}
       - AMP_MONGODB_URL=mongodb
       - AMP_MONGODB_DBNAME=proofdex
-      - AMP_MONGODB_USERNAME=${AMP_PRODUCTION_MONGODB_USERBNAME}
+      - AMP_MONGODB_USERNAME=${AMP_PRODUCTION_MONGODB_USERNAME}
       - AMP_MONGODB_PASSWORD=${AMP_PRODUCTION_MONGODB_PASSWORD}
       - AMP_ENABLE_TLS=true
       - AMP_RABBITMQ_URL=rabbitmq
@@ -150,7 +91,7 @@ services:
         target: /etc/ssl/mongodb/client_key.pem
 
     networks:
-      amp-production:
+      amp-production-backend:
         aliases:
         - matching-engine
     deploy:
@@ -163,7 +104,7 @@ services:
         window: 120s
 
 networks:
-  amp-production:
+  amp-production-backend:
     external: true
 
 configs:

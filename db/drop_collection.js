@@ -1,13 +1,25 @@
 const MongoClient = require('mongodb').MongoClient
 const argv = require('yargs').argv
+const { getMongoURI } = require('../utils/helpers')
+
 const mongoUrl = argv.mongo_url || 'mongodb://localhost:27017'
+const mongoUsername = argv.mongo_username
+const mongoPassword = argv.mongo_password
 const collection = argv.collection
+
+let mongoURI
+
+if (mongoUsername && mongoPassword) {
+  mongoURI = getMongoURI(mongoUsername, mongoPassword)
+} else {
+  mongoURI = mongoUrl 
+}
 
 let client, db, response
 
 const drop = async () => {
   try {
-    client = await MongoClient.connect(mongoUrl, { useNewUrlParser: true })
+    client = await MongoClient.connect(mongoURI, { useNewUrlParser: true })
     db = client.db('proofdex')
     response = await db.dropCollection(collection)
     console.log(response)

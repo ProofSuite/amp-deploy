@@ -113,97 +113,97 @@ show_mongo_menu(){
       case $opt in
       1) clear;
       write "Dropping Database";
-      node ../db/drop_db --mongo_url $MONGODB_URL > /dev/null;
+      node ../db/drop_db --mongo_url $MONGODB_URL;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       2) clear;
       write "Dropping Pairs";
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collection pairs > /dev/null;
+      node ../db/drop_collection --mongo_url $MONGODB_URL --collection pairs;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       3) clear;
       write "Dropping Tokens";
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collection tokens > /dev/null;
+      node ../db/drop_collection --mongo_url $MONGODB_URL --collection tokens;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       4) clear;
       write "Dropping Account";
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collections accounts > /dev/null;
+      node ../db/drop_collection --mongo_url $MONGODB_URL --collections accounts;
       write_header "Dropped Accounts";
       show_mongo_menu;
       ;;
 
       5) clear;
       write 'Dropping wallets ';
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collection wallets > /dev/null;
+      node ../db/drop_collection --mongo_url $MONGODB_URL --collection wallets;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       6) clear;
       write 'Dropping orders collection...';
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collection orders > /dev/null;
+      node ../db/drop_collection --mongo_url $MONGODB_URL --collection orders;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       7) clear;
       write 'Dropping trades collection...'
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collection trades > /dev/null;
+      node ../db/drop_collection --mongo_url $MONGODB_URL --collection trades;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       8) clear;
       write 'Seed tokens...';
-      node ../db/seed_tokens --mongo_url $MONGODB_URL --network rinkeby > /dev/null;
-      node ../db/seed_quotes --mongo_url $MONGODB_URL --network rinkeby > /dev/null;
+      node ../db/seed_tokens --mongo_url $MONGODB_URL --network rinkeby;
+      node ../db/seed_quotes --mongo_url $MONGODB_URL --network rinkeby;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       9) clear;
       write 'Seeding pairs...';
-      node ../db/seed_pairs --mongo_url $MONGODB_URL > /dev/null;
+      node ../db/seed_pairs --mongo_url $MONGODB_URL;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       10) clear;
       write 'Seeding wallets...';
-      node ../db/seed_wallets --mongo_url $MONGO_URL --network rinkeby > /dev/null;
+      node ../db/seed_wallets --mongo_url $MONGO_URL --network rinkeby;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       11) clear;
       write 'Seeding orders';
-      node ../db/seed_orders --mongo_url $MONGODB_URL > dev/null;
+      node ../db/seed_orders --mongo_url $MONGODB_URL;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       12) clear;
       write 'Seeding trades';
-      node ../db/seed_trades --mongo_url $MONGODB_URL > dev/null;
+      node ../db/seed_trades --mongo_url $MONGODB_URL;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       13) clear;
       write 'Seeding tokens ...';
-      node ../db/seed_tokens --mongo_url $MONGODB_URL --network rinkeby > /dev/null;
-      node ../db/seed_quotes --mongo_url $MONGODB_URL --network rinkeby > /dev/null;
+      node ../db/seed_tokens --mongo_url $MONGODB_URL --network rinkeby;
+      node ../db/seed_quotes --mongo_url $MONGODB_URL --network rinkeby;
       write 'Seeding pairs ...';
-      node ../db/seed_pairs --mongo_url $MONGODB_URL > /dev/null;
+      node ../db/seed_pairs --mongo_url $MONGODB_URL;
       write 'Seeding wallets ...';
-      node ../db/seed_wallets --mongo_url $MONGODB_URL --network rinkeby > dev/null;
+      node ../db/seed_wallets --mongo_url $MONGODB_URL --network rinkeby;
       write 'Done\n'
       show_mongo_menu;
       ;;
@@ -251,22 +251,22 @@ show_inspect_mongo_menu(){
     else
       case $opt in
       1) clear;
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/query_tokens | less ;
+      node ../db/query_collection --mongo_url $MONGODB_URL --collection "tokens" | less;
       show_inspect_mongo_menu;
       ;;
 
       2) clear;
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/query_pairs | less;
+      node ../db/query_collection --mongo_url $MONGODB_URL --collection "pairs" | less;
       show_inspect_mongo_menu;
       ;;
 
       3) clear;
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/query_orders | less;
+      node ../db/query_collection --mongo_url $MONGODB_URL --collection "orders" | less;
       show_inspect_mongo_menu;
       ;;
 
       4) clear;
-      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/query_trades | less;
+      node ../db/query_collection --mongo_url $MONGODB_URL --collection "trades" | less;
       show_inspect_mongo_menu;
       ;;
 

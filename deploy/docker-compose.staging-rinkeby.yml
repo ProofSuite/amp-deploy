@@ -24,13 +24,11 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == rabbitmq-staging
+          - node.hostname == rabbitmq
       restart_policy:
         condition: on-failure
         max_attempts: 3
         window: 120s
-    command: >
-      bin/sh -c "sleep 10 && rabbitmq"
 
   mongodb:
     image: mongo:latest
@@ -45,7 +43,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == mongodb-staging
+          - node.hostname == mongodb
       restart_policy:
         condition: on-failure
         max_attempts: 3
@@ -58,8 +56,8 @@ services:
     environment:
       - AMP_ENGINE_HTTP_URL=/engine
       - AMP_ETHEREUM_NODE_HTTP_URL=https://rinkeby.infura.io/
-      - AMP_ENGINE_WS_URL=ws://${AMP_RINKEBY_MATCHING_ENGINE_IP}:8081
       - AMP_ETHEREUM_NODE_WS_URL=wss://rinkeby.infura.io/_ws
+      - AMP_ENGINE_WS_URL=ws://${AMP_RINKEBY_MATCHING_ENGINE_IP}:8081
       - AMP_ETHEREUM_NETWORK_ID=4
     depends_on:
       - matching-engine
@@ -71,7 +69,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == client-staging
+          - node.hostname == client
       restart_policy:
         condition: on-failure
         max_attempts: 3
@@ -92,10 +90,10 @@ services:
       - AMP_ETHEREUM_NODE_WS_URL=wss://rinkeby.infura.io/_ws
       - AMP_MONGODB_URL=mongodb
       - AMP_MONGODB_DBNAME=proofdex
-      - AMP_RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+      - AMP_RABBITMQ_URL=rabbitmq
       - AMP_EXCHANGE_CONTRACT_ADDRESS=${AMP_RINKEBY_EXCHANGE_CONTRACT_ADDRESS}
-      - AMP_WETH_CONTRACT_ADDRESS=${AMP_RINKEBY_WETH_CONTRACT_ADDRESS}
       - AMP_FEE_ACCOUNT_ADDRESS=${AMP_RINKEBY_FEE_ACCOUNT_ADDRESS}
+      - AMP_ENABLE_TLS=false
     networks:
       amp:
         aliases:
@@ -103,7 +101,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == matching-engine-staging
+          - node.hostname == matching-engine
       restart_policy:
         condition: on-failure
         max_attempts: 3
@@ -111,7 +109,7 @@ services:
 
 
 networks:
-  amp-staging:
+  amp:
     external: true
 
 volumes:

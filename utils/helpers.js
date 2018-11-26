@@ -25,6 +25,10 @@ const getInfuraKey = (networkName) => {
   }[networkName]
 }
 
+const getMongoURI = (user, password) => {
+  return `mongodb+srv://${user}:${password}@ampcluster0-xzynf.mongodb.net/proofdex?retryWrites=true`
+}
+
 const getPrivateKeyFromEnvironment = (networkName) => {
   switch(networkName) {
     case "mainnet": 
@@ -91,7 +95,7 @@ const queryContractAddresses = () => {
   contracts['1'] = {
     "AE": "0x5ca9a71b1d01849c0a95490cc00559717fcf0d1d",
     "BAT": "0x0d8775f648430679a709e98d2b0cb6250d2887ef",
-    "BNB": " 0xB8c77482e45F1F44dE1745F52C74426C631bDD52",
+    "BNB": "0xB8c77482e45F1F44dE1745F52C74426C631bDD52",
     "DAI": "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359",
     "Exchange": "0x44cccaaa4f586300f552dd4adbb20ceddf57a2c5",
     "RewardPools": "0x654d7a6de5580e0c8bc34658cc5e471d55a864bd",
@@ -119,6 +123,7 @@ const queryContractAddresses = () => {
 
 module.exports = {
   getNetworkID,
+  getMongoURI,
   getInfuraKey,
   getPriceMultiplier,
   getMainnetAddresses,

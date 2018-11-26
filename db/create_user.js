@@ -8,7 +8,7 @@ let client, db
 
 const create = async () => {
     try {
-        client = await MongoClient.connect(mongoUrl, { useNewUrlParser: true })
+        client = await MongoClient.connect(mongoURI, { useNewUrlParser: true })
         db = client.db('proofdex')
         db.addUser(
             {

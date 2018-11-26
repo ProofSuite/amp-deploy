@@ -1,19 +1,29 @@
 const argv = require('yargs').argv
 const MongoClient = require('mongodb').MongoClient
-const { keys } = require('../../config')
+const { keys } = require('../config')
 const { utils, Wallet } = require('ethers')
-const { getNetworkID } = require('../../utils/helpers')
+const { getNetworkID, getMongoURI } = require('../utils/helpers')
 
 const mongoUrl = argv.mongo_url || 'mongodb://localhost:27017'
+const mongoUsername = argv.mongo_username
+const mongoPassword = argv.mongo_password
 const network = argv.network
+
+let mongoURI
+
+if (mongoUsername && mongoPassword) {
+  mongoURI = getMongoURI(mongoUsername, mongoPassword)
+} else {
+  mongoURI = mongoUrl 
+}
+
 const networkID = getNetworkID(network)
 const walletKeys = keys[networkID]
-
 let client, db, documents, response
 
 const seed = async () => {
   try {
-    client = await MongoClient.connect(mongoUrl, { useNewUrlParser: true })
+    client = await MongoClient.connect(mongoURI, { useNewUrlParser: true })
     db = client.db('proofdex')
     documents = []
 

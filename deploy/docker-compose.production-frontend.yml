@@ -1,0 +1,125 @@
+# This docker compose file starts processes on remote aws instances
+# For this, docker needs to be in swarm mode with the following nodes
+# - engine
+# - rabbitmq
+# - client
+# - mongodb
+# - ethereum
+#  To work properly the ethereum node and other services might have
+# to be removed and simply working with external services
+
+version: '3.7'
+services:
+  # letsencrypt-bot:
+  #   image: hamburml/docker-flow-letsencrypt:latest
+  #   networks:
+  #     - amp-production
+  #   environment:
+  #     - DOMAIN_1=('amp.exchange.com', 'www.amp.exchange.com')
+  #     - CERTBOT_EMAIL=david@proofsuite.com
+  #     - CERTBOT_CRON_RENEW=('0 3 * * *' '0 15 * * *')
+  #   volumes:
+  #     - /etc/letsencrypt:/etc/letsencrypt
+  #   deploy:
+  #     placement:
+  #       constraints:
+  #         - node.hostname == client-production
+  #       restart_policy:
+  #         condition: on-failure
+  #         max_attempts: 3
+  #         window: 120s
+
+  client:
+    hostname: client
+    image: proofsuite/amp-client:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - AMP_ENGINE_HTTP_URL=https://engine.amp.exchange
+      - AMP_ETHEREUM_NODE_HTTP_URL=https://mainnet.infura.io
+      - AMP_ENGINE_WS_URL=wss://engine.amp.exchange
+      - AMP_ETHEREUM_NODE_WS_URL=wss://mainnet.infura.io/_ws
+      - AMP_ETHEREUM_NETWORK_ID=1
+    volumes: 
+      - /etc/letsencrypt:/etc/letsencrypt
+    configs:
+      - source: nginx-config
+        target: /etc/nginx/nginx.conf
+      - source: client-server-cert
+        target: /etc/ssl/client/server_certificate.pem
+      - source: client-server-key
+        target: /etc/ssl/client/server_key.pem
+    networks:
+      amp-production-frontend:
+        aliases:
+        - client
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == client-production
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+    command: >
+         bin/sh -c "sleep 10 && chmod +x ./replace.sh && sleep 1 && ./replace.sh && cat /usr/share/nginx/html/env.js && nginx -g 'daemon off;'"
+
+networks:
+  amp-production-frontend:
+    external: true
+
+configs:
+  matching-engine-ca-cert:
+    name: matching-engine-ca-cert-${CONFIG_VERSION:-0}
+    external: true
+  matching-engine-server-cert:
+    name: matching-engine-server-cert-${CONFIG_VERSION:-0}
+    external: true
+  matching-engine-server-key:
+    name: matching-engine-server-key-${CONFIG_VERSION:-0}
+    external: true
+  mongodb-client-key:
+    name: mongodb-client-key-${CONFIG_VERSION:-0}
+    external: true
+  mongodb-client-cert:
+    name: mongodb-client-cert-${CONFIG_VERSION:-0}
+    external: true
+  mongodb-full-key:
+    name: mongodb-full-key-${CONFIG_VERSION:-0}
+    external: true
+  rabbitmq-client-cert:
+    name: rabbitmq-client-cert-${CONFIG_VERSION:-0}
+    external: true
+  rabbitmq-client-key:
+    name: rabbitmq-client-key-${CONFIG_VERSION:-0}
+    external: true
+  client-ca-cert:
+    name: client-ca-cert-${CONFIG_VERSION:-0}
+    external: true
+  client-server-cert:
+    name: client-server-cert-${CONFIG_VERSION:-0}
+    external: true
+  client-server-key:
+    name: client-server-key-${CONFIG_VERSION:-0}
+    external: true
+  rabbitmq-ca-cert:
+    name: rabbitmq-ca-cert-${CONFIG_VERSION:-0}
+    external: true
+  rabbitmq-server-cert:
+    name: rabbitmq-server-cert-${CONFIG_VERSION:-0}
+    external: true
+  rabbitmq-server-key:
+    name: rabbitmq-server-key-${CONFIG_VERSION:-0}
+    external: true
+  rabbitmq-config:
+    name: rabbitmq-config-${CONFIG_VERSION:-0}
+    external: true
+  nginx-config:
+    name: nginx-config-${CONFIG_VERSION:-0}
+    external: true
+
+volumes:
+  rabbitmq_logs:
+  rabbitmq_data:
+  client_certificates:

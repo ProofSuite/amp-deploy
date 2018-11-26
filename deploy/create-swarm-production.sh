@@ -13,4 +13,5 @@ docker swarm join --token $production_manager_token $(docker-machine ip client-p
 eval $(docker-machine env rabbitmq-production)
 docker swarm join --token $production_manager_token $(docker-machine ip client-production):2377
 
-docker network create --driver overlay --subnet 172.20.0.0/16 --attachable amp-production
+docker network create --driver overlay --attachable amp-production-frontend
+docker network create --driver overlay --attachable amp-production-backend
