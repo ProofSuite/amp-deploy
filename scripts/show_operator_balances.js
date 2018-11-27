@@ -1,11 +1,12 @@
 const fs = require('fs')
 const path = require('path');
+const argv = require('yargs').argv
 const { utils, providers, Wallet, Contract } = require('ethers')
 const { Exchange } = require('../utils/abis')
 const { operatorAddresses } = require('../config')
 const { getNetworkID, getPrivateKeyFromEnvironment } = require('../utils/helpers')
 
-const network = process.argv[2]
+const network = argv.network
 if (!network) throw new Error('Usage: node show_operator_balances.js {network}')
 
 const pk = getPrivateKeyFromEnvironment(network)

@@ -15,4 +15,5 @@ echo -e "WETH Contract Address: ${AMP_RINKEBY_WETH_CONTRACT_ADDRESS}"
 echo -e "Fee Account Address: ${AMP_RINKEBY_FEE_ACCOUNT_ADDRESS}"
 echo -e "Rinkeby Etherbase: ${AMP_RINKEBY_ETHERBASE}"
 
+eval $(docker-machine env client)
 docker stack deploy -c docker-compose.staging-rinkeby.yml amp

@@ -50,7 +50,6 @@ const seed = async () => {
           quoteTokenSymbol: quote.symbol,
           quoteTokenAddress: utils.getAddress(quote.contractAddress),
           quoteTokenDecimals: quote.decimals,
-          priceMultiplier: getPriceMultiplier(token.decimals, quote.decimals),
           active: true,
           makeFee: quote.makeFee,
           takeFee: quote.takeFee,

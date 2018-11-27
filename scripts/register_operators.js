@@ -1,11 +1,12 @@
 const fs = require('fs')
 const path = require('path');
+const argv = require('yargs').argv
 const { utils, providers, Wallet, Contract } = require('ethers')
 const { Exchange } = require('../utils/abis')
-const { contractAddresses, operatorsAddresses } = require('../config')
+const { contractAddresses, operatorAddresses } = require('../config')
 const { getNetworkID, getPrivateKeyFromEnvironment, getInfuraKey } = require('../utils/helpers')
 
-const network = process.argv[2]
+const network = argv.network
 if (!network) throw new Error('Usage: node register_operators.js {network}')
 
 const networkID = getNetworkID(network)
@@ -14,7 +15,6 @@ const infuraKey = getInfuraKey(network)
 const addresses = contractAddresses[networkID]
 const operators = operatorAddresses[networkID]
 
-// '63739bbdf74143aeb0e6d8bb8307084f'
 const provider = new providers.InfuraProvider(network, infuraKey)
 const signer = new Wallet(pk, provider)
 

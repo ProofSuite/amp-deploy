@@ -71,9 +71,8 @@ const keys = {
 
 const infuraKeys = {
   "1": process.env.AMP_MAINNET_INFURA_KEY,
-  "2": process.env.AMP_RINKEBY_INFURA_KEY,
+  "4": process.env.AMP_RINKEBY_INFURA_KEY,
 }
-
 
 module.exports = {
   quoteTokens,

@@ -5,6 +5,7 @@ const truffleBuildPath = path.join(`${process.env.AMP_DEX_PATH}`, `/build/contra
 const files = fs.readdirSync(truffleBuildPath);
 const otherContracts = ['Owned.json', 'Migrations.json', 'SafeMath.json', 'ProofToken.json', 'RewardCollector.json', 'ApproveAndCallReceiver.json']
 const { contractAddresses } = require('../config/contractAddresses.json')
+const { infuraKeys } = require('../config')
 
 
 const getNetworkID = (networkName) => {
@@ -17,12 +18,18 @@ const getNetworkID = (networkName) => {
 }
 
 const getInfuraKey = (networkName) => {
-  return {
+  let networkID = {
     "mainnet": "1",
     "homestead": "1",
     "rinkeby": "4",
     "local": "8888"
   }[networkName]
+
+  return infuraKeys[networkID]
+}
+
+const getPairName = (baseTokenSymbol, quoteTokenSymbol) => {
+  return `${baseTokenSymbol}/${quoteTokenSymbol}`
 }
 
 const getMongoURI = (user, password) => {
@@ -129,5 +136,6 @@ module.exports = {
   getMainnetAddresses,
   getRinkebyAddresses,
   queryContractAddresses,
-  getPrivateKeyFromEnvironment
+  getPrivateKeyFromEnvironment,
+  getPairName
 }

@@ -1,12 +1,13 @@
 const fs = require('fs')
 const path = require('path');
+const argv = require('yargs').argv
 const { utils, providers, Wallet, Contract } = require('ethers')
 const { ERC20, Rewards } = require('../utils/abis')
 const { contractAddresses, baseTokens, quoteTokens } = require('../config')
 const { getNetworkID, getPrivateKeyFromEnvironment, getInfuraKey } = require('../utils/helpers')
 
-const network = process.argv[2]
-if (network) throw new Error('Usage: node register_reward_tokens.js {network}')
+const network = argv.network
+if (!network) throw new Error('Usage: node register_reward_tokens.js {network}')
 
 const infuraKey = getInfuraKey(network)
 const networkID = getNetworkID(network)

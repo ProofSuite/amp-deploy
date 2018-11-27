@@ -479,67 +479,67 @@ show_contracts_menu(){
       ;;
 
       2) clear;
-      node ${AMPDB}/scripts/show_contract_addresses local
+      node ${AMPDB}/scripts/show_contract_addresses --network local
       show_contracts_menu;
       ;;
 
       3) clear;
-      node ${AMPDB}/scripts/show_contract_addresses rinkeby
+      node ${AMPDB}/scripts/show_contract_addresses --network rinkeby
       show_contracts_menu;
       ;;
 
       4) clear;
-      node ${AMPDB}/scripts/show_contract_addresses homestead
+      node ${AMPDB}/scripts/show_contract_addresses --network homestead
       show_contracts_menu;
       ;;
 
       5) clear;
-      node ${AMPDB}/scripts/register_pairs rinkeby
+      node ${AMPDB}/scripts/register_pairs --network rinkeby
       show_contracts_menu;
       ;;
 
       6) clear;
-      node ${AMPDB}/scripts/register_pairs homestead
+      node ${AMPDB}/scripts/register_pairs --network homestead
       show_contracts_menu;
       ;;
 
       7) clear;
-      node ${AMPDB}/scripts/register_reward_tokens rinkeby
+      node ${AMPDB}/scripts/register_reward_tokens --network rinkeby
       show_contracts_menu;
       ;;
 
       8) clear;
-      node ${AMPDB}/scripts/register_reward_tokens homestead
+      node ${AMPDB}/scripts/register_reward_tokens --network homestead
       show_contracts_menu;
       ;;
 
       9) clear;
-      node ${AMPDB}/scripts/register_operators rinkeby
+      node ${AMPDB}/scripts/register_operators --network rinkeby
       show_contracts_menu;
       ;;
 
       10) clear;
-      node ${AMPDB}/scripts/register_operators homestead
+      node ${AMPDB}/scripts/register_operators --network homestead
       show_contracts_menu;
       ;;
 
       11) clear;
-      node ${AMPDB}/scripts/show_operator_balances rinkeby
+      node ${AMPDB}/scripts/show_operator_balances --network rinkeby
       show_contracts_menu;
       ;;
 
       12) clear;
-      node ${AMPDB}/scripts/show_operator_balances homestead
+      node ${AMPDB}/scripts/show_operator_balances --network homestead
       show_contracts_menu;
       ;;
 
       13) clear;
-      node ${AMPDB}/scripts/show_contract_setup rinkeby
+      node ${AMPDB}/scripts/show_contract_setup --network rinkeby --mongo_url 'mongodb://localhost:27017'
       show_contracts_menu;
       ;;
 
       14) clear;
-      node ${AMPDB}/scripts/show_contract_setup rinkeby
+      node ${AMPDB}/scripts/show_contract_setup --network local --mongo_url 'mongodb://localhost:27017'
       show_contracts_menu;
       ;;
 
