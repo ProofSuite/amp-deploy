@@ -35,6 +35,7 @@ const networkID = getNetworkID(network)
 const infuraKey = getInfuraKey(network)
 const pk = getPrivateKeyFromEnvironment(network)
 const addresses = contractAddresses[networkID]
+
 let provider = new providers.InfuraProvider(network, infuraKey)
 let signer = new Wallet(pk, provider)
 
@@ -74,15 +75,15 @@ const show = async () => {
     return balance = provider.getBalance(address)
   })
 
-  let pairRegistrationCalls = pairs.map(pair => {
-    let { baseTokenAddress, quoteTokenAddress } = pair
-    return exchange.pairIsRegistered(baseTokenAddress, quoteTokenAddress)
-  })
+  // let pairRegistrationCalls = pairs.map(pair => {
+  //   let { baseTokenAddress, quoteTokenAddress } = pair
+  //   return exchange.pairIsRegistered(baseTokenAddress, quoteTokenAddress)
+  // })
 
-  let pairMultiplierCalls = pairs.map(pair => {
-    let { baseTokenAddress, quoteTokenAddress } = pair
-    return exchange.getPairPricepointMultiplier(baseTokenAddress, quoteTokenAddress)
-  })
+  // let pairMultiplierCalls = pairs.map(pair => {
+  //   let { baseTokenAddress, quoteTokenAddress } = pair
+  //   return exchange.getPairMultiplier(baseTokenAddress, quoteTokenAddress)
+  // })
 
   let [
     exchangeOwner,
@@ -99,8 +100,6 @@ const show = async () => {
 
   let operatorRegistrations = await Promise.all(operatorRegistrationCalls)
   let operatorBalances = await Promise.all(operatorBalanceCalls)
-  let pairRegistrations = await Promise.all(pairRegistrationCalls)
-  let pairMultipliers = await Promise.all(pairMultiplierCalls)
 
   let walletsTable = operatorWallets.map((wallet, index) => {
     return {
@@ -113,8 +112,11 @@ const show = async () => {
   let pairsTable = pairs.map((pair, index) => {
     return {
       Name: getPairName(pair.baseTokenSymbol, pair.quoteTokenSymbol),
-      Registered: pairRegistrations[index],
-      Multiplier: pairMultipliers[index].toString()
+      BaseTokenDecimals: pair.baseTokenDecimals,
+      QuoteTokenDecimals: pair.quoteTokenDecimals,
+      PairMultiplier: '1e' + (18 + pair.baseTokenDecimals),
+      MakeFee: pair.makeFee,
+      TakeFee: pair.takeFee,
     }
   })
 

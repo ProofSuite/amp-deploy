@@ -38,7 +38,9 @@ const getMongoURI = (user, password) => {
 
 const getPrivateKeyFromEnvironment = (networkName) => {
   switch(networkName) {
-    case "mainnet": 
+    case "homestead": 
+      return process.env.AMP_MAINNET_PRIVATE_KEY
+    case "mainnet":
       return process.env.AMP_MAINNET_PRIVATE_KEY
     case "rinkeby":
       return process.env.AMP_RINKEBY_PRIVATE_KEY

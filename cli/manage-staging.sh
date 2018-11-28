@@ -436,7 +436,8 @@ show_contracts_menu(){
   echo -e "${MENU}${NUMBER} 4)${MENU} Register Rinkeby Reward Tokens ${NORMAL}"
   echo -e "${MENU}${NUMBER} 5)${MENU} Register Rinkeby Operators ${NORMAL}"
   echo -e "${MENU}${NUMBER} 6)${MENU} Show Rinkeby Operator Balances ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 7)${MENU} Back ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 7)${MENU} Show Rinkeby Contract Setup ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 8)${MENU} Back ${NORMAL}"
   echo -e "${MENU}*********************************************${NORMAL}"
   read opt
 
@@ -448,32 +449,42 @@ show_contracts_menu(){
       case $opt in
       1) clear;
       node ${AMPDB}/scripts/update_contract_addresses
+      write "Contract addresses updated."
       show_contracts_menu;
       ;;
 
       2) clear;
-      node ${AMPDB}/scripts/show_contract_addresses rinkeby
+      node ${AMPDB}/scripts/show_contract_addresses --network rinkeby
       show_contracts_menu;
       ;;
 
       3) clear;
-      node ${AMPDB}/scripts/register_pairs rinkeby
+      node ${AMPDB}/scripts/register_pairs --network rinkeby
       show_contracts_menu;
       ;;
 
       4) clear;
-      node ${AMPDB}/scripts/register_reward_tokens rinkeby
+      node ${AMPDB}/scripts/register_reward_tokens --network rinkeby
       show_contracts_menu;
       ;;
 
       5) clear;
-      node ${AMPDB}/scripts/register_operators rinkeby
+      node ${AMPDB}/scripts/register_operators --network rinkeby
       show_contracts_menu;
       ;;
 
       6) clear;
-      node ${AMPDB}/scripts/show_operator_balances rinkeby
+      node ${AMPDB}/scripts/show_operator_balances --network rinkeby
       show_contracts_menu;
+      ;;
+
+      7) clear;
+      node ${AMPDB}/scripts/show_contract_setup --network rinkeby --mongo_url ${MONGODB_URL}
+      show_contracts_menu;
+      ;;
+
+      8) clear;
+      show_menu;
       ;;
 
       x) exit;

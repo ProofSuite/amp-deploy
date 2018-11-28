@@ -1043,7 +1043,7 @@ const Exchange = [
           "type": "address"
         }
       ],
-      "name": "getPairPricepointMultiplier",
+      "name": "getPairMultiplier",
       "outputs": [
         {
           "name": "",
@@ -1085,7 +1085,7 @@ const Exchange = [
           "type": "address"
         }
       ],
-      "name": "setFeeAccount",
+      "name": "setRewardAccount",
       "outputs": [
         {
           "name": "",

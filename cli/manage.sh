@@ -452,17 +452,15 @@ show_contracts_menu(){
   echo -e "${MENU}${NUMBER} 2)${MENU} Show local contract addresses ${NORMAL}"
   echo -e "${MENU}${NUMBER} 3)${MENU} Show rinkeby contract addresses ${NORMAL}"
   echo -e "${MENU}${NUMBER} 4)${MENU} Show mainnet contract addresses ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 5)${MENU} Register Rinkeby Pairs ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 6)${MENU} Register Mainnet Pairs ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 7)${MENU} Register Rinkeby Reward Tokens ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 8)${MENU} Register Mainnet Reward Tokens ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 9)${MENU} Register Rinkeby Operators ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 10)${MENU} Register Mainnet Operators ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 11)${MENU} Show Rinkeby Operator Balances ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 12)${MENU} Show Mainnet Operator Balances ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 13)${MENU} Show Rinkeby Contract Setup ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 14)${MENU} Show Mainnet Contract Setup ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 15)${MENU} Back ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 5)${MENU} Register Rinkeby Reward Tokens ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 6)${MENU} Register Mainnet Reward Tokens ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 7)${MENU} Register Rinkeby Operators ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 8)${MENU} Register Mainnet Operators ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 9)${MENU} Show Rinkeby Operator Balances ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 10)${MENU} Show Mainnet Operator Balances ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 11)${MENU} Show Rinkeby Contract Setup ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 12)${MENU} Show Mainnet Contract Setup ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 13)${MENU} Back ${NORMAL}"
   echo -e "${MENU}*********************************************${NORMAL}"
   read opt
 
@@ -494,56 +492,46 @@ show_contracts_menu(){
       ;;
 
       5) clear;
-      node ${AMPDB}/scripts/register_pairs --network rinkeby
-      show_contracts_menu;
-      ;;
-
-      6) clear;
-      node ${AMPDB}/scripts/register_pairs --network homestead
-      show_contracts_menu;
-      ;;
-
-      7) clear;
       node ${AMPDB}/scripts/register_reward_tokens --network rinkeby
       show_contracts_menu;
       ;;
 
-      8) clear;
+      6) clear;
       node ${AMPDB}/scripts/register_reward_tokens --network homestead
       show_contracts_menu;
       ;;
 
-      9) clear;
+      7) clear;
       node ${AMPDB}/scripts/register_operators --network rinkeby
       show_contracts_menu;
       ;;
 
-      10) clear;
+      8) clear;
       node ${AMPDB}/scripts/register_operators --network homestead
       show_contracts_menu;
       ;;
 
-      11) clear;
+      9) clear;
       node ${AMPDB}/scripts/show_operator_balances --network rinkeby
       show_contracts_menu;
       ;;
 
-      12) clear;
+      10) clear;
       node ${AMPDB}/scripts/show_operator_balances --network homestead
       show_contracts_menu;
       ;;
 
-      13) clear;
+      11) clear;
       node ${AMPDB}/scripts/show_contract_setup --network rinkeby --mongo_url 'mongodb://localhost:27017'
       show_contracts_menu;
       ;;
 
-      14) clear;
+      12) clear;
       node ${AMPDB}/scripts/show_contract_setup --network local --mongo_url 'mongodb://localhost:27017'
       show_contracts_menu;
       ;;
 
-      15) clear;
+      13) clear;
       show_menu;
       ;;
 

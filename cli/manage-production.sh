@@ -498,12 +498,13 @@ show_contracts_menu(){
   ENTER_LINE=`echo "\033[33m"`
   echo -e "${MENU}*********************************************${NORMAL}"
   echo -e "${MENU}${NUMBER} 1)${MENU} Update contract addresses ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 2)${MENU} Show Mainnet contract addresses ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 2)${MENU} Show mainnet contract addresses ${NORMAL}"
   echo -e "${MENU}${NUMBER} 3)${MENU} Register Mainnet Pairs ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 3)${MENU} Register Mainnet Reward Tokens ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 4)${MENU} Register Mainnet Operators ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 5)${MENU} Show Mainnet Operator Balances ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 6)${MENU} Back ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 4)${MENU} Register Mainnet Reward Tokens ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 5)${MENU} Register Mainnet Operators ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 6)${MENU} Show Mainnet Operator Balances ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 7)${MENU} Show Mainnet Contract Setup ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 8)${MENU} Back ${NORMAL}"
   echo -e "${MENU}*********************************************${NORMAL}"
   read opt
 
@@ -515,32 +516,46 @@ show_contracts_menu(){
       case $opt in
       1) clear;
       node ${AMPDB}/scripts/update_contract_addresses
+      write "Contract addresses updated."
       show_contracts_menu;
       ;;
 
       2) clear;
-      node ${AMPDB}/scripts/show_contract_addresses homestead
+      node ${AMPDB}/scripts/show_contract_addresses --network homestead
       show_contracts_menu;
       ;;
 
       3) clear;
-      node ${AMPDB}/scripts/register_pairs homestead
+      node ${AMPDB}/scripts/register_pairs --network homestead
       show_contracts_menu;
       ;;
 
       4) clear;
-      node ${AMPDB}/scripts/register_reward_tokens homestead
+      node ${AMPDB}/scripts/register_reward_tokens --network homestead
       show_contracts_menu;
       ;;
 
       5) clear;
-      node ${AMPDB}/scripts/register_operators homestead
+      node ${AMPDB}/scripts/register_operators --network homestead
       show_contracts_menu;
       ;;
 
       6) clear;
-      node ${AMPDB}/scripts/show_operator_balances homestead
+      node ${AMPDB}/scripts/show_operator_balances --network homestead
       show_contracts_menu;
+      ;;
+
+      7) clear;
+      node ${AMPDB}/scripts/show_contract_setup \
+      --network homestead \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_url $MONGODB_URL \
+      --mongo_password $MONGODB_PASSWORD;
+      show_contracts_menu;
+      ;;
+
+      8) clear;
+      show_menu;
       ;;
 
       x) exit;
