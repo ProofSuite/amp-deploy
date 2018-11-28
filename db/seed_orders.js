@@ -3,7 +3,7 @@ const MongoClient = require('mongodb').MongoClient
 const faker = require('faker')
 const argv = require('yargs').argv
 const { generatePricingData , interpolatePrice } = require('../utils/prices')
-const { getMongoURI } = require('../utils/helpers')
+const { getMongoURI, minBig, maxBig, randomBig, averageBig, randomDecimal, randomInt, randomRatio } = require('../utils/helpers')
 
 const mongoUrl = argv.mongo_url || 'mongodb://localhost:27017'
 const mongoUsername = argv.mongo_username
@@ -97,42 +97,51 @@ let orderLevels = orderWeightedStatuses.reduce((result, current) => {
  }, [])
  .map(elem => elem * 100)
 
-const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
-const randomSide = () => (randInt(0, 1) === 1 ? 'BUY' : 'SELL')
-const randomOrderType = () => orderTypes[randInt(0, orderTypes.length -1 )]
-const randomPair = () => pairs[randInt(0, pairs.length-1)]
-const randomFee = () => rand(10000, 100000)
+
+const randomSide = () => (randomInt(0, 1) === 1 ? 'BUY' : 'SELL')
+const randomOrderType = () => orderTypes[randomInt(0, orderTypes.length -1 )]
+const randomPair = () => pairs[randomInt(0, pairs.length-1)]
+const randomFee = () => randomDecimal(10000, 100000)
 const randomHash = () => utils.sha256(utils.randomBytes(100))
 
-const randomBigAmount = () => {
-  let ether = utils.bigNumberify("1000000000000000000")
-  let amount = utils.bigNumberify(randInt(0, 100000))
-  let bigAmount = amount.mul(ether).div("100").toString()
+const randomTimestamp = () => randomInt(minTimeStamp, maxTimeStamp)
+const randomPrice = () => randomDecimal(minPrice, maxPrice)
+
+const randomAddress = () => randomHash().slice(0, 42);
+const randomElement = (arr) => arr[randomInt(0, arr.length-1)]
+
+const randomAmount = (baseMultiplier) => {
+  let amount = utils.bigNumberify(randomInt(0, 100000))
+  let bigAmount = amount.mul(baseMultiplier).div("100")
   return bigAmount
 }
 
-const randomAmount = () => rand(minAmount, maxAmount)
-const randomRatio = () => rand(0, 1)
-const randomTimestamp = () => randInt(minTimeStamp, maxTimeStamp)
-const randomPrice = () => rand(minPrice, maxPrice)
+const randomPricepoint = (priceMultiplier, quoteMultiplier) => {
+  let precisionMultiplier = utils.bigNumberify(1e9)
+  let a = randomDecimal(0.0001, 200)
+  let b = a * precisionMultiplier
+  let c = b.toFixed(0)
+  let d = utils.bigNumberify(c)
+  let e = d.mul(priceMultiplier).mul(quoteMultiplier).div(precisionMultiplier)
 
-const randomAddress = () => randomHash().slice(0, 42);
-const randomElement = (arr) => arr[randInt(0, arr.length-1)]
+  return e  
+}
 
-const randomPricepointRange = () => {
-  let a = randInt(10000, 1000000000)
-  let b = randInt(10000, 1000000000)
-  let min = Math.min(a, b)
-  let max = Math.max(a, b)
+const randomPricepointRange = (priceMultiplier, quoteMultiplier) => {
+  let a = randomPricepoint(priceMultiplier, quoteMultiplier)
+  let b = randomPricepoint(priceMultiplier, quoteMultiplier)
+  let min = minBig(a, b)
+  let max = maxBig(a, b)
+
   return { min, max }
 }
 
-const randomQuoteToken = (quotes) => quotes[randInt(0, len(quotes)-1)]
-const randomToken = (tokens) => tokens[randInt(0, len(tokens)-1)]
+const randomQuoteToken = (quotes) => quotes[randomInt(0, len(quotes)-1)]
+const randomToken = (tokens) => tokens[randomInt(0, len(tokens)-1)]
 
 
 const randomOrderStatus = () => {
-  let nb = randInt(0, 100)
+  let nb = randomInt(0, 100)
 
   switch(true) {
     case (nb < orderLevels[0]):
@@ -159,7 +168,7 @@ const randomOrderStatus = () => {
 }
 
 const randomTradeStatus = () => {
-  let nb = randInt(0, 100)
+  let nb = randomInt(0, 100)
   switch(true) {
     case (nb < tradeLevels[0]):
       return tradeWeightedStatuses[0].name
@@ -187,6 +196,8 @@ const seed = async () => {
           baseTokenAddress: 1,
           quoteTokenSymbol: 1,
           quoteTokenAddress: 1,
+          baseTokenDecimals: 1,
+          quoteTokendecimals: 1,
           pairMultiplier: 1,
         }
       )
@@ -194,22 +205,42 @@ const seed = async () => {
 
     let pairs = []
     docs.forEach(pair => {
-      let { min, max } = randomPricepointRange()
+      let baseMultiplier = utils.bigNumberify(10).pow(pair.baseTokenDecimals)
+      let quoteMultiplier = utils.bigNumberify(10).pow(pair.quoteTokenDecimals)
+      let priceMultiplier = utils.bigNumberify(10).pow(18)
+      let { min, max } = randomPricepointRange(priceMultiplier, quoteMultiplier)
+
       pairs.push({
         baseTokenAddress: pair.baseTokenAddress,
         baseTokenSymbol: pair.baseTokenSymbol,
         quoteTokenAddress: pair.quoteTokenAddress,
         quoteTokenSymbol: pair.quoteTokenSymbol,
-        priceMultiplier: pair.priceMultiplier,
+        baseTokenDecimals: pair.baseTokenDecimals,
+        quoteTokenDecimals: pair.quoteTokenDecimals,
+        baseMultiplier,
+        quoteMultiplier,
+        priceMultiplier,
         minPricepoint: min,
         maxPricepoint: max,
-        averagePricePoint: randInt((min + (max+min)/2)/2, (max + (max+min)/2)/2)
+        averagePricepoint: averageBig(min, max)
       })
     })
 
+    
+    let testpair = pairs[0]
+    console.log(testpair.minPricepoint.toString())
+    console.log(testpair.maxPricepoint.toString())
+    console.log(testpair.averagePricepoint.toString())
+    
+    let a = randomBig(testpair.minPricepoint, testpair.averagePricepoint).toString()
+    let b = randomBig(testpair.averagePricepoint, testpair.maxPricepoint).toString()
 
+    console.log(a)
+    console.log(b)
+    
     //we choose a limited number of user accounts
     addresses = testAccounts.slice(0,4)
+
 
       for (let i = 0; i < 20000; i++) {
         let pair = randomElement(pairs)
@@ -218,8 +249,8 @@ const seed = async () => {
         let quoteToken = pair.quoteTokenAddress
         let hash = randomHash()
         let status = randomOrderStatus()
-        let amount = randomBigAmount()
-        let pricepoint = (side == "BUY") ? String(randInt(pair.minPricepoint, pair.averagePricePoint)) : String(randInt(pair.averagePricePoint, pair.maxPricepoint))
+        let amount = randomAmount(pair.baseMultiplier).toString()
+        let pricepoint = (side == "BUY") ? randomBig(pair.minPricepoint, pair.averagePricepoint).toString() : randomBig(pair.averagePricepoint, pair.maxPricepoint).toString()
         let userAddress = randomElement(addresses)
         let pairName = `${pair.baseTokenSymbol}/${pair.quoteTokenSymbol}`
         let makeFee = 0
@@ -236,7 +267,7 @@ const seed = async () => {
             filledAmount = "0"
             break
           case "PARTIALLY_FILLED":
-            filledAmount = String(randInt(0, amount))
+            filledAmount = String(randomInt(0, amount))
             break
           case "FILLED":
             filledAmount = amount
@@ -271,10 +302,7 @@ const seed = async () => {
         orders.push(order)
       }
 
-
     const ordersInsertResponse = await db.collection('orders').insertMany(orders)
-
-
     client.close()
 }
 

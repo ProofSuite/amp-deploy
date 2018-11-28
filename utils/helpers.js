@@ -128,6 +128,45 @@ const queryContractAddresses = () => {
   fs.writeFileSync('../config/contractAddresses.json', JSON.stringify(contracts), 'utf8');
 }
 
+const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+
+const randomDecimal = (min, max, decimals = 9) => {
+  return (Math.random() * (max - min) + min).toFixed(decimals)
+}
+
+const randomRatio = () => randomDecimal(0, 1)
+
+const maxBig = (a, b) => {
+  if (a.gte(b)) {
+    return a
+  } else {
+    return b
+  }
+}
+
+const minBig = (a, b) => {
+  if (a.lte(b)) {
+    return a
+  } else {
+    return b
+  }
+}
+
+const randomBig = (min, max) => {
+  let ratio = Math.random(0, 1)
+  let multiplier = utils.bigNumberify(10).pow(9)
+  let multipliedRatio = (multiplier * ratio).toFixed(0)  
+  return min.add((max.sub(min)).mul(multipliedRatio).div(multiplier))
+}
+
+const averageBig = (a, b) => {
+  let ratio = 1/2
+  let multiplier = utils.bigNumberify(10).pow(9)
+  let multipliedRatio = (multiplier * ratio).toFixed(0)
+  
+  return a.add((b.sub(a)).mul(multipliedRatio).div(multiplier))
+}
+
 module.exports = {
   getNetworkID,
   getMongoURI,
@@ -137,5 +176,12 @@ module.exports = {
   getRinkebyAddresses,
   queryContractAddresses,
   getPrivateKeyFromEnvironment,
-  getPairName
+  getPairName,
+  maxBig,
+  minBig,
+  randomInt,
+  randomBig,
+  randomRatio,
+  randomDecimal,
+  averageBig
 }
