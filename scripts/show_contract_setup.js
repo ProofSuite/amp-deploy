@@ -39,8 +39,6 @@ const addresses = contractAddresses[networkID]
 let provider = new providers.InfuraProvider(network, infuraKey)
 let signer = new Wallet(pk, provider)
 
-
-
 const show = async () => {
   const client = await MongoClient.connect(mongoURI, { useNewUrlParser: true })
   const db = client.db('proofdex')
@@ -74,16 +72,6 @@ const show = async () => {
     let { address } = operatorWallet
     return balance = provider.getBalance(address)
   })
-
-  // let pairRegistrationCalls = pairs.map(pair => {
-  //   let { baseTokenAddress, quoteTokenAddress } = pair
-  //   return exchange.pairIsRegistered(baseTokenAddress, quoteTokenAddress)
-  // })
-
-  // let pairMultiplierCalls = pairs.map(pair => {
-  //   let { baseTokenAddress, quoteTokenAddress } = pair
-  //   return exchange.getPairMultiplier(baseTokenAddress, quoteTokenAddress)
-  // })
 
   let [
     exchangeOwner,
