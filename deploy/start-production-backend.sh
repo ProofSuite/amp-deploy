@@ -54,8 +54,6 @@ docker config create matching-engine-full-key-${CONFIG_VERSION:-0} ${AMP_CERTS_P
 echo "Deploying AMP with the following parameters:"
 echo -e "Matching Engine IP: ${AMP_PRODUCTION_MATCHING_ENGINE_IP}"
 echo -e "Client IP: ${AMP_PRODUCTION_CLIENT_IP}"
-echo -e "RabbitMQ IP: ${AMP_PRODUCTION_RABBITMQ_IP}"
-echo -e "MongoDB IP: ${AMP_PRODUCTION_MONGODB_IP}"
 echo -e "Exchange Contract Address: ${AMP_PRODUCTION_EXCHANGE_CONTRACT_ADDRESS}"
 echo -e "RabbitMQ Username: ${AMP_PRODUCTION_RABBITMQ_USERNAME}"
 echo -e "RabbitMQ Password: ${AMP_PRODUCTION_RABBITMQ_PASSWORD}"
