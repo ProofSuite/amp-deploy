@@ -22,9 +22,6 @@ const networkID = getNetworkID(network)
 const truffleBuildPath = path.join(`${process.env.AMP_DEX_PATH}`, `/build/contracts`)
 const { quoteTokens, baseTokens, contractAddresses, decimals } = require('../config')
 
-console.log(networkID)
-
-
 let documents = []
 let addresses = contractAddresses[networkID]
 

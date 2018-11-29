@@ -96,14 +96,17 @@ show_mongo_menu(){
     echo -e "${MENU}${NUMBER} 7)${MENU} Drop Trades ${NORMAL}"
     echo -e "${MENU}${NUMBER} 8)${MENU} Seed Tokens ${NORMAL}"
     echo -e "${MENU}${NUMBER} 9)${MENU} Seed Tokens (Rinkeby) ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 10)${MENU} Seed Pairs ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 11)${MENU} Seed Wallets ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 12)${MENU} Seed Wallets (Rinkeby) ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 13)${MENU} Seed Random Orders ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 14)${MENU} Seed Random Trades ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 15)${MENU} Seed Test Environment ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 16)${MENU} Seed Test Environment (Rinkeby) ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 17)${MENU} Back ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 10)${MENU} Seed Tokens (Mainnet) ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 11)${MENU} Seed Pairs ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 12)${MENU} Seed Wallets ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 13)${MENU} Seed Wallets (Rinkeby) ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 14)${MENU} Seed Wallets (Mainnet) ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 15)${MENU} Seed Random Orders ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 16)${MENU} Seed Random Trades ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 17)${MENU} Seed Test Environment ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 18)${MENU} Seed Test Environment (Rinkeby) ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 19)${MENU} Seed Test Environment (Mainnet) ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 20)${MENU} Back ${NORMAL}"
     echo -e "${MENU}*********************************************${NORMAL}"
     read opt
 
@@ -172,48 +175,63 @@ show_mongo_menu(){
 
       9) clear;
       write 'Seed tokens...';
-      node ../db/seed_tokens --mongo_url $MONGODB_URL --network rinkeby > /dev/null;
-      node ../db/seed_quotes --mongo_url $MONGODB_URL --network rinkeby > /dev/null;
+      node ../db/seed_tokens --mongo_url $MONGODB_URL --network rinkeby;
+      node ../db/seed_quotes --mongo_url $MONGODB_URL --network rinkeby;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       10) clear;
+      write 'Seed tokens...';
+      node ../db/seed_tokens --mongo_url $MONGODB_URL --network homestead;
+      node ../db/seed_quotes --mongo_url $MONGODB_URL --network homestead;
+      write 'Done\n';
+      show_mongo_menu;
+      ;;
+
+      11) clear;
       write 'Seeding pairs...';
       node ../db/seed_pairs --mongo_url $MONGODB_URL;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
-      11) clear;
+      12) clear;
       write 'Seeding wallets...';
       node ../db/seed_wallets --mongo_url $MONGODB_URL --network local;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
-      12) clear;
+      13) clear;
       write 'Seeding wallets...';
       node ../db/seed_wallets --mongo_url $MONGODB_URL --network rinkeby;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
-      13) clear;
+      14) clear;
+      write 'Seeding wallets...';
+      node ../db/seed_wallets --mongo_url $MONGODB_URL --network homestead;
+      write 'Done\n';
+      show_mongo_menu;
+      ;;
+
+      15) clear;
       write 'Seeding orders';
       node ../db/seed_orders --mongo_url $MONGODB_URL;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
-      14) clear;
+      16) clear;
       write 'Seeding trades';
       node ../db/seed_trades --mongo_url $MONGODB_URL;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
-      15) clear;
+      17) clear;
       write 'Seeding tokens ...';
       node ../db/seed_tokens --mongo_url $MONGODB_URL --network local;
       node ../db/seed_quotes --mongo_url $MONGODB_URL --network local;
@@ -225,7 +243,7 @@ show_mongo_menu(){
       show_mongo_menu;
       ;;
 
-      16) clear;
+      18) clear;
       write 'Seeding tokens ...';
       node ../db/seed_tokens --mongo_url $MONGODB_URL --network rinkeby;
       node ../db/seed_quotes --mongo_url $MONGODB_URL --network rinkeby;
@@ -237,7 +255,19 @@ show_mongo_menu(){
       show_mongo_menu;
       ;;
 
-      17) clear;
+      19) clear;
+      write 'Seeding tokens ...';
+      node ../db/seed_tokens --mongo_url $MONGODB_URL --network homestead;
+      node ../db/seed_quotes --mongo_url $MONGODB_URL --network homestead;
+      write 'Seeding pairs ...';
+      node ../db/seed_pairs --mongo_url $MONGODB_URL;
+      write 'Seeding wallets ...';
+      node ../db/seed_wallets --mongo_url $MONGODB_URL --network homestead;
+      write 'Done\n'
+      show_mongo_menu;
+      ;;
+
+      20) clear;
       show_menu;
       ;;
 

@@ -11,7 +11,7 @@ AMP_PRODUCTION_MONGODB_PASSWORD=${AMP_PRODUCTION_MONGODB_PASSWORD} \
 AMP_PRODUCTION_INFURA_KEY=${AMP_PRODUCTION_INFURA_KEY} \
 AMP_CERTS_PATH=${AMP_CERTS_PATH}
 
-CONFIG_VERSION=31
+CONFIG_VERSION=63
 
 eval $(docker-machine env rabbitmq-production)
 
@@ -63,8 +63,8 @@ echo -e "MongoDB Username: ${AMP_PRODUCTION_MONGODB_PASSWORD}"
 echo -e "MongoDB Password: ${AMP_PRODUCTION_MONGODB_USERNAME}"
 echo -e "Infura Key: ${AMP_PRODUCTION_INFURA_KEY}"
 
-eval $(docker-machine env matching-engine-production)
-CONFIG_VERSION=${CONFIG_VERSION} docker stack deploy -c docker-compose.production-backend.yml amp-production-backend
-
 eval $(docker-machine env client-production)
 CONFIG_VERSION=${CONFIG_VERSION} docker stack deploy -c docker-compose.production-frontend.yml amp-production-frontend
+
+eval $(docker-machine env matching-engine-production)
+CONFIG_VERSION=${CONFIG_VERSION} docker stack deploy -c docker-compose.production-backend.yml amp-production-backend

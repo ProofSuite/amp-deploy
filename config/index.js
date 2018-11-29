@@ -1,21 +1,20 @@
 require('dotenv').config()
 
+const { utils } = require('ethers')
 const contractAddresses = require('./contractAddresses.json')
 const quoteTokens = ['USDC', 'WETH', 'DAI']
-const baseTokens = [ "AE", "BAT", "BNB", "GNT", "KNC", "LOOM", "LRC", "MITH", "MKR", "NPXS", "OMG", "PRFT", "REP", "SNT", "WTC", "ZRX"]
+const baseTokens = [ "AE", "BAT", "BNB", "KNC", "LOOM", "LRC", "MITH", "MKR", "NPXS", "OMG", "PRFT", "REP", "SNT", "WTC", "ZRX"]
 
 const makeFees = {
-  "WETH": '0',
-  "DAI": '0',
-  "TUSD": '0',
-  "USDC": '0'
+  "WETH": utils.bigNumberify(10).pow(18).div(25),
+  "DAI": utils.bigNumberify(10).pow(18).div(2),
+  "USDC": utils.bigNumberify(10).pow(6).div(2)
 }
 
 const takeFees = {
-  "WETH": '0',
-  "DAI": '0',
-  "TUSD": '0',
-  "USDC": '0'
+  "WETH": utils.bigNumberify(10).pow(18).div(25),
+  "DAI": utils.bigNumberify(10).pow(18).div(2),
+  "USDC": utils.bigNumberify(10).pow(6).div(2)
 }
 
 const decimals = {
@@ -23,7 +22,6 @@ const decimals = {
   "BAT": 18,
   "BNB": 18,
   "DAI": 18,
-  "GNT": 18,
   "KNC": 18,
   "LOOM": 18,
   "LRC": 18,

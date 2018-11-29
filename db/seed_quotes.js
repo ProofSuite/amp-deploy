@@ -38,8 +38,8 @@ const seed = async () => {
       symbol: symbol,
       contractAddress: utils.getAddress(addresses[symbol]),
       decimals: decimals[symbol],
-      makeFee: makeFees[symbol],
-      takeFee: takeFees[symbol],
+      makeFee: makeFees[symbol].toString(),
+      takeFee: takeFees[symbol].toString(),
       quote: true,
       createdAt: Date(),
       updatedAt: Date()

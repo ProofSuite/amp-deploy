@@ -2,6 +2,7 @@ const utils = require('ethers').utils
 const argv = require('yargs').argv
 const MongoClient = require('mongodb').MongoClient
 const { getNetworkID, getPriceMultiplier, getMongoURI } = require('../utils/helpers')
+const { makeFees, takeFees } = require('../config')
 
 const mongoUrl = argv.mongo_url || 'mongodb://localhost:27017'
 const mongoUsername = argv.mongo_username
@@ -23,7 +24,6 @@ const seed = async () => {
   try {
     client = await MongoClient.connect(mongoURI, { useNewUrlParser: true })
     db = client.db('proofdex')
-
     let pairs = []
 
     const tokens = await db.collection('tokens')
@@ -51,8 +51,8 @@ const seed = async () => {
           quoteTokenAddress: utils.getAddress(quote.contractAddress),
           quoteTokenDecimals: quote.decimals,
           active: true,
-          makeFee: quote.makeFee,
-          takeFee: quote.takeFee,
+          makeFee: makeFees[quote.symbol].toString(),
+          takeFee: takeFees[quote.symbol].toString(),
           createdAt: Date(),
           updatedAt: Date()
         })
