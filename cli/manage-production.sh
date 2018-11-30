@@ -102,7 +102,7 @@ show_mongo_menu(){
     echo -e "${MENU}${NUMBER} 10)${MENU} Seed Wallets ${NORMAL}"
     echo -e "${MENU}${NUMBER} 11)${MENU} Seed Random Orders ${NORMAL}"
     echo -e "${MENU}${NUMBER} 12)${MENU} Seed Random Trades ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 13)${MENU} Seed Rinkeby MongoDB Test Environment ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 13)${MENU} Seed Environment ${NORMAL}"
     echo -e "${MENU}${NUMBER} 14)${MENU} Back ${NORMAL}"
     echo -e "${MENU}*********************************************${NORMAL}"
     read opt

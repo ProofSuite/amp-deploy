@@ -134,7 +134,7 @@ show_mongo_menu(){
 
       4) clear;
       write "Dropping Account";
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collections accounts;
+      node ../db/drop_collection --mongo_url $MONGODB_URL --collection accounts;
       write_header "Dropped Accounts";
       show_mongo_menu;
       ;;

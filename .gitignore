@@ -1,5 +1,6 @@
 scripts/index.js
 node_modules/
+cli/.env
 .env
 
 db/mainnet/keys.json

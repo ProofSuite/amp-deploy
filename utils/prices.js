@@ -1,11 +1,14 @@
 const faker = require('faker')
 const dateFns = require('date-fns')
-const volatility = 0.05
+const { randomDecimal, randomInt } = require('../utils/helpers')
+const { utils } = require('ethers')
 
+const volatility = 0.05
 const rand = () => faker.random.number(100) / 100
-const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+
 
 const computeNextPrice = (oldPrice) => {
+  console.log(oldPrice)
   let changePercent = 2 * volatility * rand()
   if (changePercent > volatility) changePercent -= 2 * volatility
   let changeAmount = oldPrice * changePercent
@@ -52,13 +55,16 @@ const generateTimestamps = (start, end, interval) => {
 
 
 const generatePrices = (timestamps, initialPrice, volatility) => {
-  initialPrice = initialPrice || randInt(10000, 10000000)
+  initialPrice = initialPrice || randomDecimal(0.001, 100)
   volatility = volatility || 0.03
+
+  console.log(initialPrice)
 
   let pricesArray = [ {timestamp: timestamps[0], price: initialPrice }]
 
   let result = timestamps.slice(1).reduce((result, timestamp) => {
     let nextPrice = computeNextPrice(result[result.length - 1].price)
+    console.log(nextPrice)
     pricesArray.push({ timestamp: timestamp, price: nextPrice })
     return pricesArray
   }, pricesArray)
@@ -70,8 +76,7 @@ const generatePrices = (timestamps, initialPrice, volatility) => {
 const generatePricingData = ({ start, end, interval, initialPrice, volatility }) => {
   start = start || new Date(2016, 1, 1).getTime()
   end = end || Date.now()
-  initialPrice = initialPrice || randInt(10000, 10000000)
-  // initialPrice = initialPrice || faker.random.number(100000)
+  intialPrice = 1
   volatility = volatility || 0.03
   interval = interval || 'hour'
 
@@ -79,6 +84,14 @@ const generatePricingData = ({ start, end, interval, initialPrice, volatility })
   let pricingData = generatePrices(timestamps, initialPrice)
 
   return pricingData
+}
+
+const computePricepoint = (pricepoint, priceMultiplier, quoteMultiplier) => {
+  let precisionMultiplier = utils.bigNumberify(1e9)
+  let a = (pricepoint * precisionMultiplier).toFixed(0)
+  let b = utils.bigNumberify(a)
+  
+  return b.mul(priceMultiplier).mul(quoteMultiplier).div(precisionMultiplier)
 }
 
 
@@ -99,3 +112,14 @@ const interpolatePrice = (pricingData, timestamp) => {
 }
 
 module.exports = { generatePricingData, interpolatePrice }
+
+let start = new Date(2018, 1, 1).getTime()
+let end = Date.now()
+let pricingData = generatePricingData({ start, end })
+
+console.log(pricingData[100])
+// let pp1 = pricingData[0]
+// let r1 = randomDecimal(0.001, 100)
+// let computedpp = computePricepoint(pp1.price, utils.bigNumberify(10).pow(18), utils.bigNumberify(10).pow(18))
+
+// console.log(computedpp.toString() / 1e36)
