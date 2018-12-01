@@ -41,7 +41,26 @@ const seed = async () => {
       .toArray()
 
     
-    quotes.forEach(quote => {
+    quotes.forEach((quote, i) => {
+      let nextQuotes = quotes.slice(i+1)
+
+      nextQuotes.forEach(nextQuote => {
+        pairs.push({
+          baseTokenSymbol: nextQuote.symbol,
+          baseTokenAddress: utils.getAddress(nextQuote.contractAddress),
+          baseTokenDecimals: nextQuote.decimals,
+          quoteTokenSymbol: quote.symbol,
+          quoteTokenAddress: utils.getAddress(quote.contractAddress),
+          quoteTokenDecimals: quote.decimals,
+          active: true,
+          makeFee: makeFees[quote.symbol].toString(),
+          takeFee: takeFees[quote.symbol].toString(),
+          createdAt: Date(),
+          updatedAt: Date()          
+        })
+      })
+
+
       tokens.forEach(token => {
         pairs.push({
           baseTokenSymbol: token.symbol,
