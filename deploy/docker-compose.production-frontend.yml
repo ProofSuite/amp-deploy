@@ -36,9 +36,9 @@ services:
       - "80:80"
       - "443:443"
     environment:
-      - AMP_ENGINE_HTTP_URL=https://engine.amp.exchange
+      - AMP_ENGINE_HTTP_URL=https://amp.exchange/api
       - AMP_ETHEREUM_NODE_HTTP_URL=https://mainnet.infura.io
-      - AMP_ENGINE_WS_URL=wss://engine.amp.exchange
+      - AMP_ENGINE_WS_URL=wss://amp.exchange
       - AMP_ETHEREUM_NODE_WS_URL=wss://mainnet.infura.io/_ws
       - AMP_ETHEREUM_NETWORK_ID=1
     volumes: 

@@ -153,7 +153,7 @@ show_mongo_menu(){
       --mongo_url $MONGODB_URL \
       --mongo_username $MONGODB_USERNAME \
       --mongo_password $MONGODB_PASSWORD \
-      --collections accounts;
+      --collection accounts;
 
       write_header "Dropped Accounts";
       show_mongo_menu;

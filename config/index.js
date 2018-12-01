@@ -6,13 +6,13 @@ const quoteTokens = ['USDC', 'WETH', 'DAI']
 const baseTokens = [ "AE", "BAT", "BNB", "KNC", "LOOM", "LRC", "MITH", "MKR", "NPXS", "OMG", "PRFT", "REP", "SNT", "WTC", "ZRX"]
 
 const makeFees = {
-  "WETH": utils.bigNumberify(10).pow(18).div(25),
+  "WETH": utils.bigNumberify(10).pow(18).div(250),
   "DAI": utils.bigNumberify(10).pow(18).div(2),
   "USDC": utils.bigNumberify(10).pow(6).div(2)
 }
 
 const takeFees = {
-  "WETH": utils.bigNumberify(10).pow(18).div(25),
+  "WETH": utils.bigNumberify(10).pow(18).div(250),
   "DAI": utils.bigNumberify(10).pow(18).div(2),
   "USDC": utils.bigNumberify(10).pow(6).div(2)
 }
@@ -40,7 +40,12 @@ const decimals = {
 }
 
 const operatorAddresses = {
-  "1": [],
+  "1": [
+    '0xA0841B098D5E7968DE215def3c4bcd1d1970949D',
+    '0x95b673d8CE471EaC57C3175a9ed3Bab82e342105',
+    '0x93203E753c4C254E213c402f91e0dEd31304231e',
+    '0x837cB5aEB052988705Eb44A266f40e8ff05963B0'
+  ],
   "4": [
     '0xe0a1240b358dfa6c167edea09c763ae9f3b51ea0',
     '0x53ee745b3d30d692dc016450fef68a898c16fa44',
