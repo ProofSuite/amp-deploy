@@ -5,7 +5,7 @@ const truffleBuildPath = path.join(`${process.env.AMP_DEX_PATH}`, `/build/contra
 const files = fs.readdirSync(truffleBuildPath);
 const otherContracts = ['Owned.json', 'Migrations.json', 'SafeMath.json', 'ProofToken.json', 'RewardCollector.json', 'ApproveAndCallReceiver.json']
 const { contractAddresses } = require('../config/contractAddresses.json')
-const { infuraKeys } = require('../config')
+const { infuraKeys, tokenRanks } = require('../config')
 
 
 const getNetworkID = (networkName) => {
@@ -169,6 +169,13 @@ const averageBig = (a, b) => {
   return a.add((b.sub(a)).mul(multipliedRatio).div(multiplier))
 }
 
+const getPairRank = (baseTokenSymbol, quoteTokenSymbol) => {
+  let baseTokenRank = tokenRanks[baseTokenSymbol] ? tokenRanks[baseTokenSymbol] : 0
+  let quoteTokenRank = tokenRanks[quoteTokenSymbol] ? tokenRanks[quoteTokenSymbol] : 0
+
+  return baseTokenRank + quoteTokenRank
+}
+
 module.exports = {
   getNetworkID,
   getMongoURI,
@@ -185,5 +192,6 @@ module.exports = {
   randomBig,
   randomRatio,
   randomDecimal,
-  averageBig
+  averageBig,
+  getPairRank
 }

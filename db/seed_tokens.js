@@ -20,11 +20,10 @@ if (mongoUsername && mongoPassword) {
 
 const networkID = getNetworkID(network)
 const truffleBuildPath = path.join(`${process.env.AMP_DEX_PATH}`, `/build/contracts`)
-const { quoteTokens, baseTokens, contractAddresses, decimals } = require('../config')
+const { quoteTokens, baseTokens, contractAddresses, decimals, tokenRanks } = require('../config')
 
 let documents = []
 let addresses = contractAddresses[networkID]
-
 let client, db, response
 
 const seed = async () => {
@@ -34,9 +33,12 @@ const seed = async () => {
 
     documents = baseTokens.map((symbol) => ({
       symbol: symbol,
-      contractAddress: utils.getAddress(addresses[symbol]),
+      address: utils.getAddress(addresses[symbol]),
       decimals: decimals[symbol],
+      active: true,
       quote: false,
+      listed: true,
+      rank: tokenRanks[symbol] ? tokenRanks[symbol] : 0,
       createdAt: Date(),
       updatedAt: Date()
     }))

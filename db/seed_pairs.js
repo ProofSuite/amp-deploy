@@ -1,7 +1,7 @@
 const utils = require('ethers').utils
 const argv = require('yargs').argv
 const MongoClient = require('mongodb').MongoClient
-const { getNetworkID, getPriceMultiplier, getMongoURI } = require('../utils/helpers')
+const { getNetworkID, getPriceMultiplier, getMongoURI, getPairRank } = require('../utils/helpers')
 const { makeFees, takeFees } = require('../config')
 
 const mongoUrl = argv.mongo_url || 'mongodb://localhost:27017'
@@ -29,14 +29,14 @@ const seed = async () => {
     const tokens = await db.collection('tokens')
       .find(
         { quote: false },
-        { symbol: 1, contractAddress: 1, decimals: 1 }
+        { symbol: 1, address: 1, decimals: 1 }
       )
       .toArray()
 
     const quotes = await db.collection('tokens')
       .find(
         { quote: true },
-        { symbol: 1, contractAddress: 1, decimals: 1, makeFee: 1, takeFee: 1 }
+        { symbol: 1, address: 1, decimals: 1, makeFee: 1, takeFee: 1 }
       )
       .toArray()
 
@@ -47,16 +47,18 @@ const seed = async () => {
       nextQuotes.forEach(nextQuote => {
         pairs.push({
           baseTokenSymbol: nextQuote.symbol,
-          baseTokenAddress: utils.getAddress(nextQuote.contractAddress),
+          baseTokenAddress: utils.getAddress(nextQuote.address),
           baseTokenDecimals: nextQuote.decimals,
           quoteTokenSymbol: quote.symbol,
-          quoteTokenAddress: utils.getAddress(quote.contractAddress),
+          quoteTokenAddress: utils.getAddress(quote.address),
           quoteTokenDecimals: quote.decimals,
           active: true,
+          listed: true,
           makeFee: makeFees[quote.symbol].toString(),
           takeFee: takeFees[quote.symbol].toString(),
+          rank: getPairRank(nextQuote.symbol, quote.symbol),
           createdAt: Date(),
-          updatedAt: Date()          
+          updatedAt: Date()
         })
       })
 
@@ -64,14 +66,16 @@ const seed = async () => {
       tokens.forEach(token => {
         pairs.push({
           baseTokenSymbol: token.symbol,
-          baseTokenAddress: utils.getAddress(token.contractAddress),
+          baseTokenAddress: utils.getAddress(token.address),
           baseTokenDecimals: token.decimals,
           quoteTokenSymbol: quote.symbol,
-          quoteTokenAddress: utils.getAddress(quote.contractAddress),
+          quoteTokenAddress: utils.getAddress(quote.address),
           quoteTokenDecimals: quote.decimals,
           active: true,
+          listed: true,
           makeFee: makeFees[quote.symbol].toString(),
           takeFee: takeFees[quote.symbol].toString(),
+          rank: getPairRank(token.symbol, quote.symbol),
           createdAt: Date(),
           updatedAt: Date()
         })

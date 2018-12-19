@@ -39,6 +39,27 @@ const decimals = {
   "USDC": 6
 }
 
+const tokenRanks = {
+  "AE": 0,
+  "KNC": 0,
+  "LOOM": 0,
+  "LRC": 0,
+  "MITH": 0,
+  "NPXS": 0,
+  "REP": 0,
+  "WTC": 0,
+  "SNT": 1,
+  "OMG": 2,
+  "ZRX": 3,
+  "BNB": 4,
+  "BAT": 5,
+  "PRFT": 6,
+  "MKR": 7,
+  "WETH": 9,
+  "DAI": 8,
+  "USDC": 10
+}
+
 const operatorAddresses = {
   "1": [
     '0xA0841B098D5E7968DE215def3c4bcd1d1970949D',
@@ -87,5 +108,6 @@ module.exports = {
   testAccounts,
   contractAddresses,
   keys,
-  infuraKeys
+  infuraKeys,
+  tokenRanks
 }
