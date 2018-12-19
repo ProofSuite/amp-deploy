@@ -10,7 +10,5 @@ docker swarm leave --force
 eval $(docker-machine env rabbitmq)
 docker swarm leave --force
 
-eval $(docker-machine env ethereum)
-docker swarm leave --force
-
-docker network rm amp
+docker network rm amp-staging-frontend
+docker network rm amp-staging-backend

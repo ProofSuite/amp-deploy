@@ -1,0 +1,89 @@
+ndo# This docker compose file starts processes on remote aws instances
+# For this, docker needs to be in swarm mode with the following nodes
+# - engine
+# - rabbitmq
+# - client
+# - mongodb
+# - ethereum
+#  To work properly the ethereum node and other services might have
+# to be removed and simply working with external services
+
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - '5672:5672'
+    networks:
+      amp:
+        aliases:
+        - rabbitmq
+    volumes:
+      - "rabbitmq_logs:/var/log/rabbitmq"
+      - "rabbitmq_data:/var/lib/rabbitmq"
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == rabbitmq
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    networks:
+      amp:
+        aliases:
+        - mongodb
+    volumes:
+    - "mongodb_data:/data/db"
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == mongodb
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+
+  matching-engine:
+    image: proofsuite/amp-matching-engine:staging
+    ports:
+      - '8081:8081'
+    depends_on:
+      - rabbitmq
+      - mongodb
+    environment:
+      - AMP_ETHEREUM_NODE_HTTP_URL=https://rinkeby.infura.io
+      - AMP_ETHEREUM_NODE_WS_URL=wss://rinkeby.infura.io/_ws
+      - AMP_MONGODB_URL=mongodb
+      - AMP_MONGODB_DBNAME=proofdex
+      - AMP_RABBITMQ_URL=rabbitmq
+      - AMP_EXCHANGE_CONTRACT_ADDRESS=${AMP_RINKEBY_EXCHANGE_CONTRACT_ADDRESS}
+      - AMP_FEE_ACCOUNT_ADDRESS=${AMP_RINKEBY_FEE_ACCOUNT_ADDRESS}
+      - AMP_ENABLE_TLS=false
+    networks:
+      amp:
+        aliases:
+        - matching-engine
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == matching-engine
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+
+
+networks:
+  amp-staging-backend:
+    external: true
+
+volumes:
+  rabbitmq_logs:
+  rabbitmq_data:
+  mongodb_data:

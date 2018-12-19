@@ -1,0 +1,55 @@
+# This docker compose file starts processes on remote aws instances
+# For this, docker needs to be in swarm mode with the following nodes
+# - engine
+# - rabbitmq
+# - client
+# - mongodb
+# - ethereum
+#  To work properly the ethereum node and other services might have
+# to be removed and simply working with external services
+
+version: '3'
+services:
+  client:
+    image: proofsuite/amp-client:staging
+    ports:
+      - "80:80"
+    environment:
+      - AMP_ENGINE_HTTP_URL=/engine
+      - AMP_ETHEREUM_NODE_HTTP_URL=https://rinkeby.infura.io/
+      - AMP_ETHEREUM_NODE_WS_URL=wss://rinkeby.infura.io/_ws
+      - AMP_ENGINE_WS_URL=ws://${AMP_RINKEBY_MATCHING_ENGINE_IP}:8081
+      - AMP_ETHEREUM_NETWORK_ID=4
+    configs:
+      - source: nginx-staging-config
+        target: /etc/nginx/nginx.confg
+    depends_on:
+      - matching-engine
+      - ethereum
+    networks:
+      amp-staging-frontend:
+        aliases:
+        - client
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == client
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+    command: >
+         bin/sh -c "sleep 10 && chmod +x ./replace.sh && sleep 1 && ./replace.sh && cat /usr/share/nginx/html/env.js && nginx -g 'daemon off;'"
+
+configs:
+  nginx-staging-config:
+    name: nginx-staging-config-${STAGING_CONFIG_VERSION:-0}
+
+networks:
+  amp-staging-frontend:
+    external: true
+
+volumes:
+  rabbitmq_logs:
+  rabbitmq_data:
+  mongodb_data:

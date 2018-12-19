@@ -62,7 +62,5 @@ docker swarm join --token $manager_token $(docker-machine ip client-staging):237
 eval $(docker-machine env mongodb)
 docker swarm join --token $manager_token $(docker-machine ip client-staging):2377
 
-eval $(docker-machine env ethereum)
-docker swarm join --token $manager_token $(docker-machine ip client-staging):2377
-
-docker network create --driver overlay --attachable amp
+docker network create --driver overlay --attachable amp-staging-backend
+docker network create --driver overlay --attachable amp-staging-frontend
