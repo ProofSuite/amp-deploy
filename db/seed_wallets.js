@@ -11,10 +11,12 @@ const network = argv.network
 
 let mongoURI
 
+console.log(mongoUrl)
+
 if (mongoUsername && mongoPassword) {
   mongoURI = getMongoURI(mongoUsername, mongoPassword)
 } else {
-  mongoURI = mongoUrl 
+  mongoURI = mongoUrl
 }
 
 const networkID = getNetworkID(network)

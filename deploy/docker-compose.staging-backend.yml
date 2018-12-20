@@ -1,4 +1,3 @@
-ndo# This docker compose file starts processes on remote aws instances
 # For this, docker needs to be in swarm mode with the following nodes
 # - engine
 # - rabbitmq
@@ -8,14 +7,14 @@ ndo# This docker compose file starts processes on remote aws instances
 #  To work properly the ethereum node and other services might have
 # to be removed and simply working with external services
 
-version: '3'
+version: '3.7'
 services:
   rabbitmq:
     image: rabbitmq
     ports:
       - '5672:5672'
     networks:
-      amp:
+      amp-staging-backend:
         aliases:
         - rabbitmq
     volumes:
@@ -35,7 +34,7 @@ services:
     ports:
       - '27017:27017'
     networks:
-      amp:
+      amp-staging-backend:
         aliases:
         - mongodb
     volumes:
@@ -66,7 +65,7 @@ services:
       - AMP_FEE_ACCOUNT_ADDRESS=${AMP_RINKEBY_FEE_ACCOUNT_ADDRESS}
       - AMP_ENABLE_TLS=false
     networks:
-      amp:
+      amp-staging-backend:
         aliases:
         - matching-engine
     deploy:

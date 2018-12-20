@@ -177,7 +177,7 @@ show_mongo_menu(){
 
       10) clear;
       write 'Seeding wallets...';
-      node ../db/seed_wallets --mongo_url $MONGO_URL --network rinkeby;
+      node ../db/seed_wallets --mongo_url $MONGODB_URL --network rinkeby;
       write 'Done\n';
       show_mongo_menu;
       ;;

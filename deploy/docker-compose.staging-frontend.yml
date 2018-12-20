@@ -8,21 +8,22 @@
 #  To work properly the ethereum node and other services might have
 # to be removed and simply working with external services
 
-version: '3'
+version: '3.7'
 services:
   client:
+    hostname: client
     image: proofsuite/amp-client:staging
     ports:
       - "80:80"
     environment:
-      - AMP_ENGINE_HTTP_URL=/engine
+      - AMP_ENGINE_HTTP_URL=http://${AMP_RINKEBY_MATCHING_ENGINE_IP}:8081
       - AMP_ETHEREUM_NODE_HTTP_URL=https://rinkeby.infura.io/
       - AMP_ETHEREUM_NODE_WS_URL=wss://rinkeby.infura.io/_ws
       - AMP_ENGINE_WS_URL=ws://${AMP_RINKEBY_MATCHING_ENGINE_IP}:8081
       - AMP_ETHEREUM_NETWORK_ID=4
     configs:
       - source: nginx-staging-config
-        target: /etc/nginx/nginx.confg
+        target: /etc/nginx/nginx.conf
     depends_on:
       - matching-engine
       - ethereum
@@ -43,7 +44,8 @@ services:
 
 configs:
   nginx-staging-config:
-    name: nginx-staging-config-${STAGING_CONFIG_VERSION:-0}
+    name: nginx-staging-config-${CONFIG_VERSION:-0}
+    external: true
 
 networks:
   amp-staging-frontend:
