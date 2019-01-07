@@ -11,8 +11,7 @@ AMP_PRODUCTION_MONGODB_PASSWORD=${AMP_PRODUCTION_MONGODB_PASSWORD} \
 AMP_PRODUCTION_INFURA_KEY=${AMP_PRODUCTION_INFURA_KEY} \
 AMP_CERTS_PATH=${AMP_CERTS_PATH}
 
-CONFIG_VERSION=86
-
+CONFIG_VERSION=87
 eval $(docker-machine env rabbitmq-production)
 
 docker config create rabbitmq-config-${CONFIG_VERSION:-0} rabbitmq-production.conf
@@ -62,6 +61,7 @@ echo -e "RabbitMQ Password: ${AMP_PRODUCTION_RABBITMQ_PASSWORD}"
 echo -e "MongoDB Username: ${AMP_PRODUCTION_MONGODB_PASSWORD}"
 echo -e "MongoDB Password: ${AMP_PRODUCTION_MONGODB_USERNAME}"
 echo -e "Infura Key: ${AMP_PRODUCTION_INFURA_KEY}"
+echo -e "Mixpanel Token: ${AMP_MIXPANEL_TOKEN}"
 
 eval $(docker-machine env client-production)
 CONFIG_VERSION=${CONFIG_VERSION} docker stack deploy -c docker-compose.production-frontend.yml amp-production-frontend --prune

@@ -41,6 +41,7 @@ services:
       - AMP_ENGINE_WS_URL=wss://amp.exchange
       - AMP_ETHEREUM_NODE_WS_URL=wss://mainnet.infura.io/_ws
       - AMP_ETHEREUM_NETWORK_ID=1
+      - AMP_MIXPANEL_TOKEN=${AMP_MIXPANEL_TOKEN}
     volumes: 
       - /etc/letsencrypt:/etc/letsencrypt
     configs:

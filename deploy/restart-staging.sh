@@ -1,1 +1,1 @@
-./start-staging.sh && ./stop-staging.sh
+./stop-staging.sh && ./start-staging.sh

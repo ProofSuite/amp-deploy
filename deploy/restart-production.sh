@@ -1,1 +1,1 @@
-./start-production.sh && ./stop-production.sh
+./stop-production.sh && ./start-production.sh
