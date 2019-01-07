@@ -1,3 +1,4 @@
+# This docker compose file starts processes on remote aws instances
 # For this, docker needs to be in swarm mode with the following nodes
 # - engine
 # - rabbitmq
@@ -9,17 +10,32 @@
 
 version: '3.7'
 services:
+  # Currently the username and password need to be set manually after deployment with the following commands:
+  # rabbitmqctl add_user ${username} ${password}
+  # rabbitmqctl set_user_tags ${username} administrator
+  # rabbitmqctl set_permissions ${username} ".*" ".*" ".*"
   rabbitmq:
+    hostname: rabbitmq
     image: rabbitmq
     ports:
       - '5672:5672'
+      - '5671:5671'
     networks:
       amp-staging-backend:
         aliases:
         - rabbitmq
     volumes:
-      - "rabbitmq_logs:/var/log/rabbitmq"
-      - "rabbitmq_data:/var/lib/rabbitmq"
+      - "rabbitmq_staging_logs:/var/log/rabbitmq"
+      - "rabbitmq_staging_data:/var/lib/rabbitmq"
+    configs:
+      - source: rabbitmq-ca-cert
+        target: /etc/ssl/rabbitmq/ca_certificate.pem
+      - source: rabbitmq-server-cert
+        target: /etc/ssl/rabbitmq/server_certificate.pem
+      - source: rabbitmq-server-key
+        target: /etc/ssl/rabbitmq/server_key.pem
+      - source: rabbitmq-config
+        target: /etc/rabbitmq/rabbitmq.conf
     deploy:
       placement:
         constraints:
@@ -29,41 +45,47 @@ services:
         max_attempts: 3
         window: 120s
 
-  mongodb:
-    image: mongo:latest
-    ports:
-      - '27017:27017'
-    networks:
-      amp-staging-backend:
-        aliases:
-        - mongodb
-    volumes:
-    - "mongodb_data:/data/db"
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == mongodb
-      restart_policy:
-        condition: on-failure
-        max_attempts: 3
-        window: 120s
-
   matching-engine:
+    hostname: matching-engine
     image: proofsuite/amp-matching-engine:staging
     ports:
-      - '8081:8081'
+      - '443:443'
+      - '80:80'
     depends_on:
       - rabbitmq
       - mongodb
+    volumes:
+      - "engine_staging_certificates:/certs"
     environment:
-      - AMP_ETHEREUM_NODE_HTTP_URL=https://rinkeby.infura.io
-      - AMP_ETHEREUM_NODE_WS_URL=wss://rinkeby.infura.io/_ws
+      - AMP_ETHEREUM_NODE_HTTP_URL=https://rinkeby.infura.io/${AMP_RINKEBY_INFURA_KEY}
+      - AMP_ETHEREUM_NODE_WS_URL=wss://rinkeby.infura.io/_ws/${AMP_RINKEBY_INFURA_KEY}
       - AMP_MONGODB_URL=mongodb
       - AMP_MONGODB_DBNAME=proofdex
+      - AMP_MONGODB_USERNAME=${AMP_STAGING_MONGODB_USERNAME}
+      - AMP_MONGODB_PASSWORD=${AMP_STAGING_MONGODB_PASSWORD}
+      - AMP_ENABLE_TLS=true
       - AMP_RABBITMQ_URL=rabbitmq
+      - AMP_RABBITMQ_USERNAME=${AMP_STAGING_RABBITMQ_USERNAME}
+      - AMP_RABBITMQ_PASSWORD=${AMP_STAGING_RABBITMQ_PASSWORD}
+      - AMP_MATCHING_ENGINE_CA_CERT=/etc/ssl/matching-engine/ca_certificate.pem
+      - AMP_MATCHING_ENGINE_SERVER_CERT=/etc/ssl/matching-engine/server_certificate.pem
+      - AMP_MATCHING_ENGINE_SERVER_KEY=/etc/ssl/matching-engine/server_key.pem
+      - AMP_RABBITMQ_CLIENT_KEY=/etc/ssl/rabbitmq/client_key.pem
+      - AMP_RABBITMQ_CLIENT_CERT=/etc/ssl/rabbitmq/client_certificate.pem
       - AMP_EXCHANGE_CONTRACT_ADDRESS=${AMP_RINKEBY_EXCHANGE_CONTRACT_ADDRESS}
       - AMP_FEE_ACCOUNT_ADDRESS=${AMP_RINKEBY_FEE_ACCOUNT_ADDRESS}
-      - AMP_ENABLE_TLS=false
+    configs:
+      - source: matching-engine-ca-cert
+        target: /etc/ssl/matching-engine/ca_certificate.pem
+      - source: matching-engine-server-cert
+        target: /etc/ssl/matching-engine/server_certificate.pem
+      - source: matching-engine-server-key
+        target: /etc/ssl/matching-engine/server_key.pem
+      - source: rabbitmq-client-cert
+        target: /etc/ssl/rabbitmq/client_certificate.pem
+      - source: rabbitmq-client-key
+        target: /etc/ssl/rabbitmq/client_key.pem
+
     networks:
       amp-staging-backend:
         aliases:
@@ -77,12 +99,41 @@ services:
         max_attempts: 3
         window: 120s
 
-
 networks:
   amp-staging-backend:
     external: true
 
+configs:
+  matching-engine-ca-cert:
+    name: matching-engine-ca-cert-${STAGING_CONFIG_VERSION:-0}
+    external: true
+  matching-engine-server-cert:
+    name: matching-engine-server-cert-${STAGING_CONFIG_VERSION:-0}
+    external: true
+  matching-engine-server-key:
+    name: matching-engine-server-key-${STAGING_CONFIG_VERSION:-0}
+    external: true
+  rabbitmq-client-cert:
+    name: rabbitmq-client-cert-${STAGING_CONFIG_VERSION:-0}
+    external: true
+  rabbitmq-client-key:
+    name: rabbitmq-client-key-${STAGING_CONFIG_VERSION:-0}
+    external: true
+  rabbitmq-ca-cert:
+    name: rabbitmq-ca-cert-${STAGING_CONFIG_VERSION:-0}
+    external: true
+  rabbitmq-server-cert:
+    name: rabbitmq-server-cert-${STAGING_CONFIG_VERSION:-0}
+    external: true
+  rabbitmq-server-key:
+    name: rabbitmq-server-key-${STAGING_CONFIG_VERSION:-0}
+    external: true
+  rabbitmq-config:
+    name: rabbitmq-config-${STAGING_CONFIG_VERSION:-0}
+    external: true
+
 volumes:
-  rabbitmq_logs:
-  rabbitmq_data:
-  mongodb_data:
+  rabbitmq_staging_logs:
+  rabbitmq_staging_data:
+  engine_staging_certificates:
+  client_staging_certificates:

@@ -1,22 +1,33 @@
-#!/bin/bash
+AMP_STAGING_MATCHING_ENGINE_IP=${AMP_STAGING_MATCHING_ENGINE_IP:-'$(docker-machine ip matching-engine)'} \
+AMP_STAGING_CLIENT_IP=${AMP_STAGING_CLIENT_IP:-'$(docker-machine ip client)'} \
+AMP_STAGING_RABBITMQ_IP=${AMP_STAGING_RABBITMQ_IP:-'$(docker-machine ip rabbitmq)'} \
+AMP_STAGING_EXCHANGE_CONTRACT_ADDRESS=${AMP_STAGING_EXCHANGE_CONTRACT_ADDRESS} \
+AMP_STAGING_FEE_ACCOUNT_ADDRESS=${AMP_STAGING_FEE_ACCOUNT_ADDRESS} \
+AMP_STAGING_RABBITMQ_USERNAME=${AMP_STAGING_RABBITMQ_USERNAME} \
+AMP_STAGING_RABBITMQ_PASSWORD=${AMP_STAGING_RABBITMQ_PASSWORD} \
+AMP_STAGING_MONGODB_URL=${AMP_STAGING_MONGODB_URL} \
+AMP_STAGING_MONGODB_USERNAME=${AMP_STAGING_MONGODB_USERNAME} \
+AMP_STAGING_MONGODB_PASSWORD=${AMP_STAGING_MONGODB_PASSWORD} \
+AMP_STAGING_INFURA_KEY=${AMP_STAGING_INFURA_KEY} \
+AMP_CERTS_PATH=${AMP_STAGING_CERTS_PATH}
 
-AMP_RINKEBY_MATCHING_ENGINE_IP=${AMP_RINKEBY_MATCHING_ENGINE_IP:-'52.78.227.253'} \
-AMP_RINKEBY_CLIENT_IP=${AMP_RINKEBY_CLIENT_IP:-'13.125.177.169'} \
-AMP_RINKEBY_ETHEREUM_IP=${AMP_RINKEBY_ETHEREUM_IP:-'13.125.62.193'} \
-AMP_RINKEBY_EXCHANGE_CONTRACT_ADDRESS=${AMP_RINKEBY_EXCHANGE_CONTRACT_ADDRESS} \
-AMP_RINKEBY_FEE_ACCOUNT_ADDRESS=${AMP_RINKEBY_FEE_ACCOUNT_ADDRESS} \
+STAGING_CONFIG_VERSION=64
 
-STAGING_CONFIG_VERSION=31
-
-eval $(docker-machine env client)
-docker config create nginx-staging-config-${STAGING_CONFIG_VERSION:-0} nginx-staging.conf
-
-echo "Deploying AMP (Staging) with the following parameters:"
-echo "Matching Engine IP: ${AMP_RINKEBY_MATCHING_ENGINE_IP}"
-echo "Client IP: ${AMP_RINKEBY_CLIENT_IP}"
-echo "Ethereum IP: ${AMP_RINKEBY_ETHEREUM_IP}"
-echo "Exchange Contract Address: ${AMP_RINKEBY_EXCHANGE_CONTRACT_ADDRESS}"
-echo "Fee Account Address: ${AMP_RINKEBY_FEE_ACCOUNT_ADDRESS}"
 
 eval $(docker-machine env client)
-CONFIG_VERSION=${CONFIG_VERSION} docker stack deploy -c docker-compose.staging-frontend.yml amp-staging-frontend --prune
+docker config create nginx-config-${STAGING_CONFIG_VERSION:-0} nginx-staging.conf
+
+echo "Deploying AMP with the following parameters:"
+echo -e "Matching Engine IP: ${AMP_STAGING_MATCHING_ENGINE_IP}"
+echo -e "Client IP: ${AMP_STAGING_CLIENT_IP}"
+echo -e "RabbitMQ IP: ${AMP_STAGING_RABBITMQ_IP}"
+echo -e "MongoDB IP: ${AMP_STAGING_MONGODB_IP}"
+echo -e "Exchange Contract Address: ${AMP_STAGING_EXCHANGE_CONTRACT_ADDRESS}"
+echo -e "RabbitMQ Username: ${AMP_STAGING_RABBITMQ_USERNAME}"
+echo -e "RabbitMQ Password: ${AMP_STAGING_RABBITMQ_PASSWORD}"
+echo -e "MongoDB Username: ${AMP_STAGING_MONGODB_PASSWORD}"
+echo -e "MongoDB Password: ${AMP_STAGING_MONGODB_USERNAME}"
+echo -e "Infura Key: ${AMP_STAGING_INFURA_KEY}"
+
+eval $(docker-machine env client)
+STAGING_CONFIG_VERSION=${STAGING_CONFIG_VERSION} docker stack deploy -c docker-compose.staging-frontend.yml amp-staging-frontend --prune

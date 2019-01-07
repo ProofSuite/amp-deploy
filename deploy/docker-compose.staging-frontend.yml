@@ -10,23 +10,43 @@
 
 version: '3.7'
 services:
+  # letsencrypt-bot:
+  #   image: hamburml/docker-flow-letsencrypt:latest
+  #   networks:
+  #     - amp-staging
+  #   environment:
+  #     - DOMAIN_1=('amp.exchange.com', 'www.amp.exchange.com')
+  #     - CERTBOT_EMAIL=david@proofsuite.com
+  #     - CERTBOT_CRON_RENEW=('0 3 * * *' '0 15 * * *')
+  #   volumes:
+  #     - /etc/letsencrypt:/etc/letsencrypt
+  #   deploy:
+  #     placement:
+  #       constraints:
+  #         - node.hostname == client-production
+  #       restart_policy:
+  #         condition: on-failure
+  #         max_attempts: 3
+  #         window: 120s
+
   client:
     hostname: client
     image: proofsuite/amp-client:staging
     ports:
       - "80:80"
+      - "443:443"
     environment:
-      - AMP_ENGINE_HTTP_URL=http://${AMP_RINKEBY_MATCHING_ENGINE_IP}:8081
-      - AMP_ETHEREUM_NODE_HTTP_URL=https://rinkeby.infura.io/
+      - AMP_ENGINE_HTTP_URL=https://rinkeby.amp.exchange/api
+      - AMP_ETHEREUM_NODE_HTTP_URL=https://rinkeby.infura.io
+      - AMP_ENGINE_WS_URL=wss://rinkeby.amp.exchange
       - AMP_ETHEREUM_NODE_WS_URL=wss://rinkeby.infura.io/_ws
-      - AMP_ENGINE_WS_URL=ws://${AMP_RINKEBY_MATCHING_ENGINE_IP}:8081
       - AMP_ETHEREUM_NETWORK_ID=4
+      - AMP_MIXPANEL_TOKEN=${AMP_RINKEBY_MIXPANEL_TOKEN}
+    volumes: 
+      - /etc/letsencrypt:/etc/letsencrypt
     configs:
-      - source: nginx-staging-config
+      - source: nginx-config
         target: /etc/nginx/nginx.conf
-    depends_on:
-      - matching-engine
-      - ethereum
     networks:
       amp-staging-frontend:
         aliases:
@@ -42,16 +62,16 @@ services:
     command: >
          bin/sh -c "sleep 10 && chmod +x ./replace.sh && sleep 1 && ./replace.sh && cat /usr/share/nginx/html/env.js && nginx -g 'daemon off;'"
 
-configs:
-  nginx-staging-config:
-    name: nginx-staging-config-${CONFIG_VERSION:-0}
-    external: true
-
 networks:
   amp-staging-frontend:
+    external: true
+
+configs:
+  nginx-config:
+    name: nginx-config-${CONFIG_VERSION:-0}
     external: true
 
 volumes:
   rabbitmq_logs:
   rabbitmq_data:
-  mongodb_data:
+  client_certificates:
