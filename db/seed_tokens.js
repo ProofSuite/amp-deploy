@@ -10,10 +10,11 @@ const network = argv.network
 const mongoUrl = argv.mongo_url || 'mongodb://localhost:27017'
 const mongoUsername = argv.mongo_username
 const mongoPassword = argv.mongo_password
+const environment = argv.amp_environment
 let mongoURI
 
 if (mongoUsername && mongoPassword) {
-  mongoURI = getMongoURI(mongoUsername, mongoPassword)
+  mongoURI = getMongoURI(mongoUsername, mongoPassword, environment)
 } else {
   mongoURI = mongoUrl 
 }
@@ -31,6 +32,8 @@ const seed = async () => {
     client = await MongoClient.connect(mongoURI, { useNewUrlParser: true })
     db = client.db('proofdex')
 
+    console.log(client)
+
     documents = baseTokens.map((symbol) => ({
       symbol: symbol,
       address: utils.getAddress(addresses[symbol]),
@@ -46,6 +49,7 @@ const seed = async () => {
     response = await db.collection('tokens').insertMany(documents)
     client.close()
   } catch (e) {
+    console.log(e)
     throw new Error(e.message)
   } finally { 
     client.close()

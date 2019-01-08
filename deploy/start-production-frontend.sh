@@ -64,4 +64,4 @@ echo -e "MongoDB Password: ${AMP_PRODUCTION_MONGODB_USERNAME}"
 echo -e "Infura Key: ${AMP_PRODUCTION_INFURA_KEY}"
 
 eval $(docker-machine env client-production)
-CONFIG_VERSION=${CONFIG_VERSION} docker stack deploy -c docker-compose.production-frontend.yml amp-production-frontend
+CONFIG_VERSION=${CONFIG_VERSION} docker stack deploy -c docker-compose.production-frontend.yml amp-production-frontend --prune

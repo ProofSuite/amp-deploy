@@ -18,6 +18,7 @@ const { getInfuraKey,
 const mongoUrl = argv.mongo_url || 'mongodb://localhost:27017'
 const mongoUsername = argv.mongo_username
 const mongoPassword = argv.mongo_password
+const environment = argv.amp_environment
 const network = argv.network
 
 if (!network) throw new Error('Usage: node show_contract_setup --network {network} --mongoUrl {mongoUrl} --mongoUsername {mongoUsername} --mongoPassword {mongoPassword}')
@@ -26,7 +27,7 @@ if (!mongoUrl && (!mongoUsername && !mongoPassword)) throw new Error('Usage: nod
 let mongoURI
 
 if (mongoUsername && mongoPassword) {
-  mongoURI = getMongoURI(mongoUsername, mongoPassword)
+  mongoURI = getMongoURI(mongoUsername, mongoPassword, environment)
 } else {
   mongoURI = mongoUrl 
 }

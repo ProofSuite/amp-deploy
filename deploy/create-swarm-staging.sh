@@ -18,10 +18,8 @@ ip=$(docker-machine ip matching-engine)
 eval $(docker-machine env rabbitmq)
 docker swarm join --token $backend_manager_token $(docker-machine ip matching-engine):2377 --advertise-addr $(docker-machine ip rabbitmq)
 
-eval $(docker-machine env mongodb)
-docker swarm join --token $backend_manager_token $(docker-machine ip matching-engine):2377 --advertise-addr $(docker-machine ip mongodb)
-
-docker network create --driver overlay --subnet 172.20.0.0/16 --attachable amp-staging-backend
+docker network create --driver overlay --attachable amp-staging-frontend
+docker network create --driver overlay --attachable amp-staging-backend
 
 
 
