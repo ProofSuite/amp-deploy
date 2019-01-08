@@ -7,6 +7,7 @@ const { getNetworkID, getMongoURI } = require('../utils/helpers')
 const mongoUrl = argv.mongo_url || 'mongodb://localhost:27017'
 const mongoUsername = argv.mongo_username
 const mongoPassword = argv.mongo_password
+const environment = argv.amp_environment
 const network = argv.network
 
 let mongoURI
@@ -14,7 +15,7 @@ let mongoURI
 console.log(mongoUrl)
 
 if (mongoUsername && mongoPassword) {
-  mongoURI = getMongoURI(mongoUsername, mongoPassword)
+  mongoURI = getMongoURI(mongoUsername, mongoPassword, environment)
 } else {
   mongoURI = mongoUrl
 }

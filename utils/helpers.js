@@ -32,8 +32,15 @@ const getPairName = (baseTokenSymbol, quoteTokenSymbol) => {
   return `${baseTokenSymbol}/${quoteTokenSymbol}`
 }
 
-const getMongoURI = (user, password) => {
-  return `mongodb+srv://${user}:${password}@ampcluster0-xzynf.mongodb.net/proofdex?retryWrites=true`
+const getMongoURI = (user, password, environment) => {
+  switch (environment) {
+    case 'staging':
+      return `mongodb+srv://${user}:${password}@ampstagingcluster0-qdjqg.mongodb.net/proofdex?retryWrites=true`
+    case 'production':
+      return `mongodb+srv://${user}:${password}@ampcluster0-xzynf.mongodb.net/proofdex?retryWrites=true`
+    default: 
+      return `mongodb+srv://${user}:${password}@ampcluster0-xzynf.mongodb.net/proofdex?retryWrites=true`
+  }
 }
 
 const getPrivateKeyFromEnvironment = (networkName) => {

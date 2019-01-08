@@ -63,6 +63,9 @@ services:
       - AMP_MONGODB_DBNAME=proofdex
       - AMP_MONGODB_USERNAME=${AMP_STAGING_MONGODB_USERNAME}
       - AMP_MONGODB_PASSWORD=${AMP_STAGING_MONGODB_PASSWORD}
+      - AMP_MONGODB_SHARD_URL_1=ampstagingcluster0-shard-00-00-qdjqg.mongodb.net:27017
+      - AMP_MONGODB_SHARD_URL_2=ampstagingcluster0-shard-00-01-qdjqg.mongodb.net:27017
+      - AMP_MONGODB_SHARD_URL_3=ampstagingcluster0-shard-00-02-qdjqg.mongodb.net:27017
       - AMP_ENABLE_TLS=true
       - AMP_RABBITMQ_URL=rabbitmq
       - AMP_RABBITMQ_USERNAME=${AMP_STAGING_RABBITMQ_USERNAME}

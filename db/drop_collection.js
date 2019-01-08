@@ -5,12 +5,13 @@ const { getMongoURI } = require('../utils/helpers')
 const mongoUrl = argv.mongo_url || 'mongodb://localhost:27017'
 const mongoUsername = argv.mongo_username
 const mongoPassword = argv.mongo_password
+const environment = argv.amp_environment
 const collection = argv.collection
 
 let mongoURI
 
 if (mongoUsername && mongoPassword) {
-  mongoURI = getMongoURI(mongoUsername, mongoPassword)
+  mongoURI = getMongoURI(mongoUsername, mongoPassword, environment)
 } else {
   mongoURI = mongoUrl 
 }

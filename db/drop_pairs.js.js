@@ -11,7 +11,7 @@ console.log(mongoUsername, mongoPassword)
 let mongoURI
 
 if (mongoUsername && mongoPassword) {
-  mongoURI = getMongoURI(mongoUsername, mongoPassword)
+  mongoURI = getMongoURI(mongoUsername, mongoPassword, environment)
 } else {
   mongoURI = mongoUrl 
 }

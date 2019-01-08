@@ -68,7 +68,7 @@ networks:
 
 configs:
   nginx-config:
-    name: nginx-config-${CONFIG_VERSION:-0}
+    name: nginx-config-${STAGING_CONFIG_VERSION:-0}
     external: true
 
 volumes:

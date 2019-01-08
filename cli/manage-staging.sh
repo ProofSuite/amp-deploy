@@ -12,9 +12,11 @@ if [[ $(which rabbitmqadmin) == "rabbitmqadmin not found" ]]; then
   echo "rabbitmqadmin is missing"
 fi
 
-MONGODB_URL='mongodb://'$(docker-machine ip mongodb)':27017';
+MONGODB_URL='';
 RABBITMQ_URL='ampq://guest:guest@'$(docker-machine ip rabbitmq)':5672';
 AMP_ENVIRONMENT='staging'
+MONGODB_USERNAME=$AMP_STAGING_MONGODB_USERNAME
+MONGODB_PASSWORD=$AMP_STAGING_MONGODB_PASSWORD
 
 
 show_menu(){
@@ -100,7 +102,7 @@ show_mongo_menu(){
     echo -e "${MENU}${NUMBER} 10)${MENU} Seed Wallets ${NORMAL}"
     echo -e "${MENU}${NUMBER} 11)${MENU} Seed Random Orders ${NORMAL}"
     echo -e "${MENU}${NUMBER} 12)${MENU} Seed Random Trades ${NORMAL}"
-    echo -e "${MENU}${NUMBER} 13)${MENU} Seed Rinkeby MongoDB Test Environment ${NORMAL}"
+    echo -e "${MENU}${NUMBER} 13)${MENU} Seed Environment ${NORMAL}"
     echo -e "${MENU}${NUMBER} 14)${MENU} Back ${NORMAL}"
     echo -e "${MENU}*********************************************${NORMAL}"
     read opt
@@ -113,97 +115,191 @@ show_mongo_menu(){
       case $opt in
       1) clear;
       write "Dropping Database";
-      node ../db/drop_db --mongo_url $MONGODB_URL;
+      node ../db/drop_db --mongo_url $MONGODB_URL \
+        --amp_environment 'staging' \
+        --mongo_username $MONGODB_USERNAME \
+        --mongo_password $MONGODB_PASSWORD;
+
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       2) clear;
       write "Dropping Pairs";
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collection pairs;
+      node ../db/drop_collection \
+        --amp_environment 'staging' \
+        --mongo_username $MONGODB_USERNAME \
+        --mongo_url $MONGODB_URL \
+        --mongo_password $MONGODB_PASSWORD \
+        --collection pairs;
+
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       3) clear;
       write "Dropping Tokens";
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collection tokens;
+      node ../db/drop_collection \
+      --amp_environment 'staging' \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD \
+      --collection tokens;
+
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       4) clear;
       write "Dropping Account";
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collection accounts;
+      node ../db/drop_collection \
+      --amp_environment 'staging' \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD \
+      --collection accounts;
+
       write_header "Dropped Accounts";
       show_mongo_menu;
       ;;
 
       5) clear;
       write 'Dropping wallets ';
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collection wallets;
+      node ../db/drop_collection \
+      --amp_environment 'staging' \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD \
+      --collection wallets;
+
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       6) clear;
       write 'Dropping orders collection...';
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collection orders;
+      node ../db/drop_collection \
+      --amp_environment 'staging' \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD \
+      --collection orders;
+      
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       7) clear;
       write 'Dropping trades collection...'
-      node ../db/drop_collection --mongo_url $MONGODB_URL --collection trades;
+      node ../db/drop_collection \
+      --amp_environment 'staging' \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD \
+      --collection trades;
+
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       8) clear;
       write 'Seed tokens...';
-      node ../db/seed_tokens --mongo_url $MONGODB_URL --network rinkeby;
-      node ../db/seed_quotes --mongo_url $MONGODB_URL --network rinkeby;
+      node ../db/seed_tokens \
+      --amp_environment 'staging' \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD \
+      --network rinkeby;
+
+      node ../db/seed_quotes \
+      --amp_environment 'staging' \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD \
+      --network rinkeby;
+
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       9) clear;
       write 'Seeding pairs...';
-      node ../db/seed_pairs --mongo_url $MONGODB_URL;
+      node ../db/seed_pairs \
+      --amp_environment 'staging' \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD;
+
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       10) clear;
       write 'Seeding wallets...';
-      node ../db/seed_wallets --mongo_url $MONGODB_URL --network rinkeby;
+      node ../db/seed_wallets \
+      --amp_environment 'staging' \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD \
+      --network rinkeby;
+
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       11) clear;
       write 'Seeding orders';
-      node ../db/seed_orders --mongo_url $MONGODB_URL;
+      node ../db/seed_orders \
+      --amp_environment 'staging' \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD;
+
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       12) clear;
       write 'Seeding trades';
-      node ../db/seed_trades --mongo_url $MONGODB_URL;
+      node ../db/seed_trades \
+      --amp_environment 'staging' \
+      --mongo_url $MONGODB_URL \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_password $MONGODB_PASSWORD;
       write 'Done\n';
       show_mongo_menu;
       ;;
 
       13) clear;
       write 'Seeding tokens ...';
-      node ../db/seed_tokens --mongo_url $MONGODB_URL --network rinkeby;
-      node ../db/seed_quotes --mongo_url $MONGODB_URL --network rinkeby;
+      node ../db/seed_tokens \
+        --amp_environment 'staging' \
+        --mongo_url $MONGODB_URL \
+        --mongo_username $MONGODB_USERNAME \
+        --mongo_password $MONGODB_PASSWORD \
+        --network rinkeby;
+      node ../db/seed_quotes \
+        --amp_environment 'staging' \
+        --mongo_url $MONGODB_URL \
+        --mongo_username $MONGODB_USERNAME \
+        --mongo_password $MONGODB_PASSWORD \
+        --network rinkeby;
+
       write 'Seeding pairs ...';
-      node ../db/seed_pairs --mongo_url $MONGODB_URL;
+      node ../db/seed_pairs \
+        --amp_environment 'staging' \
+        --mongo_url $MONGODB_URL \
+        --mongo_username $MONGODB_USERNAME \
+        --mongo_password $MONGODB_PASSWORD;
+
       write 'Seeding wallets ...';
-      node ../db/seed_wallets --mongo_url $MONGODB_URL --network rinkeby;
+      node ../db/seed_wallets \
+        --amp_environment 'staging' \
+        --mongo_url $MONGODB_URL \
+        --mongo_username $MONGODB_USERNAME \
+        --mongo_password $MONGODB_PASSWORD \
+        --network rinkeby;
+
       write 'Done\n'
       show_mongo_menu;
       ;;
@@ -237,10 +333,10 @@ show_inspect_mongo_menu(){
   ENTER_LINE=`echo "\033[33m"`
   echo -e "${MENU}*********************************************${NORMAL}"
   echo -e "${MENU}${NUMBER} 1)${MENU} Query Tokens ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 2)${MENU} Query Pairs ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 3)${MENU} Query Orders  ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 4)${MENU} Query Trades ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 5)${MENU} Back ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 4)${MENU} Query Pairs ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 5)${MENU} Query Orders  ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 6)${MENU} Query Trades ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 8)${MENU} Back ${NORMAL}"
   echo -e "${MENU}*********************************************${NORMAL}"
   read opt
 
@@ -251,26 +347,26 @@ show_inspect_mongo_menu(){
     else
       case $opt in
       1) clear;
-      node ../db/query_collection --mongo_url $MONGODB_URL --collection "tokens" | less;
+      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/query_tokens | less ;
       show_inspect_mongo_menu;
       ;;
 
       2) clear;
-      node ../db/query_collection --mongo_url $MONGODB_URL --collection "pairs" | less;
+      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/query_pairs | less;
       show_inspect_mongo_menu;
       ;;
 
       3) clear;
-      node ../db/query_collection --mongo_url $MONGODB_URL --collection "orders" | less;
+      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/query_orders | less;
       show_inspect_mongo_menu;
       ;;
 
       4) clear;
-      node ../db/query_collection --mongo_url $MONGODB_URL --collection "trades" | less;
+      AMP_ENVIRONMENT=$AMP_ENVIRONMENT MONGODB_URL=$MONGODB_URL node ../db/common/query_trades | less;
       show_inspect_mongo_menu;
       ;;
 
-      5) clear;
+      8) clear;
       show_menu;
       ;;
 
@@ -289,6 +385,7 @@ show_inspect_mongo_menu(){
     fi
   done
 }
+
 
 
 show_engine_menu(){
@@ -355,8 +452,7 @@ show_rabbitmq_menu(){
   echo -e "${MENU}${NUMBER} 2)${MENU} List queues ${NORMAL}"
   echo -e "${MENU}${NUMBER} 3)${MENU} List connections  ${NORMAL}"
   echo -e "${MENU}${NUMBER} 4)${MENU} List channels ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 5)${MENU} Show logs ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 5)${MENU} Report ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 5)${MENU} Show logs (new tab) ${NORMAL}"
   echo -e "${MENU}${NUMBER} 6)${MENU} Back ${NORMAL}"
   echo -e "${MENU}*********************************************${NORMAL}"
   read opt
@@ -368,41 +464,31 @@ show_rabbitmq_menu(){
     else
       case $opt in
       1) clear;
-      eval $(docker-machine env rabbitmq)
-      docker container exec -it $(docker container ls -q) rabbitmqctl list_users
+      rabbitmqadmin list users;
       show_rabbitmq_menu;
       ;;
 
       2) clear;
-      eval $(docker-machine env rabbitmq)
-      docker container exec -it $(docker container ls -q) rabbitmqctl list_queues
+      rabbitmqadmin list queues;
       show_rabbitmq_menu;
       ;;
 
       3) clear;
-      eval $(docker-machine env rabbitmq)
-      docker container exec -it $(docker container ls -q) rabbitmqctl list_connections
+      rabbitmqadmin list connections;
       show_rabbitmq_menu;
       ;;
 
       4) clear;
-      eval $(docker-machine env rabbitmq)
-      docker container exec -it $(docker container ls -q) rabbitmqctl list_channels
+      rabbitmqadmin list channels
       show_rabbitmq_menu;
       ;;
 
       5) clear;
-      eval $(docker-machine env rabbitmq)
-      docker container exec -it $(docker container ls -q) 'cat /usr/local/var/log/rabbitmq/rabbit@localhost.log'
+      ttab 'cat /usr/local/var/log/rabbitmq/rabbit@localhost.log'
       show_rabbitmq_menu;
       ;;
 
       6) clear;
-      eval $(docker-machine env rabbitmq)
-      docker container exec -it $(docker container ls -q) rabbitmqctl report
-      ;;
-
-      7) clear;
       show_menu;
       ;;
 
@@ -431,14 +517,13 @@ show_contracts_menu(){
   ENTER_LINE=`echo "\033[33m"`
   echo -e "${MENU}*********************************************${NORMAL}"
   echo -e "${MENU}${NUMBER} 1)${MENU} Update contract addresses ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 2)${MENU} Show rinkeby contract addresses ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 3)${MENU} Register Rinkeby Pairs ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 4)${MENU} Register Rinkeby Reward Tokens ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 5)${MENU} Register Rinkeby Reward Account ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 6)${MENU} Register Rinkeby Operators ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 7)${MENU} Show Rinkeby Operator Balances ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 8)${MENU} Show Rinkeby Contract Setup ${NORMAL}"
-  echo -e "${MENU}${NUMBER} 9)${MENU} Back ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 2)${MENU} Show mainnet contract addresses ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 3)${MENU} Register Mainnet Pairs ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 4)${MENU} Register Mainnet Reward Tokens ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 5)${MENU} Register Mainnet Operators ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 6)${MENU} Show Mainnet Operator Balances ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 7)${MENU} Show Mainnet Contract Setup ${NORMAL}"
+  echo -e "${MENU}${NUMBER} 8)${MENU} Back ${NORMAL}"
   echo -e "${MENU}*********************************************${NORMAL}"
   read opt
 
@@ -475,21 +560,20 @@ show_contracts_menu(){
       ;;
 
       6) clear;
-      node ${AMPDB}/scripts/register_reward_account --network rinkeby
-      show_contracts_menu;
-      ;;
-
-      7) clear;
       node ${AMPDB}/scripts/show_operator_balances --network rinkeby
       show_contracts_menu;
       ;;
 
-      8) clear;
-      node ${AMPDB}/scripts/show_contract_setup --network rinkeby --mongo_url ${MONGODB_URL}
+      7) clear;
+      node ${AMPDB}/scripts/show_contract_setup \
+      --network rinkeby \
+      --mongo_username $MONGODB_USERNAME \
+      --mongo_url $MONGODB_URL \
+      --mongo_password $MONGODB_PASSWORD;
       show_contracts_menu;
       ;;
 
-      9) clear;
+      8) clear;
       show_menu;
       ;;
 
@@ -508,7 +592,6 @@ show_contracts_menu(){
     fi
   done
 }
-
 
 write(){
   COLOR='\033[01;31m' # bold red
