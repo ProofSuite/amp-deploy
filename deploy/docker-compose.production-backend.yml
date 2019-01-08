@@ -73,8 +73,6 @@ services:
       - AMP_MATCHING_ENGINE_CA_CERT=/etc/ssl/matching-engine/ca_certificate.pem
       - AMP_MATCHING_ENGINE_SERVER_CERT=/etc/ssl/matching-engine/server_certificate.pem
       - AMP_MATCHING_ENGINE_SERVER_KEY=/etc/ssl/matching-engine/server_key.pem
-      - AMP_MONGODB_CLIENT_CERT=/etc/ssl/mongodb/client_certificate.pem
-      - AMP_MONGODB_CLIENT_KEY=/etc/ssl/mongodb/client_key.pem
       - AMP_RABBITMQ_CLIENT_KEY=/etc/ssl/rabbitmq/client_key.pem
       - AMP_RABBITMQ_CLIENT_CERT=/etc/ssl/rabbitmq/client_certificate.pem
       - AMP_EXCHANGE_CONTRACT_ADDRESS=${AMP_MAINNET_EXCHANGE_CONTRACT_ADDRESS}
@@ -90,10 +88,6 @@ services:
         target: /etc/ssl/rabbitmq/client_certificate.pem
       - source: rabbitmq-client-key
         target: /etc/ssl/rabbitmq/client_key.pem
-      - source: mongodb-client-cert
-        target: /etc/ssl/mongodb/client_certificate.pem
-      - source: mongodb-client-key
-        target: /etc/ssl/mongodb/client_key.pem
 
     networks:
       amp-production-backend:
@@ -122,29 +116,11 @@ configs:
   matching-engine-server-key:
     name: matching-engine-server-key-${CONFIG_VERSION:-0}
     external: true
-  mongodb-client-key:
-    name: mongodb-client-key-${CONFIG_VERSION:-0}
-    external: true
-  mongodb-client-cert:
-    name: mongodb-client-cert-${CONFIG_VERSION:-0}
-    external: true
-  mongodb-full-key:
-    name: mongodb-full-key-${CONFIG_VERSION:-0}
-    external: true
   rabbitmq-client-cert:
     name: rabbitmq-client-cert-${CONFIG_VERSION:-0}
     external: true
   rabbitmq-client-key:
     name: rabbitmq-client-key-${CONFIG_VERSION:-0}
-    external: true
-  client-ca-cert:
-    name: client-ca-cert-${CONFIG_VERSION:-0}
-    external: true
-  client-server-cert:
-    name: client-server-cert-${CONFIG_VERSION:-0}
-    external: true
-  client-server-key:
-    name: client-server-key-${CONFIG_VERSION:-0}
     external: true
   rabbitmq-ca-cert:
     name: rabbitmq-ca-cert-${CONFIG_VERSION:-0}
