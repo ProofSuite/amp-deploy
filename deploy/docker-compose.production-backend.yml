@@ -67,6 +67,9 @@ services:
       - AMP_RABBITMQ_URL=rabbitmq
       - AMP_RABBITMQ_USERNAME=${AMP_PRODUCTION_RABBITMQ_USERNAME}
       - AMP_RABBITMQ_PASSWORD=${AMP_PRODUCTION_RABBITMQ_PASSWORD}
+      - AMP_MONGODB_SHARD_URL_1=ampcluster0-shard-00-00-xzynf.mongodb.net:27017
+      - AMP_MONGODB_SHARD_URL_2=ampcluster0-shard-00-01-xzynf.mongodb.net:27017
+      - AMP_MONGODB_SHARD_URL_3=ampcluster0-shard-00-02-xzynf.mongodb.net:27017
       - AMP_MATCHING_ENGINE_CA_CERT=/etc/ssl/matching-engine/ca_certificate.pem
       - AMP_MATCHING_ENGINE_SERVER_CERT=/etc/ssl/matching-engine/server_certificate.pem
       - AMP_MATCHING_ENGINE_SERVER_KEY=/etc/ssl/matching-engine/server_key.pem
