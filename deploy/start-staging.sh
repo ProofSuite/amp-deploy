@@ -11,8 +11,9 @@ AMP_STAGING_MONGODB_URL=${AMP_STAGING_MONGODB_URL} \
 AMP_STAGING_MONGODB_USERNAME=${AMP_STAGING_MONGODB_USERNAME} \
 AMP_STAGING_MONGODB_PASSWORD=${AMP_STAGING_MONGODB_PASSWORD} \
 AMP_STAGING_INFURA_KEY=${AMP_STAGING_INFURA_KEY}
+AMP_STAGING_MIXPANEL_TOKEN=${AMP_STAGING_MIXPANEL_TOKEN}
 
-STAGING_CONFIG_VERSION=72
+STAGING_CONFIG_VERSION=74
 
 eval $(docker-machine env client)
 docker config create nginx-config-${STAGING_CONFIG_VERSION:-0} nginx-staging.conf
@@ -44,7 +45,7 @@ echo -e "RabbitMQ Password: ${AMP_STAGING_RABBITMQ_PASSWORD}"
 echo -e "MongoDB Username: ${AMP_STAGING_MONGODB_PASSWORD}"
 echo -e "MongoDB Password: ${AMP_STAGING_MONGODB_USERNAME}"
 echo -e "Infura Key: ${AMP_STAGING_INFURA_KEY}"
-echo -e "Mixpanel Token: ${AMP_MIXPANEL_TOKEN}"
+echo -e "Mixpanel Token: ${AMP_STAGING_MIXPANEL_TOKEN}"
 
 eval $(docker-machine env client)
 STAGING_CONFIG_VERSION=${STAGING_CONFIG_VERSION} docker stack deploy -c docker-compose.staging-frontend.yml amp-staging-frontend --prune

@@ -11,7 +11,7 @@ AMP_PRODUCTION_MONGODB_PASSWORD=${AMP_PRODUCTION_MONGODB_PASSWORD} \
 AMP_PRODUCTION_INFURA_KEY=${AMP_PRODUCTION_INFURA_KEY} \
 AMP_CERTS_PATH=${AMP_CERTS_PATH}
 
-CONFIG_VERSION=87
+CONFIG_VERSION=88
 eval $(docker-machine env rabbitmq-production)
 
 docker config create rabbitmq-config-${CONFIG_VERSION:-0} rabbitmq-production.conf
