@@ -14,7 +14,6 @@ cp -rf result/* ${AMP_PRODUCTION_CERTS_PATH}/matching-engine/
 make PASSWORD=${AMP_PRODUCTION_CERT_PW}
 cp -rf result/* ${AMP_PRODUCTION_CERTS_PATH}/client/
 
-
 cat ${AMP_PRODUCTION_CERTS_PATH}/rabbitmq/server_certificate.pem ${AMP_PRODUCTION_CERTS_PATH}/rabbitmq/server_key.pem > ${AMP_PRODUCTION_CERTS_PATH}/rabbitmq/server_full_key.pem
 cat ${AMP_PRODUCTION_CERTS_PATH}/matching-engine/server_certificate.pem ${AMP_PRODUCTION_CERTS_PATH}/matching-engine/server_key.pem > ${AMP_PRODUCTION_CERTS_PATH}/matching-engine/server_full_key.pem
 cat ${AMP_PRODUCTION_CERTS_PATH}/rabbitmq/client_certificate.pem ${AMP_PRODUCTION_CERTS_PATH}/rabbitmq/client_key.pem > ${AMP_PRODUCTION_CERTS_PATH}/rabbitmq/client_full_key.pem

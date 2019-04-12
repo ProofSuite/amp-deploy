@@ -1,6 +1,6 @@
-AMP_PRODUCTION_MATCHING_ENGINE_IP=${AMP_PRODUCTION_MATCHING_ENGINE_IP:-'$(docker-machine ip matching-engine-production)'} \
-AMP_PRODUCTION_CLIENT_IP=${AMP_PRODUCTION_CLIENT_IP:-'$(docker-machine ip client-production)'} \
-AMP_PRODUCTION_RABBITMQ_IP=${AMP_PRODUCTION_RABBITMQ_IP:-'$(docker-machine ip rabbitmq-production)'} \
+AMP_PRODUCTION_MATCHING_ENGINE_IP=${AMP_PRODUCTION_MATCHING_ENGINE_IP:-'$(docker-machine ip matching-engine-prod)'} \
+AMP_PRODUCTION_CLIENT_IP=${AMP_PRODUCTION_CLIENT_IP:-'$(docker-machine ip client-prod)'} \
+AMP_PRODUCTION_RABBITMQ_IP=${AMP_PRODUCTION_RABBITMQ_IP:-'$(docker-machine ip rabbitmq-prod)'} \
 AMP_PRODUCTION_EXCHANGE_CONTRACT_ADDRESS=${AMP_PRODUCTION_EXCHANGE_CONTRACT_ADDRESS} \
 AMP_PRODUCTION_FEE_ACCOUNT_ADDRESS=${AMP_PRODUCTION_FEE_ACCOUNT_ADDRESS} \
 AMP_PRODUCTION_RABBITMQ_USERNAME=${AMP_PRODUCTION_RABBITMQ_USERNAME} \
@@ -11,9 +11,8 @@ AMP_PRODUCTION_MONGODB_PASSWORD=${AMP_PRODUCTION_MONGODB_PASSWORD} \
 AMP_PRODUCTION_INFURA_KEY=${AMP_PRODUCTION_INFURA_KEY} \
 AMP_CERTS_PATH=${AMP_CERTS_PATH}
 
-CONFIG_VERSION=88
-eval $(docker-machine env rabbitmq-production)
-
+CONFIG_VERSION=101
+eval $(docker-machine env rabbitmq-prod)
 docker config create rabbitmq-config-${CONFIG_VERSION:-0} rabbitmq-production.conf
 docker config create rabbitmq-ca-cert-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/rabbitmq/ca_certificate.pem
 docker config create rabbitmq-server-cert-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/rabbitmq/server_certificate.pem
@@ -22,17 +21,7 @@ docker config create rabbitmq-client-cert-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}
 docker config create rabbitmq-client-key-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/rabbitmq/client_key.pem
 docker config create rabbitmq-full-key-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/rabbitmq/server_full_key.pem
 
-# eval $(docker-machine env mongodb-production)
-
-docker config create mongodb-ca-cert-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/mongodb/ca_certificate.pem
-docker config create mongodb-server-cert-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/mongodb/server_certificate.pem
-docker config create mongodb-server-key-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/mongodb/server_key.pem
-docker config create mongodb-client-cert-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/mongodb/client_certificate.pem
-docker config create mongodb-client-key-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/mongodb/client_key.pem
-docker config create mongodb-full-key-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/mongodb/server_full_key.pem
-
-eval $(docker-machine env client-production)
-
+eval $(docker-machine env client-prod)
 docker config create nginx-config-${CONFIG_VERSION:-0} nginx-production.conf
 docker config create client-ca-cert-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/client/ca_certificate.pem
 docker config create client-server-cert-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/client/server_certificate.pem
@@ -41,8 +30,7 @@ docker config create client-client-cert-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/c
 docker config create client-client-key-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/client/client_key.pem
 docker config create client-full-key-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/client/server_full_key.pem
 
-eval $(docker-machine env matching-engine-production)
-
+eval $(docker-machine env matching-engine-prod)
 docker config create matching-engine-ca-cert-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/matching-engine/ca_certificate.pem
 docker config create matching-engine-server-cert-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/matching-engine/server_certificate.pem
 docker config create matching-engine-server-key-${CONFIG_VERSION:-0} ${AMP_CERTS_PATH}/matching-engine/server_key.pem
@@ -63,8 +51,8 @@ echo -e "MongoDB Password: ${AMP_PRODUCTION_MONGODB_USERNAME}"
 echo -e "Infura Key: ${AMP_PRODUCTION_INFURA_KEY}"
 echo -e "Mixpanel Token: ${AMP_MIXPANEL_TOKEN}"
 
-eval $(docker-machine env client-production)
-CONFIG_VERSION=${CONFIG_VERSION} docker stack deploy -c docker-compose.production-frontend.yml amp-production-frontend --prune
+eval $(docker-machine env client-prod)
+CONFIG_VERSION=${CONFIG_VERSION} docker stack deploy -c docker-compose.production-frontend.yml amp-prod-frontend --prune
 
-eval $(docker-machine env matching-engine-production)
-CONFIG_VERSION=${CONFIG_VERSION} docker stack deploy -c docker-compose.production-backend.yml amp-production-backend --prune
+eval $(docker-machine env matching-engine-prod)
+CONFIG_VERSION=${CONFIG_VERSION} docker stack deploy -c docker-compose.production-backend.yml amp-prod-backend --prune

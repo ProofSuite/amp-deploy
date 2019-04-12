@@ -49,6 +49,5 @@ echo -e "Mixpanel Token: ${AMP_STAGING_MIXPANEL_TOKEN}"
 
 eval $(docker-machine env client)
 STAGING_CONFIG_VERSION=${STAGING_CONFIG_VERSION} docker stack deploy -c docker-compose.staging-frontend.yml amp-staging-frontend --prune
-
 eval $(docker-machine env matching-engine)
 STAGING_CONFIG_VERSION=${STAGING_CONFIG_VERSION} docker stack deploy -c docker-compose.staging-backend.yml amp-staging-backend --prune

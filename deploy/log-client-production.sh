@@ -1,2 +1,2 @@
-eval $(docker-machine env client-production)
-docker service logs amp-production-frontend_client --tail 500 --follow
+eval $(docker-machine env client-prod)
+docker service logs amp-prod-frontend_client --tail 500 --follow

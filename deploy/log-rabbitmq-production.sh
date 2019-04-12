@@ -1,2 +1,2 @@
-eval $(docker-machine env rabbitmq-production)
-docker service logs amp-production-backend_rabbitmq --tail 500 --follow
+eval $(docker-machine env rabbitmq-prod)
+docker service logs amp-prod-backend_rabbitmq --tail 500 --follow

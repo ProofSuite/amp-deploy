@@ -21,7 +21,7 @@ services:
       - '5672:5672'
       - '5671:5671'
     networks:
-      amp-production-backend:
+      amp-prod-backend:
         aliases:
         - rabbitmq
     volumes:
@@ -39,7 +39,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == rabbitmq-production
+          - node.hostname == rabbitmq-prod
       restart_policy:
         condition: on-failure
         max_attempts: 3
@@ -58,7 +58,7 @@ services:
       - "matching-engine-certificates:/certs"
     environment:
       - AMP_ETHEREUM_NODE_HTTP_URL=https://mainnet.infura.io/${AMP_MAINNET_INFURA_KEY}
-      - AMP_ETHEREUM_NODE_WS_URL=wss://mainnet.infura.io/_ws/${AMP_MAINNET_INFURA_KEY}
+      - AMP_ETHEREUM_NODE_WS_URL=wss://mainnet.infura.io/ws/${AMP_MAINNET_INFURA_KEY}
       - AMP_MONGODB_URL=mongodb
       - AMP_MONGODB_DBNAME=proofdex
       - AMP_MONGODB_USERNAME=${AMP_PRODUCTION_MONGODB_USERNAME}
@@ -90,20 +90,20 @@ services:
         target: /etc/ssl/rabbitmq/client_key.pem
 
     networks:
-      amp-production-backend:
+      amp-prod-backend:
         aliases:
         - matching-engine
     deploy:
       placement:
         constraints:
-          - node.hostname == matching-engine-production
+          - node.hostname == matching-engine-prod
       restart_policy:
         condition: on-failure
         max_attempts: 3
         window: 120s
 
 networks:
-  amp-production-backend:
+  amp-prod-backend:
     external: true
 
 configs:

@@ -15,8 +15,16 @@ const infuraKey = getInfuraKey(network)
 const addresses = contractAddresses[networkID]
 const operators = operatorAddresses[networkID]
 
-const provider = new providers.InfuraProvider(network, infuraKey)
-const signer = new Wallet(pk, provider)
+let signer, provider
+
+if (network === "quorum") {
+  provider = new providers.JsonRpcProvider('http://127.0.0.1:22000')
+  signer = new Wallet(pk, provider)
+} else {
+  provider = new providers.InfuraProvider(network, infuraKey)
+  signer = new Wallet(pk, provider)
+}
+
 
 const setOperators = async () => {
   for (let operator of operators) {

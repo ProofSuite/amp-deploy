@@ -20,8 +20,3 @@ docker swarm join --token $backend_manager_token $(docker-machine ip matching-en
 
 docker network create --driver overlay --attachable amp-staging-frontend
 docker network create --driver overlay --attachable amp-staging-backend
-
-
-
-
-

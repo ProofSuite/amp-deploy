@@ -39,7 +39,7 @@ services:
       - AMP_ENGINE_HTTP_URL=https://amp.exchange/api
       - AMP_ETHEREUM_NODE_HTTP_URL=https://mainnet.infura.io
       - AMP_ENGINE_WS_URL=wss://amp.exchange
-      - AMP_ETHEREUM_NODE_WS_URL=wss://mainnet.infura.io/_ws
+      - AMP_ETHEREUM_NODE_WS_URL=wss://mainnet.infura.io/ws
       - AMP_ETHEREUM_NETWORK_ID=1
       - AMP_MIXPANEL_TOKEN=${AMP_MIXPANEL_TOKEN}
     volumes: 
@@ -52,13 +52,13 @@ services:
       - source: client-server-key
         target: /etc/ssl/client/server_key.pem
     networks:
-      amp-production-frontend:
+      amp-prod-frontend:
         aliases:
         - client
     deploy:
       placement:
         constraints:
-          - node.hostname == client-production
+          - node.hostname == client-prod
       restart_policy:
         condition: on-failure
         max_attempts: 3
@@ -67,7 +67,7 @@ services:
          bin/sh -c "sleep 10 && chmod +x ./replace.sh && sleep 1 && ./replace.sh && cat /usr/share/nginx/html/env.js && nginx -g 'daemon off;'"
 
 networks:
-  amp-production-frontend:
+  amp-prod-frontend:
     external: true
 
 configs:

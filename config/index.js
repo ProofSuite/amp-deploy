@@ -72,6 +72,12 @@ const operatorAddresses = {
     '0x53ee745b3d30d692dc016450fef68a898c16fa44',
     '0xc8b74b6b883a96e3defd62934ec3a1e44f149860',
     '0xbf8e9e3f9dbb85554679ce8147077b0496358f53'
+  ],
+  "10": [
+    '0xe0a1240b358dfa6c167edea09c763ae9f3b51ea0',
+    '0xca843569e3427144cead5e4d5999a3d0ccf92b8e',
+    '0x0fbdc686b912d7722dc86510934589e0aaf3b55a',
+    '0x9186eb3d20cbd1f5f992a950d808c4495153abd5'
   ]
 }
 
@@ -90,7 +96,8 @@ const testAccounts = [
 
 const keys = {
   "1": process.env.AMP_MAINNET_KEYS.split(','),
-  "4": process.env.AMP_RINKEBY_KEYS.split(',')
+  "4": process.env.AMP_RINKEBY_KEYS.split(','),
+  "10": process.env.AMP_QUORUM_KEYS.split(',')
 }
 
 const infuraKeys = {

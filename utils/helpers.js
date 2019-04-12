@@ -13,6 +13,7 @@ const getNetworkID = (networkName) => {
     "mainnet": "1",
     "homestead": "1",
     "rinkeby": "4",
+    "quorum": "10",
     "local": "8888"
   }[networkName]
 }
@@ -22,6 +23,7 @@ const getInfuraKey = (networkName) => {
     "mainnet": "1",
     "homestead": "1",
     "rinkeby": "4",
+    "quorum": "10",
     "local": "8888"
   }[networkName]
 
@@ -38,19 +40,23 @@ const getMongoURI = (user, password, environment) => {
       return `mongodb+srv://${user}:${password}@ampstagingcluster0-qdjqg.mongodb.net/proofdex?retryWrites=true`
     case 'production':
       return `mongodb+srv://${user}:${password}@ampcluster0-xzynf.mongodb.net/proofdex?retryWrites=true`
-    default: 
+    case 'quorum':
+      return 'localhost'
+    default:
       return `mongodb+srv://${user}:${password}@ampcluster0-xzynf.mongodb.net/proofdex?retryWrites=true`
   }
 }
 
 const getPrivateKeyFromEnvironment = (networkName) => {
   switch(networkName) {
-    case "homestead": 
+    case "homestead":
       return process.env.AMP_MAINNET_PRIVATE_KEY
     case "mainnet":
       return process.env.AMP_MAINNET_PRIVATE_KEY
     case "rinkeby":
       return process.env.AMP_RINKEBY_PRIVATE_KEY
+    case "quorum":
+      return process.env.AMP_QUORUM_PRIVATE_KEY
     default:
       throw new Error('Could not get private key from environment')
   }
@@ -76,8 +82,12 @@ const getMainnetAddresses = () => {
   return contractAddresses['1']
 }
 
+const getQuorumAddresses = () => {
+  return contractAddresses['10']
+}
+
 const queryContractAddresses = () => {
-  let contracts = { '8888': {}, '1000': {}, '4': {}, '1': {} };
+  let contracts = { '8888': {}, '1000': {}, '4': {}, '1': {}, '10': {} };
 
   // Configuration for testnets based on local truffle project
   files.forEach((file, index) => {
@@ -85,6 +95,7 @@ const queryContractAddresses = () => {
     let symbol;
     let json = JSON.parse(fs.readFileSync(`${truffleBuildPath}/${file}`, 'utf8'));
 
+    //Local TestRPC chain
     if (json.networks['8888']) {
       symbol = file.slice(0, -5);
       if (symbol === 'WETH9') symbol = 'WETH';
@@ -92,6 +103,7 @@ const queryContractAddresses = () => {
       contracts['8888'][symbol] = utils.getAddress(address);
     }
 
+    //Local Ethereum chain
     if (json.networks['1000']) {
       symbol = file.slice(0, -5);
       if (symbol === 'WETH9') symbol = 'WETH';
@@ -99,11 +111,20 @@ const queryContractAddresses = () => {
       contracts['1000'][symbol] = utils.getAddress(address);
     }
 
+    //Rinkeby
     if (json.networks['4']) {
       symbol = file.slice(0, -5);
       if (symbol === 'WETH9') symbol = 'WETH';
       address = json.networks['4'].address;
       contracts['4'][symbol] = utils.getAddress(address);
+    }
+
+    //Quorum
+    if (json.networks['10']) {
+      symbol = file.slice(0, -5);
+      if (symbol === 'WETH9') symbol = 'WETH';
+      address = json.networks['10'].address;
+      contracts['10'][symbol] = utils.getAddress(address);
     }
   });
 
@@ -164,7 +185,7 @@ const minBig = (a, b) => {
 const randomBig = (min, max) => {
   let ratio = Math.random(0, 1)
   let multiplier = utils.bigNumberify(10).pow(9)
-  let multipliedRatio = (multiplier * ratio).toFixed(0)  
+  let multipliedRatio = (multiplier * ratio).toFixed(0)
   return min.add((max.sub(min)).mul(multipliedRatio).div(multiplier))
 }
 
@@ -172,7 +193,7 @@ const averageBig = (a, b) => {
   let ratio = 1/2
   let multiplier = utils.bigNumberify(10).pow(9)
   let multipliedRatio = (multiplier * ratio).toFixed(0)
-  
+
   return a.add((b.sub(a)).mul(multipliedRatio).div(multiplier))
 }
 

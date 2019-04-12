@@ -8,4 +8,5 @@ cd $AMPCLIENT
 docker build -f Dockerfile -t proofsuite/amp-client:staging .
 docker push proofsuite/amp-client:staging
 
+cd $AMPDB/deploy
 ./deploy-amp.staging-rinkeby

@@ -1,8 +1,7 @@
-
 echo "\nFrontend Status"
-eval $(docker-machine env client-production)
-docker stack ps amp-production-frontend
+eval $(docker-machine env client-prod)
+docker stack ps amp-prod-frontend
 
 echo "\nBackend Status"
-eval $(docker-machine env matching-engine-production)
-docker stack ps amp-production-backend
+eval $(docker-machine env matching-engine-prod)
+docker stack ps amp-prod-backend
